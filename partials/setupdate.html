@@ -1,0 +1,26 @@
+<div class="container modalPopup">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="big-dialog">
+                <div class="clearfix">
+                    <div class="pull-left dialog-picture">
+                        <img class="small-profile-picture" ng-src="{{setupDateCtrl.pet.img}}">
+                    </div>
+                    <h3>{{setupDateCtrl.pet.name}}</h3>
+
+                    <p>{{setupDateCtrl.pet.profileText}}</p>
+
+                    <div pc-reverse-geocode="setupDateCtrl.selectedLocation"></div>
+                </div>
+                <div class="map">
+                    <em>Drag and drop to select the park where you want to play with {{pet.name}}</em>
+                    <div class="map-container" pc-googlemaps marker="setupDateCtrl.selectedLocation"></div>
+                </div>
+                <div class="clearfix">
+                    <button type="button" class="btn" ng-click="setupDateCtrl.cancel()">Cancel</button>
+                    <button type="button" class="btn btn-primary pull-right" ng-click="setupDateCtrl.submit()">Let's play!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
