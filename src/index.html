@@ -5,20 +5,26 @@
     <meta charset="utf-8">
     <title>PetCupid</title>
     <link rel="stylesheet" href="assets/css/main.css">
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDv8dgwdaY49CHc_dqGyxBFVX9mqVx91Iw&sensor=false"></script>
-    <script src="../bower_components/angular/angular.js"></script>
-    <script src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="app/scripts/app.es6.js"></script>
 </head>
 
 <body>
     <header class="colored-background header">
         <img class="logo" src="assets/img/heart.png"> PetCupid
     </header>
+
     <div class="fader" ui-view></div>
     <footer class="hugs-bottom colored-background footer">
         <p>&copy; 2015 Cegeka</p>
     </footer>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDv8dgwdaY49CHc_dqGyxBFVX9mqVx91Iw&sensor=false"></script>
+    <script src="../bower_components/angular/angular.js"></script>
+    <script src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="app/scripts/app.es6.js"></script>
+
+    <!-- Bootstrapping -->
+    <script src="app/app.module.js"></script>
+    <script src="app/app.route.js"></script>
 </body>
 
 </html>
