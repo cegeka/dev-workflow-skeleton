@@ -27,6 +27,7 @@
         "url": "https://github.com/cegeka/dev-workflow-skeleton/issues"
     },
     "devDependencies": {
-        "gulp": "~3.9.0"
+        "gulp": "~3.9.0",
+        "main-bower-files": "~2.9.0"
     }
 }
