@@ -1,5 +1,5 @@
 /* global angular, google */
-var petcupidApp = angular.module("petcupidApp", ["ui.router", "ngResource"]);
+var petcupidApp = angular.module("petcupidApp", ["ui.router"]);
 
 petcupidApp.config(function($urlRouterProvider, $stateProvider) {
     "use strict";
@@ -24,7 +24,7 @@ petcupidApp.config(function($urlRouterProvider, $stateProvider) {
     $urlRouterProvider.otherwise("/gallery");
 });
 
-petcupidApp.factory("Pet", function($resource) {
+petcupidApp.factory("Pet", function() {
     "use strict";
 
     var data = [
@@ -64,12 +64,12 @@ petcupidApp.factory("Pet", function($resource) {
             img: "assets/img/dog3.jpg",
             profileText: "Bobby loves to fetch balls and chase rabbits. Great with kids."
         }
-    ];    
+    ];
 
     function getPets() {
         return data;
     }
-    
+
     function getPetWithName(name) {
         return data
             .filter(function(pet) {
@@ -111,7 +111,7 @@ petcupidApp.controller("ProfileGalleryCtrl", function(Pet, $state) {
 
 petcupidApp.controller("SetupDateCtrl", function(pet, $state) {
     "use strict";
-    
+
     this.pet = pet;
 
     this.cancel = function() {
