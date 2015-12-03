@@ -17,14 +17,31 @@
         <p>&copy; 2015 Cegeka</p>
     </footer>
 
+    <!-- Vendor -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDv8dgwdaY49CHc_dqGyxBFVX9mqVx91Iw&sensor=false"></script>
     <script src="../bower_components/angular/angular.js"></script>
     <script src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="app/scripts/app.es6.js"></script>
 
     <!-- Bootstrapping -->
     <script src="app/app.module.js"></script>
     <script src="app/app.route.js"></script>
+    
+    <!-- Core -->
+    <script src="app/core/core.module.js"></script>
+    <script src="app/core/pet.service.js"></script>
+    
+    <!-- Gallery -->
+    <script src="app/gallery/gallery.module.js"></script>
+    <script src="app/gallery/gallery.controller.js"></script>
+    
+    <!-- Setup-date -->
+    <script src="app/setup-date/setup-date.module.js"></script>
+    <script src="app/setup-date/setup-date.controller.js"></script>
+    
+    <!-- Widgets -->
+    <script src="app/widgets/widgets.module.js"></script>
+    <script src="app/widgets/pcGooglemaps.js"></script>
+    <script src="app/widgets/pcReverseGeocode.js"></script>
 </body>
 
 </html>

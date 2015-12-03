@@ -5,12 +5,12 @@ angular.module("petcupidApp").config(function($urlRouterProvider, $stateProvider
     $stateProvider
         .state("gallery", {
             url: "/gallery",
-            templateUrl: "app/partials/gallery.html",
+            templateUrl: "app/gallery/gallery.html",
             controller: "ProfileGalleryCtrl as profileGalleryCtrl"
         })
         .state("setupDate", {
             url: "/pets/:name",
-            templateUrl: "app/partials/setupdate.html",
+            templateUrl: "app/setup-date/setup-date.html",
             controller: "SetupDateCtrl as setupDateCtrl",
             resolve: {
                 pet(Pet, $stateParams) {
