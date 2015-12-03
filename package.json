@@ -1,0 +1,33 @@
+{
+    "name": "dev-workflow-skeleton",
+    "version": "0.0.0",
+    "description": "Innovation center to setup a small project that can be used to quickly bootstrap the development of new applications.",
+    "homepage": "https://github.com/cegeka/dev-workflow-skeleton",
+    "contributors": [
+    {
+        "name": "Dieter Van Peer",
+        "email": "dieter.vanpeer@cegeka.be",
+        "url": "https://github.com/dietervanpeer"
+    },
+    {
+        "name": "Bruno Lannoo",
+        "email": "bruno.lannoo@cegeka.be",
+        "url": "https://github.com/BLannoo"
+    },
+    {
+        "name": "Gilliam Flebus",
+        "email": "gilliam.flebus@cegeka.be",
+        "url": "https://github.com/Gi11i4m"
+    }],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/cegeka/dev-workflow-skeleton.git"
+    },
+    "bugs": {
+        "url": "https://github.com/cegeka/dev-workflow-skeleton/issues"
+    },
+    "devDependencies": {
+        "gulp": "~3.9.0",
+        "main-bower-files": "~2.9.0"
+    }
+}
