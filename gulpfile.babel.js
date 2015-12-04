@@ -1,25 +1,25 @@
-var gulp = require("gulp");
-var runSequence = require("run-sequence");
-var del = require("del");
-var mainBowerFiles = require("main-bower-files");
+import gulp from "gulp";
+import runSequence from "run-sequence";
+import del from "del";
+import mainBowerFiles from "main-bower-files";
 
-gulp.task("default", function(callback) {
+gulp.task("default", (callback) => {
     runSequence("clean", "build", callback);
 });
 
-gulp.task("clean", function(){
-    return del("dist/")
+gulp.task("clean", () => {
+    return del("dist/");
 });
 
 gulp.task("build", ["build:app", "build:vendor"]);
 
-gulp.task("build:app", function() {
+gulp.task("build:app", () => {
     return gulp
         .src("src/**/*")
         .pipe(gulp.dest("dist"));
 });
 
-gulp.task("build:vendor", function() {
+gulp.task("build:vendor", () => {
     return gulp
         .src(mainBowerFiles({
             checkExistence: true
