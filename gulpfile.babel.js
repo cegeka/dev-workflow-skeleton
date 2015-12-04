@@ -4,6 +4,8 @@ import del from "del";
 import babel from "gulp-babel";
 import ngAnnotate from "gulp-ng-annotate";
 import uglify from "gulp-uglify";
+import imagemin from "gulp-imagemin";
+import pngquant from "imagemin-pngquant";
 import mainBowerFiles from "main-bower-files";
 
 gulp.task("default", callback =>
@@ -17,6 +19,8 @@ gulp.task("clean", () =>
 gulp.task("build", ["build:app", "build:assets", "build:vendor"]);
 
 gulp.task("build:app", ["build:app:js", "build:app:html"]);
+
+gulp.task("build:assets", ["build:assets:css", "build:assets:img"]);
 
 gulp.task("build:app:js", () =>
     gulp
@@ -35,11 +39,23 @@ gulp.task("build:app:html", () =>
     .pipe(gulp.dest("dist"))
 );
 
-gulp.task("build:assets", () =>
+gulp.task("build:assets:css", () =>
     gulp
-    .src("src/assets/**/*", {
+    .src("src/assets/css/*", {
         base: "src"
     })
+    .pipe(gulp.dest("dist"))
+);
+
+gulp.task("build:assets:img", () =>
+    gulp
+    .src("src/assets/img/*", {
+        base: "src"
+    })
+    .pipe(imagemin({
+        progressive: true,
+        use: [pngquant()]
+    }))
     .pipe(gulp.dest("dist"))
 );
 
