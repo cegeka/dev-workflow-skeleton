@@ -5,9 +5,9 @@ angular.module("app.widgets").directive("pcGooglemaps", function() {
     return {
         restrict: "A",
         scope: {
-            'marker': "="
+            "marker": "="
         },
-        link(scope, element, attrs) {
+        link(scope, element) {
             var map = new google.maps.Map(element[0], { // const
                 center: new google.maps.LatLng(50.85, 4.35),
                 zoom: 8

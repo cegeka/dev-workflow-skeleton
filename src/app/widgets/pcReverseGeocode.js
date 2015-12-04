@@ -5,7 +5,7 @@ angular.module("app.widgets").directive("pcReverseGeocode", function() {
     return {
         restrict: "A",
         scope: {
-            'position': "=pcReverseGeocode"
+            "position": "=pcReverseGeocode"
         },
         template: "<span>{{address}}</span>",
         link(scope) {
@@ -13,8 +13,8 @@ angular.module("app.widgets").directive("pcReverseGeocode", function() {
             scope.$watch("position", function(newPosition) {
                 const latlng = new google.maps.LatLng(newPosition.lat, newPosition.long);
                 geocoder.geocode({
-                    'latLng': latlng
-                }, function(results, status) {
+                    "latLng": latlng
+                }, function(results) {
                     scope.$apply(function() {
                         scope.address = results[0].formatted_address;
                     });

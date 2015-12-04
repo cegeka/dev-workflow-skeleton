@@ -20,6 +20,6 @@ angular.module("app.gallery").controller("ProfileGalleryCtrl", function(Pet, $st
     };
 
     this.setupDate = function () {
-        $state.go('setupDate', { name: this.selectedPet.name });
+        $state.go("setupDate", { name: this.selectedPet.name });
     };
 });
