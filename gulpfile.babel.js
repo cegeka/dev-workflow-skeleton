@@ -22,14 +22,16 @@ gulp.task("build:app", ["build:app:js", "build:app:html"]);
 
 gulp.task("build:assets", ["build:assets:css", "build:assets:img"]);
 
+gulp.task("build:vendor", ["build:vendor:npm", "build:vendor:bower"]);
+
 gulp.task("build:app:js", () =>
     gulp
     .src("src/**/*.js")
     .pipe(babel({
         presets: ["es2015"]
-    }))
+}))
     .pipe(ngAnnotate())
-    .pipe(uglify())
+    //.pipe(uglify())
     .pipe(gulp.dest("dist"))
 );
 
@@ -59,10 +61,16 @@ gulp.task("build:assets:img", () =>
     .pipe(gulp.dest("dist"))
 );
 
-gulp.task("build:vendor", () =>
+gulp.task("build:vendor:bower", () =>
     gulp
     .src(mainBowerFiles({
         checkExistence: true
     }))
+    .pipe(gulp.dest("dist/vendor"))
+);
+
+gulp.task("build:vendor:npm", () =>
+    gulp
+    .src("node_modules/angular-new-router/dist/router.es5.js")
     .pipe(gulp.dest("dist/vendor"))
 );

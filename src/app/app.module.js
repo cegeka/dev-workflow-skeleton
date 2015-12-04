@@ -2,7 +2,7 @@
 angular.module("petcupidApp", [
 
     /* Angular modules */
-    "ui.router",
+    "ngNewRouter",
 
     /* Shared modules */
     "app.core",

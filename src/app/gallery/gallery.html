@@ -1,9 +1,9 @@
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-9" ng-click="profileGalleryCtrl.deselectPet()">
+        <div class="col-md-9" ng-click="gallery.deselectPet()">
             <div class="gallery">
-                <div class="gallery-pet fader" ng-class="{active: profileGalleryCtrl.selectedPet === pet}"
-                     ng-repeat="pet in profileGalleryCtrl.pets | filter:profileGalleryCtrl.searchCriteria" ng-click="profileGalleryCtrl.selectPet($event, pet)">
+                <div class="gallery-pet fader" ng-class="{active: gallery.selectedPet === pet}"
+                     ng-repeat="pet in gallery.pets | filter:gallery.searchCriteria" ng-click="gallery.selectPet($event, pet)">
                     <img class="profile-picture" ng-src="{{pet.img}}">
 
                     <div class="overlay">
@@ -30,10 +30,10 @@
 
                     <form>
                         <div class="form-group">
-                            <input class="form-control" placeholder="Search" ng-model="profileGalleryCtrl.searchCriteria.$">
+                            <input class="form-control" placeholder="Search" ng-model="gallery.searchCriteria.$">
                         </div>
                         <div class="form-group">
-                            <select class="form-control" ng-model="profileGalleryCtrl.searchCriteria.kind">
+                            <select class="form-control" ng-model="gallery.searchCriteria.kind">
                                 <option value="">All</option>
                                 <option value="cat">Cat</option>
                                 <option value="dog">Dog</option>
@@ -43,13 +43,13 @@
                     </form>
                 </section>
 
-                <section class="tiny-dialog fader" ng-show="profileGalleryCtrl.selectedPet">
-                    <h3>{{profileGalleryCtrl.selectedPet.name}}</h3>
+                <section class="tiny-dialog fader" ng-show="gallery.selectedPet">
+                    <h3>{{gallery.selectedPet.name}}</h3>
 
-                    <p>{{profileGalleryCtrl.selectedPet.profileText}}</p>
+                    <p>{{gallery.selectedPet.profileText}}</p>
 
                     <div class="dialog-centered">
-                        <button type="button" class="btn btn-primary btn-lg dialog-centered" ng-click="profileGalleryCtrl.setupDate()">Setup date</button>
+                        <button type="button" class="btn btn-primary btn-lg dialog-centered" ng-click="gallery.setupDate()">Setup date</button>
                     </div>
                 </section>
             </div>

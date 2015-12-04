@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="petcupidApp" ng-strict-di>
+<html ng-app="petcupidApp" ng-controller="PetcupidAppCtrl" ng-strict-di>
 
 <head>
     <meta charset="utf-8">
@@ -11,14 +11,13 @@
     <header class="colored-background header">
         <img class="logo" src="assets/img/heart.png">PetCupid
     </header>
-    <div class="fader" ui-view></div>
+    <div class="fader" ng-viewport></div>
     <footer class="hugs-bottom colored-background footer">
         <p>&copy; 2015 Cegeka</p>
     </footer>
     <!-- Vendor -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDv8dgwdaY49CHc_dqGyxBFVX9mqVx91Iw&sensor=false"></script>
     <script src="vendor/angular.js"></script>
-    <script src="vendor/angular-ui-router.js"></script>
     <script src="vendor/router.es5.js"></script>
     <!-- Bootstrapping -->
     <script src="app/app.module.js"></script>

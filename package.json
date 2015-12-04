@@ -29,7 +29,6 @@
     "url": "https://github.com/cegeka/dev-workflow-skeleton/issues"
   },
   "devDependencies": {
-    "angular-new-router": "~0.5.3",
     "babel-core": "~6.3.2",
     "babel-preset-es2015": "~6.1.18",
     "del": "~2.1.0",
@@ -47,5 +46,8 @@
     "presets": [
       "es2015"
     ]
+  },
+  "dependencies": {
+    "angular-new-router": "~0.5.3"
   }
 }

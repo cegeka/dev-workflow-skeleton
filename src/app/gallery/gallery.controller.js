@@ -1,5 +1,5 @@
 /* global angular */
-angular.module("app.gallery").controller("ProfileGalleryCtrl", function(Pet, $state) {
+angular.module("app.gallery").controller("GalleryCtrl", function(Pet) {
     "use strict";
 
     this.pets = Pet.query();
@@ -20,6 +20,6 @@ angular.module("app.gallery").controller("ProfileGalleryCtrl", function(Pet, $st
     };
 
     this.setupDate = function () {
-        $state.go("setupDate", { name: this.selectedPet.name });
+       // $state.go("setupDate", { name: this.selectedPet.name });
     };
 });
