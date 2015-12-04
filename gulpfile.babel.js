@@ -2,6 +2,7 @@ import gulp from "gulp";
 import runSequence from "run-sequence";
 import del from "del";
 import babel from "gulp-babel";
+import uglify from "gulp-uglify";
 import mainBowerFiles from "main-bower-files";
 
 gulp.task("default", callback =>
@@ -22,6 +23,7 @@ gulp.task("build:app:js", () =>
     .pipe(babel({
         presets: ["es2015"]
     }))
+    .pipe(uglify({ mangle: false }))
     .pipe(gulp.dest("dist"))
 );
 
