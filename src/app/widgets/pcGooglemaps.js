@@ -8,11 +8,11 @@ angular.module("app.widgets").directive("pcGooglemaps", function() {
             "marker": "="
         },
         link(scope, element) {
-            var map = new google.maps.Map(element[0], { // const
+            let map = new google.maps.Map(element[0], {
                 center: new google.maps.LatLng(50.85, 4.35),
                 zoom: 8
             });
-            var marker = new google.maps.Marker({ //const
+            let marker = new google.maps.Marker({
                 position: new google.maps.LatLng(scope.marker.lat, scope.marker.long),
                 map,
                 draggable: true

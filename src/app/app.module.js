@@ -1,8 +1,5 @@
-angular.module("petcupidApp", [
-
-    /* Angular modules */
-    "ngNewRouter",
-
+angular
+.module("petcupidApp", [
     /* Shared modules */
     "app.core",
     "app.widgets",
