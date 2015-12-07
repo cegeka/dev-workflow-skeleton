@@ -1,4 +1,3 @@
-/* global angular */
 angular.module("app.gallery").controller("GalleryCtrl", function(Pet, $location) {
     "use strict";
 

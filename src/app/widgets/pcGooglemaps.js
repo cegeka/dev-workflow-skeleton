@@ -1,4 +1,4 @@
-/* global angular, google */
+/* global google */
 angular.module("app.widgets").directive("pcGooglemaps", function() {
     "use strict";
 
@@ -14,7 +14,7 @@ angular.module("app.widgets").directive("pcGooglemaps", function() {
             });
             var marker = new google.maps.Marker({ //const
                 position: new google.maps.LatLng(scope.marker.lat, scope.marker.long),
-                map: map,
+                map,
                 draggable: true
             });
             google.maps.event.addListener(marker, "dragend", function() {

@@ -1,4 +1,3 @@
-/* global angular */
 angular.module("app.setup-date").controller("SetupDateCtrl", function(Pet, $routeParams, $location) {
     "use strict";
 

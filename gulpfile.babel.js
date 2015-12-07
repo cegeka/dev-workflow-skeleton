@@ -4,6 +4,7 @@ import del from "del";
 import babel from "gulp-babel";
 import ngAnnotate from "gulp-ng-annotate";
 import uglify from "gulp-uglify";
+import eslint from "gulp-eslint";
 import imagemin from "gulp-imagemin";
 import pngquant from "imagemin-pngquant";
 import mainBowerFiles from "main-bower-files";
@@ -16,7 +17,7 @@ gulp.task("clean", () =>
     del("dist/")
 );
 
-gulp.task("build", ["build:app", "build:assets", "build:vendor"]);
+gulp.task("build", ["build:app", "build:assets", "build:vendor", "lint"]);
 
 gulp.task("build:app", ["build:app:js", "build:app:html"]);
 
@@ -29,9 +30,9 @@ gulp.task("build:app:js", () =>
     .src("src/**/*.js")
     .pipe(babel({
         presets: ["es2015"]
-}))
+    }))
     .pipe(ngAnnotate())
-    //.pipe(uglify())
+    .pipe(uglify())
     .pipe(gulp.dest("dist"))
 );
 
@@ -74,3 +75,10 @@ gulp.task("build:vendor:npm", () =>
     .src("node_modules/angular-new-router/dist/router.es5.js")
     .pipe(gulp.dest("dist/vendor"))
 );
+
+gulp.task("lint", () => {
+    return gulp.src(["gulpfile.babel.js", "src/app/**/*.js"])
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
+});

@@ -1,4 +1,3 @@
-/* global angular */
 angular.module("app.core").factory("Pet", function() {
     "use strict";
 

@@ -1,4 +1,4 @@
-/* global angular, google */
+/* global google */
 angular.module("app.widgets").directive("pcReverseGeocode", function() {
     "use strict";
 

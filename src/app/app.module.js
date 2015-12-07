@@ -1,4 +1,3 @@
-/* global angular */
 angular.module("petcupidApp", [
 
     /* Angular modules */
