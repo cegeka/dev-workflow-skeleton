@@ -61,7 +61,7 @@ gulp.task("build:app:js", () =>
     }))
     .pipe(ngAnnotate())
     //.pipe(uglify())
-    .pipe(gulp.dest(paths.dest))
+    .pipe(gulp.dest(dirs.dest))
 );
 
 gulp.task("build:app:html", () =>
