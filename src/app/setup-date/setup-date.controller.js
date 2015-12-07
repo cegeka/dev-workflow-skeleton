@@ -1,15 +1,15 @@
 /* global angular */
-angular.module("app.setup-date").controller("SetupDateCtrl", function(pet, $state) {
+angular.module("app.setup-date").controller("SetupDateCtrl", function(Pet, $routeParams, $location) {
     "use strict";
 
-    this.pet = pet;
+    this.pet = Pet.get($routeParams.name);
 
     this.cancel = function() {
-        $state.go("gallery");
+        $location.path(`/`);
     };
 
     this.submit = function() {
-        $state.go("gallery");
+        $location.path(`/`);
     };
 
     this.selectedLocation = {

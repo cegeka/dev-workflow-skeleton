@@ -1,5 +1,5 @@
 /* global angular */
-angular.module("app.gallery").controller("GalleryCtrl", function(Pet) {
+angular.module("app.gallery").controller("GalleryCtrl", function(Pet, $location) {
     "use strict";
 
     this.pets = Pet.query();
@@ -20,6 +20,6 @@ angular.module("app.gallery").controller("GalleryCtrl", function(Pet) {
     };
 
     this.setupDate = function () {
-       // $state.go("setupDate", { name: this.selectedPet.name });
+        $location.path(`/pets/${this.selectedPet.name}`);
     };
 });
