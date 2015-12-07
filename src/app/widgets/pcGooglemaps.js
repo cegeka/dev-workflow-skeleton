@@ -13,7 +13,7 @@ angular.module("app.widgets").directive("pcGooglemaps", function() {
                 zoom: 8
             });
             let marker = new google.maps.Marker({
-                position: new google.maps.LatLng(scope.marker.lat, scope.marker.long),
+                position: new google.maps.LatLng(50.85, 4.35),
                 map,
                 draggable: true
             });
