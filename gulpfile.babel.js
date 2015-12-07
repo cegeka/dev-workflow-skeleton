@@ -3,7 +3,7 @@ import runSequence from "run-sequence";
 import del from "del";
 import babel from "gulp-babel";
 import ngAnnotate from "gulp-ng-annotate";
-import uglify from "gulp-uglify";
+// import uglify from "gulp-uglify";
 import eslint from "gulp-eslint";
 import imagemin from "gulp-imagemin";
 import pngquant from "imagemin-pngquant";
@@ -32,7 +32,7 @@ gulp.task("build:app:js", () =>
         presets: ["es2015"]
     }))
     .pipe(ngAnnotate())
-    .pipe(uglify())
+    //.pipe(uglify())
     .pipe(gulp.dest("dist"))
 );
 
