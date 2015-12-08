@@ -8,6 +8,7 @@ let camelToDash = name => {
 let camelToCtrl = name => `${name[0].toUpperCase()}${name.substring(1)}Ctrl`;
 
 export default $componentLoaderProvider => {
+    "ngInject";
     $componentLoaderProvider.setTemplateMapping(component => `app/${camelToDash(component)}/${camelToDash(component)}.html`);
     $componentLoaderProvider.setCtrlNameMapping(component => camelToCtrl(component));
 };

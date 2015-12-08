@@ -1,6 +1,7 @@
-angular
-    .module("petcupidApp")
-    .controller("PetcupidAppCtrl", function($router) {
+export default class PetcupidAppCtrl {
+
+    constructor($router) {
+        "ngInject";
         $router.config([{
             path: "/",
             component: "gallery"
@@ -8,4 +9,5 @@ angular
             path: "/pets/:name",
             component: "setupDate"
         }]);
-    });
+    }
+}

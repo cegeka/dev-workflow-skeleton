@@ -1,18 +1,25 @@
-angular.module("app.setup-date").controller("SetupDateCtrl", function(Pet, $routeParams, $location) {
-    "use strict";
+export default class SetupDateCtrl {
+    
+    constructor(petService, $routeParams, $location) {
+        "ngInject";
+        this.petService = petService;
+        this.routeParams = $routeParams;
+        this.location = $location;
+    }
+    
+    activate(){
+        this.pet = this.petService.get(this.routeParams.name);
+        this.selectedLocation = {
+            lat: 50.85,
+            long: 4.35
+        };
+    }
+    
+    cancel() {
+        this.location.path(`/`);
+    }
 
-    this.pet = Pet.get($routeParams.name);
-
-    this.cancel = function() {
-        $location.path(`/`);
-    };
-
-    this.submit = function() {
-        $location.path(`/`);
-    };
-
-    this.selectedLocation = {
-        lat: 50.85,
-        long: 4.35
-    };
-});
+    submit() {
+        this.location.path(`/`);
+    }
+}

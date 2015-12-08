@@ -30,7 +30,7 @@
     <!-- Core -->
     <script src="app/core/core.module.js"></script>
     <script src="app/core/core.config.js"></script>
-    <script src="app/core/pet.service.js"></script>
+    <script src="app/core/core.pet.service.js"></script>
     <!-- Gallery -->
     <script src="app/gallery/gallery.module.js"></script>
     <script src="app/gallery/gallery.controller.js"></script>
@@ -39,8 +39,11 @@
     <script src="app/setup-date/setup-date.controller.js"></script>
     <!-- Widgets -->
     <script src="app/widgets/widgets.module.js"></script>
-    <script src="app/widgets/pcGooglemaps.js"></script>
-    <script src="app/widgets/pcReverseGeocode.js"></script>
+    <script src="app/widgets/widgets.google-maps.directive.js"></script>
+    <script src="app/widgets/widgets.reverse-geocode.directive.js"></script>
+    <script>
+        System.import("app.module");
+    </script>
 </body>
 
 </html>

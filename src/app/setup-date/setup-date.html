@@ -8,11 +8,11 @@
                     </div>
                     <h3>{{setupDate.pet.name}}</h3>
                     <p>{{setupDate.pet.profileText}}</p>
-                    <div pc-reverse-geocode="setupDate.selectedLocation"></div>
+                    <pc-reverse-geocode position="setupDate.selectedLocation"></pc-reverse-geocode>
                 </div>
                 <div class="map">
                     <em>Drag and drop to select the park where you want to play with {{setupDate.pet.name}}</em>
-                    <div class="map-container" pc-googlemaps marker="setupDate.selectedLocation"></div>
+                    <div class="map-container" pc-google-maps marker="setupDate.selectedLocation"></div>
                 </div>
                 <div class="clearfix">
                     <button type="button" class="btn" ng-click="setupDate.cancel()">Cancel</button>

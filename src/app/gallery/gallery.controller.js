@@ -1,24 +1,30 @@
-angular.module("app.gallery").controller("GalleryCtrl", function(Pet, $location) {
-    "use strict";
+export default class GalleryCtrl {
+    
+    constructor(petService, $location) {
+        "ngInject";
+        this.petService = petService;
+        this.location = $location;
+    }
 
-    this.pets = Pet.query();
-    this.searchCriteria = {
-        $: "",
-        kind: ""
-    };
-
-    this.selectedPet = null;
-
-    this.selectPet = function ($event, newPet) {
+    activate() {
+        this.pets = this.petService.query();
+        this.searchCriteria = {
+            $: "",
+            kind: ""
+        };
+        this.selectedPet = null;
+    }
+    
+    selectPet($event, newPet) {
         this.selectedPet = newPet;
         $event.stopPropagation();
-    };
+    }
 
-    this.deselectPet = function () {
+    deselectPet() {
         this.selectedPet = null;
-    };
+    }
 
-    this.setupDate = function () {
-        $location.path(`/pets/${this.selectedPet.name}`);
-    };
-});
+    setupDate() {
+        this.location.path(`/pets/${this.selectedPet.name}`);
+    }
+}

@@ -1,17 +1,7 @@
-let camelToDash = name => {
-    const UPPERCASE = /([A-Z])/g;
-    let upperCaseToDashLowerCase = $1 => `-${$1.toLowerCase()}`;
+import routerConfig from "core/core.config";
+import PetService from "core/core.pet.service";
 
-    return name.replace(UPPERCASE, upperCaseToDashLowerCase);
-};
-
-let camelToCtrl = name => `${name[0].toUpperCase()}${name.substring(1)}Ctrl`;
-
-let routerConfig = $componentLoaderProvider => {
-    $componentLoaderProvider.setTemplateMapping(component => `app/${camelToDash(component)}/${camelToDash(component)}.html`);
-    $componentLoaderProvider.setCtrlNameMapping(component => camelToCtrl(component));
-};
-
-angular
+export default angular
     .module("app.core", ["ngNewRouter"])
-    .config(routerConfig);
+    .config(routerConfig)
+    .service("petService", PetService);

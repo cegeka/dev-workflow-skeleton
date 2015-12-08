@@ -1,8 +1,7 @@
-angular.module("app.core").factory("Pet", function() {
-    "use strict";
+export default class PetService {
 
-    var data = [
-        {
+    constructor() {
+        this.pets = [{
             name: "Princess",
             kind: "chicken",
             img: "assets/img/chicken1.jpg",
@@ -37,22 +36,14 @@ angular.module("app.core").factory("Pet", function() {
             kind: "dog",
             img: "assets/img/dog3.jpg",
             profileText: "Bobby loves to fetch balls and chase rabbits. Great with kids."
-        }
-    ];
-
-    function getPets() {
-        return data;
+        }];
     }
 
-    function getPetWithName(name) {
-        return data
-            .filter(function(pet) {
-                return pet.name === name;
-            })[0];
+    query() {
+        return this.pets;
     }
-
-    return {
-        query: getPets,
-        get: getPetWithName
-    };
-});
+    
+    get(name) {
+        return this.pets.filter(pet => pet.name === name)[0];
+    }
+}

@@ -27,6 +27,7 @@
         "angular/controller-name": [2, "/[A-Z].*Ctrl$/"],
         "angular/di": [0, "$inject"],
         "angular/module-getter": 0,
+        "angular/no-service-method": 0,
 
         "babel/generator-star-spacing": [2, "after"],
         "babel/new-cap": 2,

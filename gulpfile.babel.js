@@ -3,7 +3,7 @@ import runSequence from "run-sequence";
 import del from "del";
 import babel from "gulp-babel";
 import ngAnnotate from "gulp-ng-annotate";
-import uglify from "gulp-uglify";
+// import uglify from "gulp-uglify";
 import eslint from "gulp-eslint";
 import imagemin from "gulp-imagemin";
 import pngquant from "imagemin-pngquant";
@@ -21,7 +21,7 @@ const dirs = {
 const paths = {
     vendor: `${dirs.dest}/vendor`,
     html: "src/**/*.html",
-    js: "src/**/*.js",
+    js: "src/app/**/*.js",
     css: "src/assets/css/*",
     img: "src/assets/img/*",
     ngNewRouter: `node_modules/angular-new-router/dist/router.es5.js`,
@@ -38,7 +38,7 @@ gulp.task("clean", () =>
 );
 
 gulp.task("dev", callback =>
-    runSequence("clean", "build", "watch", "serve", callback)
+    runSequence("clean", ["build", "watch"], "serve", callback)
 );
 
 gulp.task("build", ["build:app", "build:assets", "build:vendor", "lint"]);
@@ -61,12 +61,14 @@ gulp.task("build:app:js", () =>
     gulp
     .src(paths.js)
     .pipe(babel({
-        presets: ["es2015"]
+        moduleIds: true,
+        presets: ["es2015"],
+        plugins: ["transform-es2015-modules-systemjs"]
     }))
     .on("error", handleError)
     .pipe(ngAnnotate())
-    .pipe(uglify())
-    .pipe(gulp.dest(dirs.dest))
+    // .pipe(uglify())
+    .pipe(gulp.dest(`${dirs.dest}/app`))
 );
 
 gulp.task("build:app:html", () =>
