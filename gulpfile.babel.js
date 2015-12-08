@@ -38,7 +38,7 @@ gulp.task("clean", () =>
 );
 
 gulp.task("dev", callback =>
-    runSequence("clean","build", "watch", "serve", callback)
+    runSequence("clean", "build", "watch", "serve", callback)
 );
 
 gulp.task("build", ["build:app", "build:assets", "build:vendor", "lint"]);
