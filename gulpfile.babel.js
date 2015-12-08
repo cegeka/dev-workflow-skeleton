@@ -10,6 +10,7 @@ import pngquant from "imagemin-pngquant";
 import mainBowerFiles from "main-bower-files";
 import browserSync from "browser-sync";
 import gutil from "gulp-util";
+import concat from "gulp-concat";
 
 const server = browserSync.create("dev-workflow-skeleton");
 
@@ -68,6 +69,7 @@ gulp.task("build:app:js", () =>
     .on("error", handleError)
     .pipe(ngAnnotate())
     // .pipe(uglify())
+    .pipe(concat("main.js"))
     .pipe(gulp.dest(`${dirs.dest}/app`))
 );
 

@@ -4,7 +4,6 @@
 <head>
     <base href="/">
     <meta charset="utf-8">
-    <base href="/" />
     <title>PetCupid</title>
     <link rel="stylesheet" href="assets/css/main.css">
 </head>
@@ -25,22 +24,8 @@
     <script src="vendor/angular.js"></script>
     <script src="vendor/router.es5.js"></script>
     <!-- Bootstrapping -->
-    <script src="app/app.module.js"></script>
-    <script src="app/app.route.js"></script>
-    <!-- Core -->
-    <script src="app/core/core.module.js"></script>
-    <script src="app/core/core.config.js"></script>
-    <script src="app/core/core.pet.service.js"></script>
-    <!-- Gallery -->
-    <script src="app/gallery/gallery.module.js"></script>
-    <script src="app/gallery/gallery.controller.js"></script>
-    <!-- Setup-date -->
-    <script src="app/setup-date/setup-date.module.js"></script>
-    <script src="app/setup-date/setup-date.controller.js"></script>
-    <!-- Widgets -->
-    <script src="app/widgets/widgets.module.js"></script>
-    <script src="app/widgets/widgets.google-maps.directive.js"></script>
-    <script src="app/widgets/widgets.reverse-geocode.directive.js"></script>
+    <script src="app/main.js"></script>
+    <!-- Import app module (clean up?) -->
     <script>
         System.import("app.module");
     </script>
