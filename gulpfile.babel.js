@@ -37,7 +37,9 @@ gulp.task("clean", () =>
     del(`${dirs.dest}/`)
 );
 
-gulp.task("dev", ["build", "watch", "serve"]);
+gulp.task("dev", callback =>
+    runSequence("clean","build", "watch", "serve", callback)
+);
 
 gulp.task("build", ["build:app", "build:assets", "build:vendor", "lint"]);
 
