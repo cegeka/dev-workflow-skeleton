@@ -59,9 +59,7 @@ gulp.task("build:app:js", () =>
     gulp
     .src(paths.js)
     .pipe(babel({
-        moduleIds: true,
-        presets: ["es2015"],
-        plugins: ["transform-es2015-modules-systemjs"]
+        presets: ["es2015"]
     }))
     .on("error", handleError)
     .pipe(ngAnnotate())

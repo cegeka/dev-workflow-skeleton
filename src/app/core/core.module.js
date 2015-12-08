@@ -1,4 +1,16 @@
-import routerConfig from "app/core/core.config";
+let camelToDash = name => {
+    const UPPERCASE = /([A-Z])/g;
+    let upperCaseToDashLowerCase = $1 => `-${$1.toLowerCase()}`;
+
+    return name.replace(UPPERCASE, upperCaseToDashLowerCase);
+};
+
+let camelToCtrl = name => `${name[0].toUpperCase()}${name.substring(1)}Ctrl`;
+
+let routerConfig = $componentLoaderProvider => {
+    $componentLoaderProvider.setTemplateMapping(component => `app/${camelToDash(component)}/${camelToDash(component)}.html`);
+    $componentLoaderProvider.setCtrlNameMapping(component => camelToCtrl(component));
+};
 
 angular
     .module("app.core", ["ngNewRouter"])
