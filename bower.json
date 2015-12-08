@@ -1,28 +1,39 @@
 {
-    "name": "dev-workflow-skeleton",
-    "description": "Innovation center to setup a small project that can be used to quickly bootstrap the development of new applications.",
-    "homepage": "https://github.com/cegeka/dev-workflow-skeleton",
-    "authors": [
-    {
-        "name": "Dieter Van Peer",
-        "email": "dieter.vanpeer@cegeka.be",
-        "homepage": "https://github.com/dietervanpeer"
+  "name": "dev-workflow-skeleton",
+  "description": "Innovation center to setup a small project that can be used to quickly bootstrap the development of new applications.",
+  "homepage": "https://github.com/cegeka/dev-workflow-skeleton",
+  "authors": [{
+    "name": "Dieter Van Peer",
+    "email": "dieter.vanpeer@cegeka.be",
+    "homepage": "https://github.com/dietervanpeer"
+  }, {
+    "name": "Bruno Lannoo",
+    "email": "bruno.lannoo@cegeka.be",
+    "homepage": "https://github.com/BLannoo"
+  }, {
+    "name": "Gilliam Flebus",
+    "email": "gilliam.flebus@cegeka.be",
+    "homepage": "https://github.com/Gi11i4m"
+  }],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cegeka/dev-workflow-skeleton.git"
+  },
+  "dependencies": {
+    "angular": "~1.4.8",
+    "es6-module-loader": "~0.17.8",
+    "system.js": "~0.19.6"
+  },
+  "overrides": {
+    "es6-module-loader": {
+      "main": [
+        "./dist/es6-module-loader.src.js"
+      ]
     },
-    {
-        "name": "Bruno Lannoo",
-        "email": "bruno.lannoo@cegeka.be",
-        "homepage": "https://github.com/BLannoo"
-    },
-    {
-        "name": "Gilliam Flebus",
-        "email": "gilliam.flebus@cegeka.be",
-        "homepage": "https://github.com/Gi11i4m"
-    }],
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/cegeka/dev-workflow-skeleton.git"
-    },
-    "dependencies": {
-        "angular": "~1.4.8"
+    "system.js": {
+      "main": [
+        "./dist/system.src.js"
+      ]
     }
+  }
 }

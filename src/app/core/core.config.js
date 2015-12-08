@@ -7,9 +7,7 @@ let camelToDash = name => {
 
 let camelToCtrl = name => `${name[0].toUpperCase()}${name.substring(1)}Ctrl`;
 
-angular
-    .module("app.core")
-    .config($componentLoaderProvider => {
-        $componentLoaderProvider.setTemplateMapping(component => `app/${camelToDash(component)}/${camelToDash(component)}.html`);
-        $componentLoaderProvider.setCtrlNameMapping(component => camelToCtrl(component));
-    });
+export default $componentLoaderProvider => {
+    $componentLoaderProvider.setTemplateMapping(component => `app/${camelToDash(component)}/${camelToDash(component)}.html`);
+    $componentLoaderProvider.setCtrlNameMapping(component => camelToCtrl(component));
+};

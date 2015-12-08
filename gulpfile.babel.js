@@ -9,6 +9,7 @@ import imagemin from "gulp-imagemin";
 import pngquant from "imagemin-pngquant";
 import mainBowerFiles from "main-bower-files";
 import browserSync from "browser-sync";
+import gutil from "gulp-util";
 
 const server = browserSync.create("dev-workflow-skeleton");
 
@@ -23,7 +24,8 @@ const paths = {
     js: "src/**/*.js",
     css: "src/assets/css/*",
     img: "src/assets/img/*",
-    ngNewRouter: `node_modules/angular-new-router/${dirs.dest}/router.es5.js`,
+    ngNewRouter: `node_modules/angular-new-router/dist/router.es5.js`,
+    babelPolyfill: `node_modules/babel-polyfill/dist/polyfill.js`,
     bower: "bower.json"
 };
 
@@ -57,8 +59,11 @@ gulp.task("build:app:js", () =>
     gulp
     .src(paths.js)
     .pipe(babel({
-        presets: ["es2015"]
+        moduleIds: true,
+        presets: ["es2015"],
+        plugins: ["transform-es2015-modules-systemjs"]
     }))
+    .on("error", handleError)
     .pipe(ngAnnotate())
     .pipe(uglify())
     .pipe(gulp.dest(dirs.dest))
@@ -100,7 +105,7 @@ gulp.task("build:vendor:bower", () =>
 
 gulp.task("build:vendor:npm", () =>
     gulp
-    .src(paths.ngNewRouter)
+    .src([paths.ngNewRouter, paths.babelPolyfill])
     .pipe(gulp.dest(paths.vendor))
 );
 
@@ -113,12 +118,17 @@ gulp.task("lint", () =>
 
 gulp.task("serve", () =>
     server.init({
-        ui: {
-            port: 8081
-        },
+        // ui: {
+        //     port: 8081
+        // },
         port: 8080,
         server: {
             baseDir: dirs.dest
         }
     })
 );
+
+function handleError(err) {
+    gutil.log(err);
+    this.emit("end");
+}
