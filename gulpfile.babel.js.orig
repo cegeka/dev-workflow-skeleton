@@ -41,7 +41,11 @@ const paths = {
 let test = singleRunEnabled => {
     return callback => {
         new karma.Server({
-            configFile: `${__dirname}/test/unit/${paths.karma}`,
+<<<<<<< HEAD
+            configFile: `${__dirname}/test/${paths.karma}`,
+=======
+            configFile: `${__dirname}/test/unit/karma.conf.js`,
+>>>>>>> moved karma tests to dist
             singleRun: singleRunEnabled
         },
         callback)
@@ -66,7 +70,21 @@ gulp.task("build", ["build:app", "build:assets", "build:vendor", "build:test"], 
 
 gulp.task("build:app", ["jslint", "build:app:js", "build:app:html"]);
 
+<<<<<<< HEAD
 gulp.task("build:assets", ["csslint", "build:assets:css", "build:assets:img"]);
+=======
+gulp.task("build:test", () =>
+    gulp.src(paths.test)
+    .pipe(babel({
+        moduleIds: true,
+        presets: ["es2015"],
+        plugins: ["transform-es2015-modules-systemjs"]
+    }))
+    .pipe(gulp.dest(`${dirs.dest}/test/unit`))
+);
+
+gulp.task("build:assets", ["build:assets:css", "build:assets:img"]);
+>>>>>>> moved karma tests to dist
 
 gulp.task("build:vendor", ["build:vendor:npm", "build:vendor:bower"]);
 
@@ -155,7 +173,7 @@ gulp.task("build:test", () =>
         presets: ["es2015"],
         plugins: ["transform-es2015-modules-systemjs"]
     }))
-    .pipe(gulp.dest(`${dirs.dest}/test/unit`))
+    .pipe(gulp.dest(`${dirs.dest}/test`))
 );
 
 gulp.task("serve", () =>
