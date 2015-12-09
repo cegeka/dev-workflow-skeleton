@@ -14,8 +14,7 @@ import concat from "gulp-concat";
 import karma from "karma";
 import csslint from "gulp-csslint";
 import plumber from "gulp-plumber";
-// import gutil from "gulp-util";
-// import uglify from "gulp-uglify";
+import uglify from "gulp-uglify";
 
 const server = browserSync.create("dev-workflow-skeleton");
 
@@ -27,21 +26,22 @@ const dirs = {
 const paths = {
     vendor: `${dirs.dest}/vendor`,
     html: "src/**/*.html",
-    js: "src/app/**/*.js",
+    srcAppJs: "src/app/**/*.js",
+    testUnitJs: "test/unit/**/*.js",
+    testE2EJs: "test/e2e/**/*.js",
     test: "test/unit/**/*.spec.js",
     css: "src/assets/css/*",
     img: "src/assets/img/*",
     ngNewRouter: `node_modules/angular-new-router/dist/router.es5.js`,
     babelPolyfill: `node_modules/babel-polyfill/dist/polyfill.js`,
     bower: "bower.json",
-    gulp: "gulpfile.babel.js",
-    karma: "karma.conf.js"
+    gulp: "gulpfile.babel.js"
 };
 
 let test = singleRunEnabled => {
     return callback => {
         new karma.Server({
-            configFile: `${__dirname}/test/unit/${paths.karma}`,
+            configFile: `${__dirname}/test/unit/karma.conf.js`,
             singleRun: singleRunEnabled
         },
         callback)
@@ -62,9 +62,9 @@ gulp.task("dev", callback =>
     runSequence("clean", ["build", "watch"], "serve", callback)
 );
 
-gulp.task("build", ["build:app", "build:assets", "build:vendor", "build:test"], testSingleRun);
+gulp.task("build", ["build:app", "build:assets", "build:vendor", "build:test", "jslint"], testSingleRun);
 
-gulp.task("build:app", ["jslint", "build:app:js", "build:app:html"]);
+gulp.task("build:app", ["build:app:js", "build:app:html"]);
 
 gulp.task("build:assets", ["csslint", "build:assets:css", "build:assets:img"]);
 
@@ -72,7 +72,7 @@ gulp.task("build:vendor", ["build:vendor:npm", "build:vendor:bower"]);
 
 gulp.task("watch", () => {
     gulp.watch(paths.html, ["build:app:html"]);
-    gulp.watch(paths.js, ["jslint", "build:app:js"]);
+    gulp.watch(paths.srcAppJs, ["jslint", "build:app:js"]);
     gulp.watch(paths.css, ["csslint", "build:assets:css"]);
     gulp.watch(paths.img, ["build:assets:img"]);
     gulp.watch(paths.bower, ["build:vendor:bower"]);
@@ -80,7 +80,7 @@ gulp.task("watch", () => {
 
 gulp.task("build:app:js", () =>
     gulp
-    .src(paths.js)
+    .src(paths.srcAppJs)
     .pipe(plumber())
     .pipe(babel({
         moduleIds: true,
@@ -88,7 +88,7 @@ gulp.task("build:app:js", () =>
         plugins: ["transform-es2015-modules-systemjs"]
     }))
     .pipe(ngAnnotate())
-    // .pipe(uglify())
+    .pipe(uglify())
     .pipe(concat("main.js"))
     .pipe(gulp.dest(`${dirs.dest}/app`))
 );
@@ -135,17 +135,17 @@ gulp.task("build:vendor:npm", () =>
 );
 
 gulp.task("jslint", () =>
-    gulp.src([paths.gulp, paths.karma, paths.js])
+    gulp.src([paths.gulp, paths.srcAppJs, paths.testUnitJs, paths.testE2EJs])
     .pipe(eslint())
     .pipe(eslint.format())
-    //.pipe(eslint.failAfterError())
+    .pipe(eslint.failAfterError())
 );
 
 gulp.task("csslint", () =>
     gulp.src(paths.css)
     .pipe(csslint())
     .pipe(csslint.reporter("compact"))
-    //.pipe(csslint.failReporter())
+    // .pipe(csslint.failReporter())
 );
 
 gulp.task("build:test", () =>
@@ -160,10 +160,10 @@ gulp.task("build:test", () =>
 
 gulp.task("serve", () =>
     server.init({
-        // ui: {
-        //     port: 8081
-        // },
         port: 8080,
+        ui: {
+            port: 8081
+        },
         server: {
             baseDir: dirs.dest
         },

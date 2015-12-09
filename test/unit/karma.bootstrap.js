@@ -1,4 +1,4 @@
-/* test/unit/karma.bootstrap.js */
+/* globals __karma__ */
 
 (function bootstrapKarma() {
     function disableKarmaAutoStartUp() {

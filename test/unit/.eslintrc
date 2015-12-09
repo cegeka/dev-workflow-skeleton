@@ -1,6 +1,5 @@
 {
     "env": {
-        "protractor": true,
         "mocha": true
     }
 }
