@@ -15,6 +15,8 @@ import karma from "karma";
 import csslint from "gulp-csslint";
 import plumber from "gulp-plumber";
 import uglify from "gulp-uglify";
+import rename from "gulp-rename";
+import extReplace from "gulp-ext-replace";
 
 const server = browserSync.create("dev-workflow-skeleton");
 
@@ -87,9 +89,12 @@ gulp.task("build:app:js", () =>
         presets: ["es2015"],
         plugins: ["transform-es2015-modules-systemjs"]
     }))
+    .pipe(concat("app.js"))
     .pipe(ngAnnotate())
     .pipe(uglify())
-    .pipe(concat("main.js"))
+    .pipe(rename({
+        suffix: ".min"
+    }))
     .pipe(gulp.dest(`${dirs.dest}/app`))
 );
 
@@ -123,7 +128,13 @@ gulp.task("build:assets:img", () =>
 gulp.task("build:vendor:bower", () =>
     gulp
     .src(mainBowerFiles({
-        checkExistence: true
+        checkExistence: true,
+        filter: "**/*.js"
+    }))
+    .pipe(extReplace(".js", ".src.js"))
+    .pipe(uglify())
+    .pipe(rename({
+        suffix: ".min"
     }))
     .pipe(gulp.dest(paths.vendor))
 );
@@ -131,6 +142,10 @@ gulp.task("build:vendor:bower", () =>
 gulp.task("build:vendor:npm", () =>
     gulp
     .src([paths.ngNewRouter, paths.babelPolyfill])
+    .pipe(uglify())
+    .pipe(rename({
+        suffix: ".min"
+    }))
     .pipe(gulp.dest(paths.vendor))
 );
 

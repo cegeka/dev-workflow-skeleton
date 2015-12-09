@@ -4,9 +4,9 @@ module.exports = function(config) {
     config.set({
         basePath: "../..",
         files: [
-            "dist/vendor/polyfill.js",
-            "dist/vendor/es6-module-loader.src.js",
-            "dist/vendor/system.src.js",
+            "dist/vendor/polyfill.min.js",
+            "dist/vendor/es6-module-loader.min.js",
+            "dist/vendor/system.min.js",
             "dist/app/**/*.js",
             "dist/test/unit/**/*.spec.js",
             "test/unit/karma.bootstrap.js"
