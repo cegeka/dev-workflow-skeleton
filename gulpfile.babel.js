@@ -1,5 +1,4 @@
 /* global __dirname */
-
 import gulp from "gulp";
 import runSequence from "run-sequence";
 import del from "del";
@@ -21,44 +20,56 @@ import sourceMaps from "gulp-sourcemaps";
 
 const server = browserSync.create("dev-workflow-skeleton");
 
+const src = "src";
+const dest = "dist";
+const test = "test";
+
 const dirs = {
-    src: "src",
-    dest: "dist"
+    app: `${dest}/app`,
+    vendor: `${dest}/vendor`,
+    assets: {
+        css: `${dest}/assets/css`,
+        img: `${dest}/assets/img`
+    },
+    test: {
+        unit: `${dest}/${test}/unit`,
+        e2e: `${dest}/${test}/e2e`
+    }
 };
 
 const paths = {
-    vendor: `${dirs.dest}/vendor`,
-    html: "src/**/*.html",
-    srcAppJs: "src/app/**/*.js",
-    testUnitJs: "test/unit/**/*.js",
-    testE2EJs: "test/e2e/**/*.js",
-    test: "test/unit/**/*.spec.js",
-    css: "src/assets/css/*",
-    img: "src/assets/img/*",
+    html: `${src}/**/*.html`,
+    js: `${src}/app/**/*.js`,
+    css: `${src}/assets/css/*`,
+    img: `${src}/assets/img/*`,
+    dest: `${dest}/**/*`,
+    testUnit: `${test}/unit/**/*.spec.js`,
+    testE2e: `${test}/e2e/**/*.spec.js`,
     ngNewRouter: `node_modules/angular-new-router/dist/router.es5.js`,
     babelPolyfill: `node_modules/babel-polyfill/dist/polyfill.js`,
     bower: "bower.json",
-    gulp: "gulpfile.babel.js"
+    gulp: "gulpfile.babel.js",
+    karma: "karma.conf.js"
 };
 
-let test = singleRunEnabled => {
+let runTests = singleRunEnabled => {
     return callback => {
         new karma.Server({
-            configFile: `${__dirname}/test/unit/karma.conf.js`,
+            configFile: `${__dirname}/${test}/unit/${paths.karma}`,
             singleRun: singleRunEnabled
-        },
-        callback)
+        }, callback)
         .start();
     };
 };
-let testSingleRun = test(true);
+
+let testSingleRun = runTests(true);
 
 gulp.task("default", callback =>
     runSequence("clean", "build", callback)
 );
 
 gulp.task("clean", () =>
-    del(dirs.dest)
+    del(dest)
 );
 
 gulp.task("dev", callback =>
@@ -83,7 +94,7 @@ gulp.task("watch", () => {
 
 gulp.task("build:app:js", () =>
     gulp
-    .src(paths.srcAppJs)
+    .src(paths.js)
     .pipe(plumber())
     .pipe(sourceMaps.init())
     .pipe(babel({
@@ -98,34 +109,31 @@ gulp.task("build:app:js", () =>
         suffix: ".min"
     }))
     .pipe(sourceMaps.write("./"))
-    .pipe(gulp.dest(`${dirs.dest}/app`))
+    .pipe(gulp.dest(dirs.app))
 );
 
 gulp.task("build:app:html", () =>
     gulp
     .src(paths.html)
-    .pipe(gulp.dest(dirs.dest))
+    .pipe(gulp.dest(dest))
 );
 
 gulp.task("build:assets:css", () =>
     gulp
-    .src(paths.css, {
-        base: dirs.src
-    })
-    .pipe(gulp.dest(dirs.dest))
+    .src(paths.css)
+    .pipe(concat("main.css"))
+    .pipe(gulp.dest(dirs.assets.css))
 );
 
 gulp.task("build:assets:img", () =>
     gulp
-    .src(paths.img, {
-        base: dirs.src
-    })
+    .src(paths.img)
     .pipe(plumber())
     .pipe(imagemin({
         progressive: true,
         use: [pngquant()]
     }))
-    .pipe(gulp.dest(dirs.dest))
+    .pipe(gulp.dest(dirs.assets.img))
 );
 
 gulp.task("build:vendor:bower", () =>
@@ -141,7 +149,7 @@ gulp.task("build:vendor:bower", () =>
         suffix: ".min"
     }))
     .pipe(sourceMaps.write("./"))
-    .pipe(gulp.dest(paths.vendor))
+    .pipe(gulp.dest(dirs.vendor))
 );
 
 gulp.task("build:vendor:npm", () =>
@@ -153,11 +161,11 @@ gulp.task("build:vendor:npm", () =>
         suffix: ".min"
     }))
     .pipe(sourceMaps.write("./"))
-    .pipe(gulp.dest(paths.vendor))
+    .pipe(gulp.dest(dirs.vendor))
 );
 
 gulp.task("jslint", () =>
-    gulp.src([paths.gulp, paths.srcAppJs, paths.testUnitJs, paths.testE2EJs])
+    gulp.src([paths.gulp, paths.js, paths.testUnit, paths.testE2e])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError())
@@ -171,7 +179,7 @@ gulp.task("csslint", () =>
 );
 
 gulp.task("build:test", () =>
-    gulp.src(paths.test)
+    gulp.src(paths.testUnit)
     .pipe(sourceMaps.init())
     .pipe(babel({
         moduleIds: true,
@@ -179,7 +187,7 @@ gulp.task("build:test", () =>
         plugins: ["transform-es2015-modules-systemjs"]
     }))
     .pipe(sourceMaps.init())
-    .pipe(gulp.dest(`${dirs.dest}/test/unit`))
+    .pipe(gulp.dest(dirs.test.unit))
 );
 
 gulp.task("serve", () =>
@@ -189,8 +197,8 @@ gulp.task("serve", () =>
             port: 8081
         },
         server: {
-            baseDir: dirs.dest
+            baseDir: dest
         },
-        files: `${dirs.dest}/**/*`
+        files: paths.dest
     })
 );
