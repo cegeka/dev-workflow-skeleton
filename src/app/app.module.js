@@ -14,5 +14,4 @@ angular
         GalleryModule.name,
         SetupDateModule.name
     ])
-    .controller("PetcupidAppCtrl", PetcupidAppCtrl)
-    .config($locationProvider => $locationProvider.html5Mode(true));
+    .controller("PetcupidAppCtrl", PetcupidAppCtrl);
