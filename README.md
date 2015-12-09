@@ -27,7 +27,11 @@ The goal of this innovation center is to set up a small project that can be used
 5. Install [Bower](http://bower.io/) 
   1. `npm install -g bower`
 6. Install [Gulp](http://gulpjs.com/)
-  2. `npm install -g gulp`
+  1. `npm install -g gulp`
+7. Install [Java](http://www.webupd8.org/2012/09/install-oracle-java-8-in-ubuntu-via-ppa.html)
+  1. `sudo add-apt-repository ppa:webupd8team/java`
+  2. `sudo apt-get update`
+  3. `sudo apt-get install oracle-java8-installer `
 
 
 ### Project Setup

@@ -1,4 +1,4 @@
-    {
+{
     "root": true,
     "env": {
         "es6": true
@@ -22,7 +22,7 @@
         "object-shorthand": 0,
         "arrow-parens": 0,
         "no-await-in-loop": 0,
-    
+
         "angular/controller-as-vm": 0,
         "angular/controller-name": [2, "/[A-Z].*Ctrl$/"],
         "angular/di": [0, "$inject"],

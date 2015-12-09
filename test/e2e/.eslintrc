@@ -1,0 +1,6 @@
+{
+    "env": {
+        "protractor": true,
+        "jasmine": true
+    }
+}

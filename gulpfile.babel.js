@@ -141,7 +141,7 @@ gulp.task("build:vendor:npm", () =>
 );
 
 gulp.task("lint", () =>
-    gulp.src(["gulpfile.babel.js", paths.js])
+    gulp.src(["gulpfile.babel.js", "karma.conf.js", paths.js])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError())
