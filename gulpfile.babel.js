@@ -17,6 +17,7 @@ import plumber from "gulp-plumber";
 import uglify from "gulp-uglify";
 import rename from "gulp-rename";
 import extReplace from "gulp-ext-replace";
+import sourceMaps from "gulp-sourcemaps";
 
 const server = browserSync.create("dev-workflow-skeleton");
 
@@ -84,6 +85,7 @@ gulp.task("build:app:js", () =>
     gulp
     .src(paths.srcAppJs)
     .pipe(plumber())
+    .pipe(sourceMaps.init())
     .pipe(babel({
         moduleIds: true,
         presets: ["es2015"],
@@ -95,6 +97,7 @@ gulp.task("build:app:js", () =>
     .pipe(rename({
         suffix: ".min"
     }))
+    .pipe(sourceMaps.write("./"))
     .pipe(gulp.dest(`${dirs.dest}/app`))
 );
 
@@ -132,20 +135,24 @@ gulp.task("build:vendor:bower", () =>
         filter: "**/*.js"
     }))
     .pipe(extReplace(".js", ".src.js"))
+    .pipe(sourceMaps.init())
     .pipe(uglify())
     .pipe(rename({
         suffix: ".min"
     }))
+    .pipe(sourceMaps.write("./"))
     .pipe(gulp.dest(paths.vendor))
 );
 
 gulp.task("build:vendor:npm", () =>
     gulp
     .src([paths.ngNewRouter, paths.babelPolyfill])
+    .pipe(sourceMaps.init())
     .pipe(uglify())
     .pipe(rename({
         suffix: ".min"
     }))
+    .pipe(sourceMaps.write("./"))
     .pipe(gulp.dest(paths.vendor))
 );
 
@@ -165,11 +172,13 @@ gulp.task("csslint", () =>
 
 gulp.task("build:test", () =>
     gulp.src(paths.test)
+    .pipe(sourceMaps.init())
     .pipe(babel({
         moduleIds: true,
         presets: ["es2015"],
         plugins: ["transform-es2015-modules-systemjs"]
     }))
+    .pipe(sourceMaps.init())
     .pipe(gulp.dest(`${dirs.dest}/test/unit`))
 );
 
