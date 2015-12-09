@@ -5,15 +5,17 @@ import runSequence from "run-sequence";
 import del from "del";
 import babel from "gulp-babel";
 import ngAnnotate from "gulp-ng-annotate";
-// import uglify from "gulp-uglify";
 import eslint from "gulp-eslint";
 import imagemin from "gulp-imagemin";
 import pngquant from "imagemin-pngquant";
 import mainBowerFiles from "main-bower-files";
 import browserSync from "browser-sync";
-import gutil from "gulp-util";
 import concat from "gulp-concat";
 import karma from "karma";
+import csslint from "gulp-csslint";
+import plumber from "gulp-plumber";
+// import gutil from "gulp-util";
+// import uglify from "gulp-uglify";
 
 const server = browserSync.create("dev-workflow-skeleton");
 
@@ -31,14 +33,16 @@ const paths = {
     img: "src/assets/img/*",
     ngNewRouter: `node_modules/angular-new-router/dist/router.es5.js`,
     babelPolyfill: `node_modules/babel-polyfill/dist/polyfill.js`,
-    bower: "bower.json"
+    bower: "bower.json",
+    gulp: "gulpfile.babel.js",
+    karma: "karma.conf.js"
 };
 
 let test = singleRunEnabled => {
     return callback => {
         gutil.log("RUN TESTS");
         new karma.Server({
-            configFile: `${__dirname}/test/karma.conf.js`,
+            configFile: `${__dirname}/test/${paths.karma}`,
             singleRun: singleRunEnabled
         },
         callback)
@@ -52,35 +56,25 @@ gulp.task("default", callback =>
 );
 
 gulp.task("clean", () =>
-    del(`${dirs.dest}/`)
+    del(dirs.dest)
 );
 
 gulp.task("dev", callback =>
     runSequence("clean", ["build", "watch"], "serve", callback)
 );
 
-gulp.task("build", ["build:app", "build:test", "build:assets", "build:vendor", "lint"], testSingleRun);
+gulp.task("build", ["build:app", "build:assets", "build:vendor", "build:test"], testSingleRun);
 
-gulp.task("build:app", ["build:app:js", "build:app:html"]);
+gulp.task("build:app", ["jslint", "build:app:js", "build:app:html"]);
 
-gulp.task("build:test", () =>
-    gulp.src(paths.test)
-    .pipe(babel({
-        moduleIds: true,
-        presets: ["es2015"],
-        plugins: ["transform-es2015-modules-systemjs"]
-    }))
-    .pipe(gulp.dest(`${dirs.dest}/test`))
-);
-
-gulp.task("build:assets", ["build:assets:css", "build:assets:img"]);
+gulp.task("build:assets", ["csslint", "build:assets:css", "build:assets:img"]);
 
 gulp.task("build:vendor", ["build:vendor:npm", "build:vendor:bower"]);
 
 gulp.task("watch", () => {
     gulp.watch(paths.html, ["build:app:html"]);
-    gulp.watch(paths.js, ["build:app:js"]);
-    gulp.watch(paths.css, ["build:assets:css"]);
+    gulp.watch(paths.js, ["jslint", "build:app:js"]);
+    gulp.watch(paths.css, ["csslint", "build:assets:css"]);
     gulp.watch(paths.img, ["build:assets:img"]);
     gulp.watch(paths.bower, ["build:vendor:bower"]);
 });
@@ -88,12 +82,12 @@ gulp.task("watch", () => {
 gulp.task("build:app:js", () =>
     gulp
     .src(paths.js)
+    .pipe(plumber())
     .pipe(babel({
         moduleIds: true,
         presets: ["es2015"],
         plugins: ["transform-es2015-modules-systemjs"]
     }))
-    .on("error", handleError)
     .pipe(ngAnnotate())
     // .pipe(uglify())
     .pipe(concat("main.js"))
@@ -119,6 +113,7 @@ gulp.task("build:assets:img", () =>
     .src(paths.img, {
         base: dirs.src
     })
+    .pipe(plumber())
     .pipe(imagemin({
         progressive: true,
         use: [pngquant()]
@@ -140,11 +135,28 @@ gulp.task("build:vendor:npm", () =>
     .pipe(gulp.dest(paths.vendor))
 );
 
-gulp.task("lint", () =>
-    gulp.src(["gulpfile.babel.js", "karma.conf.js", paths.js])
+gulp.task("jslint", () =>
+    gulp.src([paths.gulp, paths.karma, paths.js])
     .pipe(eslint())
     .pipe(eslint.format())
-    .pipe(eslint.failAfterError())
+    //.pipe(eslint.failAfterError())
+);
+
+gulp.task("csslint", () =>
+    gulp.src(paths.css)
+    .pipe(csslint())
+    .pipe(csslint.reporter("compact"))
+    //.pipe(csslint.failReporter())
+);
+
+gulp.task("build:test", () =>
+    gulp.src(paths.test)
+    .pipe(babel({
+        moduleIds: true,
+        presets: ["es2015"],
+        plugins: ["transform-es2015-modules-systemjs"]
+    }))
+    .pipe(gulp.dest(`${dirs.dest}/test`))
 );
 
 gulp.task("serve", () =>
@@ -155,11 +167,7 @@ gulp.task("serve", () =>
         port: 8080,
         server: {
             baseDir: dirs.dest
-        }
+        },
+        files: `${dirs.dest}/**/*`
     })
 );
-
-function handleError(err) {
-    gutil.log(err);
-    this.emit("end");
-}
