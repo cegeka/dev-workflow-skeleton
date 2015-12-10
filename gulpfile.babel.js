@@ -1,4 +1,5 @@
-/* global __dirname */
+/* global __dirname, process */
+
 import gulp from "gulp";
 import runSequence from "run-sequence";
 import del from "del";
@@ -18,11 +19,11 @@ import extReplace from "gulp-ext-replace";
 import sourceMaps from "gulp-sourcemaps";
 import autoprefixer from "gulp-autoprefixer";
 import minifyCss from "gulp-minify-css";
-// import csslint from "gulp-csslint";
-// import gutil from "gulp-util";
-// import uglify from "gulp-uglify";
+import csslint from "gulp-csslint";
+import gulpProtractor from "gulp-protractor";
 
 const server = browserSync.create("dev-workflow-skeleton");
+const protractor = gulpProtractor.protractor;
 
 const src = "src";
 const dest = "dist";
@@ -56,42 +57,40 @@ const paths = {
     karma: "karma.conf.js"
 };
 
-let runTests = singleRunEnabled => {
-    return callback => {
-        new karma.Server({
-            configFile: `${__dirname}/${test}/unit/${paths.karma}`,
-            singleRun: singleRunEnabled
-        }, callback)
-        .start();
-    };
-};
+gulp.task("default", ["build"]);
 
-let testSingleRun = runTests(true);
+gulp.task("dev", callback =>
+    runSequence(
+        "build",
+        "watch",
+        "serve:start",
+        callback)
+);
 
-gulp.task("default", callback =>
-    runSequence("clean", "build", callback)
+gulp.task("build", callback =>
+    runSequence(
+        "clean",
+        ["build:app", "build:assets", "build:test", "build:vendor", "jslint"],
+        "test:unit",
+        "serve:start",
+        "test:e2e",
+        "serve:stop",
+        callback)
 );
 
 gulp.task("clean", () =>
     del(dest)
 );
 
-gulp.task("dev", callback =>
-    runSequence("clean", ["build", "watch"], "serve", callback)
-);
-
-gulp.task("build", ["build:app", "build:assets", "build:vendor", "build:test", "jslint"], testSingleRun);
-
 gulp.task("build:app", ["build:app:js", "build:app:html"]);
-
-gulp.task("build:assets", ["csslint", "build:assets:css", "build:assets:img"]);
-
+gulp.task("build:assets", ["build:assets:css", "build:assets:img"]);
 gulp.task("build:vendor", ["build:vendor:npm", "build:vendor:bower"]);
+gulp.task("build:test", ["build:test:unit", "build:test:e2e"]);
 
 gulp.task("watch", () => {
     gulp.watch(paths.html, ["build:app:html"]);
     gulp.watch(paths.js, ["jslint", "build:app:js"]);
-    gulp.watch(paths.css, ["csslint", "build:assets:css"]);
+    gulp.watch(paths.css, ["build:assets:css"]);
     gulp.watch(paths.img, ["build:assets:img"]);
     gulp.watch(paths.bower, ["build:vendor:bower"]);
 });
@@ -175,21 +174,7 @@ gulp.task("build:vendor:npm", () =>
     .pipe(gulp.dest(dirs.vendor))
 );
 
-gulp.task("jslint", () =>
-    gulp.src([paths.gulp, paths.js, paths.test.unit, paths.test.e2e])
-    .pipe(eslint())
-    .pipe(eslint.format())
-    .pipe(eslint.failAfterError())
-);
-
-gulp.task("csslint", () =>
-    gulp.src(paths.css)
-    /*.pipe(csslint())
-    .pipe(csslint.reporter("compact"))
-    .pipe(csslint.failReporter())*/
-);
-
-gulp.task("build:test", () =>
+gulp.task("build:test:unit", () =>
     gulp.src(paths.test.unit)
     .pipe(sourceMaps.init())
     .pipe(babel({
@@ -217,15 +202,53 @@ gulp.task("build:test:e2e", () =>
     .pipe(gulp.dest(dirs.test.e2e))
 );
 
-gulp.task("serve", () =>
-    server.init({
-        port: 8080,
-        ui: {
-            port: 8081
+gulp.task("test:unit", callback => {
+    new karma.Server(
+        {
+            configFile: `${__dirname}/${test}/unit/${paths.karma}`,
+            singleRun: true
         },
-        server: {
-            baseDir: dest
-        },
-        files: paths.dest
-    })
+        callback)
+    .start();
+});
+
+gulp.task("test:e2e", () =>
+    gulp
+        .src(`${test}/e2e/protractor.bootstrap.js`)
+        .pipe(protractor({
+            configFile: `${test}/e2e/protractor.conf.js`
+        }))
+        .on("error", () => process.exit(1))
 );
+
+gulp.task("jslint", () =>
+    gulp.src([paths.gulp, paths.js, paths.test.unit, paths.test.e2e])
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError())
+);
+
+gulp.task("csslint", () =>
+    gulp.src(paths.css)
+    .pipe(csslint())
+    .pipe(csslint.reporter("compact"))
+    .pipe(csslint.failReporter())
+);
+
+gulp.task("serve:start", callback =>
+    server.init(
+        {
+            open: false,
+            port: 8080,
+            ui: {
+                port: 8081
+            },
+            server: {
+                baseDir: dest
+            },
+            files: paths.dest
+        },
+        callback)
+);
+
+gulp.task("serve:stop", () => server.exit());

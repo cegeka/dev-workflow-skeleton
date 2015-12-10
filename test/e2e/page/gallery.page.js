@@ -3,7 +3,7 @@ import expect from "config/chai.config";
 export default class GalleryPage {
 
     constructor(){
-        browser.get("http://localhost:8080");
+        browser.get("");
     }
 
     assertOnGalleryPage(){
