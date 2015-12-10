@@ -31,10 +31,8 @@ const test = "test";
 const dirs = {
     app: `${dest}/app`,
     vendor: `${dest}/vendor`,
-    assets: {
-        css: `${dest}/assets/css`,
-        img: `${dest}/assets/img`
-    },
+    css: `${dest}/assets/css`,
+    img: `${dest}/assets/img`,
     test: {
         unit: `${dest}/${test}/unit`,
         e2e: `${dest}/${test}/e2e`
@@ -47,8 +45,10 @@ const paths = {
     css: `${src}/assets/css/*`,
     img: `${src}/assets/img/*`,
     dest: `${dest}/**/*`,
-    testUnit: `${test}/unit/**/*.spec.js`,
-    testE2e: `${test}/e2e/**/*.spec.js`,
+    test: {
+        unit: `${test}/unit/**/*.spec.js`,
+        e2e: `${test}/e2e/**/*.spec.js`
+    },
     ngNewRouter: `node_modules/angular-new-router/dist/router.es5.js`,
     babelPolyfill: `node_modules/babel-polyfill/dist/polyfill.js`,
     bower: "bower.json",
@@ -90,7 +90,7 @@ gulp.task("build:vendor", ["build:vendor:npm", "build:vendor:bower"]);
 
 gulp.task("watch", () => {
     gulp.watch(paths.html, ["build:app:html"]);
-    gulp.watch(paths.srcAppJs, ["jslint", "build:app:js"]);
+    gulp.watch(paths.js, ["jslint", "build:app:js"]);
     gulp.watch(paths.css, ["csslint", "build:assets:css"]);
     gulp.watch(paths.img, ["build:assets:img"]);
     gulp.watch(paths.bower, ["build:vendor:bower"]);
@@ -125,13 +125,15 @@ gulp.task("build:app:html", () =>
 gulp.task("build:assets:css", () =>
     gulp
     .src(paths.css)
+    .pipe(sourceMaps.init())
     .pipe(autoprefixer({
         browsers: ["> 5%"],
         cascade: false
     }))
     .pipe(minifyCss())
     .pipe(concat("main.css"))
-    .pipe(gulp.dest(dirs.assets.css))
+    .pipe(sourceMaps.write("./"))
+    .pipe(gulp.dest(dirs.css))
 );
 
 gulp.task("build:assets:img", () =>
@@ -142,7 +144,7 @@ gulp.task("build:assets:img", () =>
         progressive: true,
         use: [pngquant()]
     }))
-    .pipe(gulp.dest(dirs.assets.img))
+    .pipe(gulp.dest(dirs.img))
 );
 
 gulp.task("build:vendor:bower", () =>
@@ -174,7 +176,7 @@ gulp.task("build:vendor:npm", () =>
 );
 
 gulp.task("jslint", () =>
-    gulp.src([paths.gulp, paths.js, paths.testUnit, paths.testE2e])
+    gulp.src([paths.gulp, paths.js, paths.test.unit, paths.test.e2e])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError())
@@ -184,11 +186,11 @@ gulp.task("csslint", () =>
     gulp.src(paths.css)
     .pipe(csslint())
     .pipe(csslint.reporter("compact"))
-    // .pipe(csslint.failReporter())
+    .pipe(csslint.failReporter())
 );
 
 gulp.task("build:test", () =>
-    gulp.src(paths.testUnit)
+    gulp.src(paths.test.unit)
     .pipe(sourceMaps.init())
     .pipe(babel({
         moduleIds: true,
