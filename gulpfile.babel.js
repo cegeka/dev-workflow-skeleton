@@ -203,7 +203,7 @@ gulp.task("build:test", () =>
 
 gulp.task("build:test:e2e", () =>
     gulp
-    .src([paths.test.e2e, `${test}/e2e/page/**/*.js`, `${test}/e2e/config/**/*.js`2e], {
+    .src([paths.test.e2e, `${test}/e2e/page/**/*.js`, `${test}/e2e/config/**/*.js`], {
         base: "test/e2e/"
     })
     .pipe(sourceMaps.init())
