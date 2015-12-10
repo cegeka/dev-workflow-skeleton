@@ -18,7 +18,7 @@ import rename from "gulp-rename";
 import extReplace from "gulp-ext-replace";
 import sourceMaps from "gulp-sourcemaps";
 import autoprefixer from "gulp-autoprefixer";
-import minifyCss from "gulp-minify-css"
+import minifyCss from "gulp-minify-css";
 // import gutil from "gulp-util";
 // import uglify from "gulp-uglify";
 
@@ -130,7 +130,6 @@ gulp.task("build:assets:css", () =>
         cascade: false
     }))
     .pipe(minifyCss())
-    .src(paths.css)
     .pipe(concat("main.css"))
     .pipe(gulp.dest(dirs.assets.css))
 );
