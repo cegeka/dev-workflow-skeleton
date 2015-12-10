@@ -17,6 +17,10 @@ import uglify from "gulp-uglify";
 import rename from "gulp-rename";
 import extReplace from "gulp-ext-replace";
 import sourceMaps from "gulp-sourcemaps";
+import autoprefixer from "gulp-autoprefixer";
+import minifyCss from "gulp-minify-css"
+// import gutil from "gulp-util";
+// import uglify from "gulp-uglify";
 
 const server = browserSync.create("dev-workflow-skeleton");
 
@@ -120,6 +124,12 @@ gulp.task("build:app:html", () =>
 
 gulp.task("build:assets:css", () =>
     gulp
+    .src(paths.css)
+    .pipe(autoprefixer({
+        browsers: ["> 5%"],
+        cascade: false
+    }))
+    .pipe(minifyCss())
     .src(paths.css)
     .pipe(concat("main.css"))
     .pipe(gulp.dest(dirs.assets.css))
