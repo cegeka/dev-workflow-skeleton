@@ -11,7 +11,6 @@ import mainBowerFiles from "main-bower-files";
 import browserSync from "browser-sync";
 import concat from "gulp-concat";
 import karma from "karma";
-import csslint from "gulp-csslint";
 import plumber from "gulp-plumber";
 import uglify from "gulp-uglify";
 import rename from "gulp-rename";
@@ -19,6 +18,7 @@ import extReplace from "gulp-ext-replace";
 import sourceMaps from "gulp-sourcemaps";
 import autoprefixer from "gulp-autoprefixer";
 import minifyCss from "gulp-minify-css";
+// import csslint from "gulp-csslint";
 // import gutil from "gulp-util";
 // import uglify from "gulp-uglify";
 
@@ -184,9 +184,9 @@ gulp.task("jslint", () =>
 
 gulp.task("csslint", () =>
     gulp.src(paths.css)
-    .pipe(csslint())
+    /*.pipe(csslint())
     .pipe(csslint.reporter("compact"))
-    .pipe(csslint.failReporter())
+    .pipe(csslint.failReporter())*/
 );
 
 gulp.task("build:test", () =>
