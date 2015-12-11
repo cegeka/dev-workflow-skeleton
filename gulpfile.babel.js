@@ -40,7 +40,7 @@ const dirs = {
     }
 };
 
-const paths = {
+const files = {
     html: `${src}/**/*.html`,
     js: `${src}/app/**/*.js`,
     css: `${src}/assets/css/*`,
@@ -88,16 +88,16 @@ gulp.task("build:vendor", ["build:vendor:npm", "build:vendor:bower"]);
 gulp.task("build:test", ["build:test:unit", "build:test:e2e"]);
 
 gulp.task("watch", () => {
-    gulp.watch(paths.html, ["build:app:html"]);
-    gulp.watch(paths.js, ["jslint", "build:app:js"]);
-    gulp.watch(paths.css, ["build:assets:css"]);
-    gulp.watch(paths.img, ["build:assets:img"]);
-    gulp.watch(paths.bower, ["build:vendor:bower"]);
+    gulp.watch(files.html, ["build:app:html"]);
+    gulp.watch(files.js, ["jslint", "build:app:js"]);
+    gulp.watch(files.css, ["build:assets:css"]);
+    gulp.watch(files.img, ["build:assets:img"]);
+    gulp.watch(files.bower, ["build:vendor:bower"]);
 });
 
 gulp.task("build:app:js", () =>
     gulp
-    .src(paths.js)
+    .src(files.js)
     .pipe(plumber())
     .pipe(sourceMaps.init())
     .pipe(babel({
@@ -117,13 +117,13 @@ gulp.task("build:app:js", () =>
 
 gulp.task("build:app:html", () =>
     gulp
-    .src(paths.html)
+    .src(files.html)
     .pipe(gulp.dest(dest))
 );
 
 gulp.task("build:assets:css", () =>
     gulp
-    .src(paths.css)
+    .src(files.css)
     .pipe(sourceMaps.init())
     .pipe(autoprefixer({
         browsers: ["> 5%"],
@@ -137,7 +137,7 @@ gulp.task("build:assets:css", () =>
 
 gulp.task("build:assets:img", () =>
     gulp
-    .src(paths.img)
+    .src(files.img)
     .pipe(plumber())
     .pipe(imagemin({
         progressive: true,
@@ -164,7 +164,7 @@ gulp.task("build:vendor:bower", () =>
 
 gulp.task("build:vendor:npm", () =>
     gulp
-    .src([paths.ngNewRouter, paths.babelPolyfill])
+    .src([files.ngNewRouter, files.babelPolyfill])
     .pipe(sourceMaps.init())
     .pipe(uglify())
     .pipe(rename({
@@ -175,7 +175,7 @@ gulp.task("build:vendor:npm", () =>
 );
 
 gulp.task("build:test:unit", () =>
-    gulp.src(paths.test.unit)
+    gulp.src(files.test.unit)
     .pipe(sourceMaps.init())
     .pipe(babel({
         moduleIds: true,
@@ -188,7 +188,7 @@ gulp.task("build:test:unit", () =>
 
 gulp.task("build:test:e2e", () =>
     gulp
-    .src([paths.test.e2e, `${test}/e2e/page/**/*.js`, `${test}/e2e/config/**/*.js`], {
+    .src([files.test.e2e, `${test}/e2e/page/**/*.js`, `${test}/e2e/config/**/*.js`], {
         base: "test/e2e/"
     })
     .pipe(sourceMaps.init())
@@ -205,7 +205,7 @@ gulp.task("build:test:e2e", () =>
 gulp.task("test:unit", callback => {
     new karma.Server(
         {
-            configFile: `${__dirname}/${test}/unit/${paths.karma}`,
+            configFile: `${__dirname}/${test}/unit/${files.karma}`,
             singleRun: true
         },
         callback)
@@ -222,14 +222,14 @@ gulp.task("test:e2e", () =>
 );
 
 gulp.task("jslint", () =>
-    gulp.src([paths.gulp, paths.js, paths.test.unit, paths.test.e2e])
+    gulp.src([files.gulp, files.js, files.test.unit, files.test.e2e])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError())
 );
 
 gulp.task("csslint", () =>
-    gulp.src(paths.css)
+    gulp.src(files.css)
     .pipe(csslint())
     .pipe(csslint.reporter("compact"))
     .pipe(csslint.failReporter())
@@ -246,7 +246,7 @@ gulp.task("serve:start", callback =>
             server: {
                 baseDir: dest
             },
-            files: paths.dest
+            files: files.dest
         },
         callback)
 );
