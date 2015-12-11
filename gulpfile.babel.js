@@ -222,7 +222,7 @@ gulp.task("test:e2e", () =>
 );
 
 gulp.task("jslint", () =>
-    gulp.src([files.gulp, files.js, files.test.unit, files.test.e2e])
+    gulp.src([files.gulp, files.js, `${test}/unit/**/*.js`, `${test}/e2e/**/*.js`])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError())
