@@ -21,6 +21,7 @@ import autoprefixer from "gulp-autoprefixer";
 import minifyCss from "gulp-minify-css";
 import csslint from "gulp-csslint";
 import gulpProtractor from "gulp-protractor";
+import protractorQA from "gulp-protractor-qa";
 
 const server = browserSync.create("dev-workflow-skeleton");
 const protractor = gulpProtractor.protractor;
@@ -63,6 +64,7 @@ gulp.task("dev", callback =>
     runSequence(
         "build",
         "watch",
+        "watch:protractor-qa",
         "serve:start",
         callback)
 );
@@ -70,7 +72,8 @@ gulp.task("dev", callback =>
 gulp.task("build", callback =>
     runSequence(
         "clean",
-        ["build:app", "build:assets", "build:test", "build:vendor", "jslint"],
+        ["build:app", "build:assets", "build:test", "build:vendor"],
+        ["jslint", "protractor-qa"],
         "test:unit",
         "serve:start",
         "test:e2e",
@@ -93,6 +96,7 @@ gulp.task("watch", () => {
     gulp.watch(files.css, ["build:assets:css"]);
     gulp.watch(files.img, ["build:assets:img"]);
     gulp.watch(files.bower, ["build:vendor:bower"]);
+    gulp.watch([files.test.e2e, `${test}/e2e/page/**/*.js`, `${test}/e2e/config/**/*.js`], ["build:test:e2e"]);
 });
 
 gulp.task("build:app:js", () =>
@@ -197,6 +201,7 @@ gulp.task("build:test:e2e", () =>
         presets: ["es2015"],
         plugins: ["transform-es2015-modules-systemjs"]
     }))
+    .pipe(gulp.dest(dirs.test.e2e))
     .pipe(concat("e2e.js"))
     .pipe(sourceMaps.init())
     .pipe(gulp.dest(dirs.test.e2e))
@@ -219,6 +224,21 @@ gulp.task("test:e2e", () =>
             configFile: `${test}/e2e/protractor.conf.js`
         }))
         .on("error", () => process.exit(1))
+);
+
+let startProtractorQA = runOnce =>
+    protractorQA.init({
+        runOnce,
+        testSrc: `${dirs.test.e2e}/**/!(e2e).js`,
+        viewSrc: files.html
+    });
+
+gulp.task("protractor-qa", () =>
+    startProtractorQA(true)
+);
+
+gulp.task("watch:protractor-qa", () =>
+    startProtractorQA(false)
 );
 
 gulp.task("jslint", () =>

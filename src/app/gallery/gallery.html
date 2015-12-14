@@ -2,7 +2,8 @@
     <div class="row">
         <div class="col-md-9" ng-click="gallery.deselectPet()">
             <div class="gallery">
-                <div class="gallery-pet fader" ng-class="{active: gallery.selectedPet === pet}" ng-repeat="pet in gallery.pets | filter:gallery.searchCriteria" ng-click="gallery.selectPet($event, pet)">
+                <div class="gallery-pet fader" ng-class="{active: gallery.selectedPet === pet}" ng-repeat="pet in gallery.pets | filter:gallery.searchCriteria
+" ng-click="gallery.selectPet($event, pet)">
                     <img class="profile-picture" ng-src="{{pet.img}}">
                     <div class="overlay">
                         <div class="overlay-text">{{pet.name}}</div>
