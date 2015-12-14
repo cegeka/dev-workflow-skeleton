@@ -11,4 +11,11 @@
 
 	<name>dws-domain</name>
 	<description>DWS Domain Layer</description>
+	
+	<dependencies>
+		<dependency>
+			<groupId>be.cegeka</groupId>
+			<artifactId>dws-infrastructure</artifactId>
+		</dependency>
+	</dependencies>
 </project>

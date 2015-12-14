@@ -11,4 +11,15 @@
 
 	<name>dws-service</name>
 	<description>DWS Service Layer</description>
+	
+	<dependencies>
+		<dependency>
+			<groupId>be.cegeka</groupId>
+			<artifactId>dws-infrastructure</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>be.cegeka</groupId>
+			<artifactId>dws-domain</artifactId>
+		</dependency>
+	</dependencies>
 </project>

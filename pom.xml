@@ -32,7 +32,27 @@
 		<module>dws-rest</module>
 		<module>dws-ui</module>
 	</modules>
-
+	
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>be.cegeka</groupId>
+				<artifactId>dws-infrastructure</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>be.cegeka</groupId>
+				<artifactId>dws-domain</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>be.cegeka</groupId>
+				<artifactId>dws-service</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	
 	<build>
 		<plugins>
 			<plugin>
