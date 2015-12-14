@@ -4,7 +4,7 @@ import GalleryPage from "page/gallery.page";
 export default class SetupDatePage {
 
     constructor() {
-        this.petName = element(by.binding("setupDate.pet.name"));
+        this.petName = element(by.id("header")).element(by.tagName("h3"));
         this.location = element(by.tagName("pc-reverse-geocode"));
         this.googleMaps = element(by.className("map-container"));
         this.submit = element(by.id("submit"));
