@@ -1,5 +1,4 @@
-/* globals require */
-/* eslint no-unused-vars:0 */
+/* global require */
 
 let chai = require("chai");
 let chaiAsPromised = require("chai-as-promised");
