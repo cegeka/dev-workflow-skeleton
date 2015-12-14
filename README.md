@@ -31,7 +31,13 @@ The goal of this innovation center is to set up a small project that can be used
 7. Install [Java](http://www.webupd8.org/2012/09/install-oracle-java-8-in-ubuntu-via-ppa.html)
   1. `sudo add-apt-repository ppa:webupd8team/java`
   2. `sudo apt-get update`
-  3. `sudo apt-get install oracle-java8-installer `
+  3. `sudo apt-get install oracle-java8-installer`
+8. Install [Maven](https://maven.apache.org/)
+  1. Download [Maven](http://apache.belnet.be/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz)
+  2. `tar xzvf apache-maven-3.3.9-bin.tar.gz`
+  3. `sudo mv apache-maven-3.3.9 /opt`
+  4. `sudo ln -s /usr/local/bin/mvn /opt/apache-maven-3.3.9/bin/mvn`
+9. Install [Eclipse IDE For Java EE Developers](http://www.eclipse.org/downloads/)
 
 
 ### Project Setup
