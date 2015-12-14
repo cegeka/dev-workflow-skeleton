@@ -1,0 +1,27 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>be.cegeka</groupId>
+	<artifactId>dws</artifactId>
+	<version>0.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>Dev Worklflow Skeleton</name>
+	<description>Innovation center to set up a small project that can be used to quickly bootstrap the development of new applications.</description>
+	<url>https://github.com/cegeka/dev-workflow-skeleton</url>
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/cegeka/dev-workflow-skeleton/issues</url>
+	</issueManagement>
+	<scm>
+		<connection>scm:git:git+https://github.com/cegeka/dev-workflow-skeleton.git</connection>
+		<developerConnection>scm:git:git+https://github.com/cegeka/dev-workflow-skeleton.git</developerConnection>
+		<url>https://github.com/cegeka/dev-workflow-skeleton/url</url>
+	</scm>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+</project>
