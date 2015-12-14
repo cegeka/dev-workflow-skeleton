@@ -8,7 +8,7 @@
 	<version>0.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>Dev Worklflow Skeleton</name>
+	<name>dws</name>
 	<description>Innovation center to set up a small project that can be used to quickly bootstrap the development of new applications.</description>
 	<url>https://github.com/cegeka/dev-workflow-skeleton</url>
 	<issueManagement>
@@ -24,4 +24,11 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+	<modules>
+		<module>dws-infrastructure</module>
+		<module>dws-domain</module>
+		<module>dws-service</module>
+		<module>dws-ui</module>
+		<module>dws-rest</module>
+	</modules>
 </project>
