@@ -6,6 +6,7 @@ dist
 
 .project
 .settings
+.classpath
 
 target/
 bin/
