@@ -13,6 +13,7 @@
 	<description>DWS Rest Layer</description>
 
 	<dependencies>
+		<!-- dws -->
 		<dependency>
 			<groupId>be.cegeka</groupId>
 			<artifactId>dws-infrastructure</artifactId>
@@ -25,5 +26,20 @@
 			<groupId>be.cegeka</groupId>
 			<artifactId>dws-service</artifactId>
 		</dependency>
+
+		<!-- spring -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 </project>
