@@ -8,6 +8,13 @@
 	<version>0.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
+	<parent>
+		<groupId>io.spring.platform</groupId>
+		<artifactId>platform-bom</artifactId>
+		<version>2.0.0.RELEASE</version>
+		<relativePath />
+	</parent>
+
 	<name>dws</name>
 	<description>Innovation center to set up a small project that can be used to quickly bootstrap the development of new applications.</description>
 	<url>https://github.com/cegeka/dev-workflow-skeleton</url>
@@ -32,7 +39,7 @@
 		<module>dws-rest</module>
 		<module>dws-ui</module>
 	</modules>
-	
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -52,13 +59,12 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	
+
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
