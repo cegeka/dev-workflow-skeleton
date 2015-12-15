@@ -1,4 +1,4 @@
-package be.cegeka.dws.rest;
+package be.cegeka.dws.rest.spring;
 
 import javax.inject.Named;
 import javax.ws.rs.ApplicationPath;

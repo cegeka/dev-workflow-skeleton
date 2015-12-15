@@ -1,4 +1,4 @@
-package be.cegeka.dws.rest;
+package be.cegeka.dws.rest.pet;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
