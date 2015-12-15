@@ -8,11 +8,10 @@
 		<version>0.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>dws-rest</artifactId>
-	<packaging>war</packaging>
-
+	
 	<name>dws-rest</name>
 	<description>DWS Rest Layer</description>
-
+	
 	<dependencies>
 		<dependency>
 			<groupId>be.cegeka</groupId>
