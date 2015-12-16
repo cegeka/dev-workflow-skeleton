@@ -20,11 +20,29 @@
 		</dependency>
 		<dependency>
 			<groupId>be.cegeka</groupId>
+			<artifactId>dws-infrastructure</artifactId>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>be.cegeka</groupId>
 			<artifactId>dws-domain</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>be.cegeka</groupId>
+			<artifactId>dws-domain</artifactId>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>be.cegeka</groupId>
 			<artifactId>dws-service</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>be.cegeka</groupId>
+			<artifactId>dws-service</artifactId>
+			<type>test-jar</type>
+			<scope>test</scope>
 		</dependency>
 
 		<!-- spring -->

@@ -1,10 +1,10 @@
-package be.cegeka.dws.domain;
+package be.cegeka.dws.domain.pet;
 
 public class Pet {
 
 	private String name;
 	private Race kind;
-	private String imgLocation;
+	private String imageLocation;
 	private String profileText;
 
 	public String getName() {
@@ -23,12 +23,12 @@ public class Pet {
 		this.kind = kind;
 	}
 
-	public String getImgLocation() {
-		return imgLocation;
+	public String getImageLocation() {
+		return imageLocation;
 	}
 
-	public void setImgLocation(String imgLocation) {
-		this.imgLocation = imgLocation;
+	public void setImageLocation(String imageLocation) {
+		this.imageLocation = imageLocation;
 	}
 
 	public String getProfileText() {

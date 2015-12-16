@@ -17,5 +17,11 @@
 			<groupId>be.cegeka</groupId>
 			<artifactId>dws-infrastructure</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>be.cegeka</groupId>
+			<artifactId>dws-infrastructure</artifactId>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>

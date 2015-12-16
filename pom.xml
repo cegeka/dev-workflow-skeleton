@@ -46,9 +46,16 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>3.2.0</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
+		<!-- dws -->
 		<dependencies>
 			<dependency>
 				<groupId>be.cegeka</groupId>
@@ -57,14 +64,53 @@
 			</dependency>
 			<dependency>
 				<groupId>be.cegeka</groupId>
+				<artifactId>dws-infrastructure</artifactId>
+				<type>test-jar</type>
+				<version>${project.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>be.cegeka</groupId>
 				<artifactId>dws-domain</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>be.cegeka</groupId>
+				<artifactId>dws-domain</artifactId>
+				<type>test-jar</type>
+				<version>${project.version}</version>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>be.cegeka</groupId>
 				<artifactId>dws-service</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>be.cegeka</groupId>
+				<artifactId>dws-service</artifactId>
+				<type>test-jar</type>
+				<version>${project.version}</version>
+				<scope>test</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<executions>
+						<execution>
+							<goals>
+								<goal>test-jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>

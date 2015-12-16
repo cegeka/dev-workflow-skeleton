@@ -11,4 +11,11 @@
 
 	<name>dws-infrascructure</name>
 	<description>DWS Infrastructure Layer</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+		</dependency>
+	</dependencies>
 </project>
