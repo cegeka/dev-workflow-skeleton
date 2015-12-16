@@ -1,0 +1,1 @@
+psql -U $POSTGRES_USER -w -c "CREATE USER dws WITH ENCRYPTED PASSWORD 'dws'" dws
