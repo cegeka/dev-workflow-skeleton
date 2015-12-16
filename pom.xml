@@ -41,6 +41,12 @@
 	</modules>
 
 	<dependencies>
+		<!-- Compile -->
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+		</dependency>
+		<!-- Test -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -52,6 +58,7 @@
 			<version>3.2.0</version>
 			<scope>test</scope>
 		</dependency>
+		
 	</dependencies>
 
 	<dependencyManagement>
