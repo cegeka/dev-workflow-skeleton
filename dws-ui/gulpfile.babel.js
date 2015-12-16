@@ -65,7 +65,7 @@ gulp.task("dev", callback =>
         "build",
         "watch",
         "watch:protractor-qa",
-        "serve:start",
+        "serve",
         callback)
 );
 
@@ -75,9 +75,7 @@ gulp.task("build", callback =>
         ["build:app", "build:assets", "build:test", "build:vendor"],
         ["jslint", "protractor-qa"],
         "test:unit",
-        "serve:start",
         "test:e2e",
-        "serve:stop",
         callback)
 );
 
@@ -217,7 +215,25 @@ gulp.task("test:unit", callback => {
     .start();
 });
 
-gulp.task("test:e2e", () =>
+gulp.task("test:e2e", callback =>
+    runSequence("serve:start", "test:e2e:protractor", "serve:stop", callback)
+);
+
+gulp.task("serve:start", callback =>
+    server.init(
+        {
+            open: false,
+            port: 8080,
+            server: {
+                baseDir: dest
+            }
+        },
+        callback)
+);
+
+gulp.task("serve:stop", () => server.exit());
+
+gulp.task("test:e2e:protractor", () =>
     gulp
         .src(`${test}/e2e/protractor.bootstrap.js`)
         .pipe(protractor({
@@ -255,10 +271,9 @@ gulp.task("csslint", () =>
     .pipe(csslint.failReporter())
 );
 
-gulp.task("serve:start", callback =>
+gulp.task("serve", callback =>
     server.init(
         {
-            open: false,
             port: 8080,
             ui: {
                 port: 8081
@@ -270,5 +285,3 @@ gulp.task("serve:start", callback =>
         },
         callback)
 );
-
-gulp.task("serve:stop", () => server.exit());
