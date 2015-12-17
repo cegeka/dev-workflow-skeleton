@@ -14,7 +14,7 @@ public class Pet {
 		return name;
 	}
 
-	public void setName(String name) {
+	private void setName(String name) {
 		this.name = name;
 	}
 
@@ -22,7 +22,7 @@ public class Pet {
 		return race;
 	}
 
-	public void setRace(Race race) {
+	private void setRace(Race race) {
 		this.race = race;
 	}
 
@@ -30,7 +30,7 @@ public class Pet {
 		return imageLocation;
 	}
 
-	public void setImageLocation(String imageLocation) {
+	private void setImageLocation(String imageLocation) {
 		this.imageLocation = imageLocation;
 	}
 
@@ -38,7 +38,7 @@ public class Pet {
 		return profileText;
 	}
 
-	public void setProfileText(String profileText) {
+	private void setProfileText(String profileText) {
 		this.profileText = profileText;
 	}
 

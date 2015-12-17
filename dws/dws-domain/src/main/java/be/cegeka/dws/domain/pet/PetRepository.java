@@ -18,7 +18,6 @@ public interface PetRepository {
 	public List<Pet> findAll();
 
 	public static class PetMapper implements ResultSetMapper<Pet> {
-
 		@Override
 		public Pet map(int index, ResultSet r, StatementContext ctx) throws SQLException {
 			return pet()
@@ -28,6 +27,5 @@ public interface PetRepository {
 					.withProfileText(r.getString("profile_text"))
 					.build();
 		}
-
 	}
 }
