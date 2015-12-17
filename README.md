@@ -12,6 +12,7 @@ The goal of this innovation center is to set up a small project that can be used
   4. `git config --global push.default "simple"`
   5. `git config --global pull.rebase true`
   6. `git config --global url."https://".insteadOf git://`
+  7. `git config --global credential.helper 'cache --timeout=18000'`
 2. Install an editor, e.g. [SublimeText](http://www.sublimetext.com/)
   1. `sudo add-apt-repository ppa:webupd8team/sublime-text-3`
   2. `sudo apt-get update`
