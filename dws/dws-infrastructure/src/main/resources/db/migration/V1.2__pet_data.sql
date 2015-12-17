@@ -1,13 +1,3 @@
-CREATE TYPE RACE AS ENUM('CHICKEN', 'DOG', 'CAT');
-
-CREATE TABLE pet(
-    id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
-    race RACE NOT NULL,
-    image_location TEXT NOT NULL,
-    profile_text TEXT
-);
-
 INSERT INTO pet(name, race, image_location, profile_text) VALUES
 ('Princess', 'CHICKEN', 'assets/img/chicken1.jpg', 'Meet Princess Fluffybutt! She is one of the fluffiest chickens you will ever meet. Most often you''ll find Princess cuddled up in the warmest spot she can find, and if that happens to be in your lap, well then that''s fine for her too! Princess also enjoys nomming treats out of your hand, clucking softly under her breath, and following her three sisters around the yard. Get to know Princess today!'),
 ('MrFuzz', 'CAT', 'assets/img/cat1.jpg', 'MrFuzz loves belly rubs, and likes playing with pieces of string'),
