@@ -3,7 +3,7 @@ package be.cegeka.dws.domain.pet;
 public class Pet {
 
 	private String name;
-	private Race kind;
+	private Race race;
 	private String imageLocation;
 	private String profileText;
 
@@ -15,12 +15,12 @@ public class Pet {
 		this.name = name;
 	}
 
-	public Race getKind() {
-		return kind;
+	public Race getRace() {
+		return race;
 	}
 
-	public void setKind(Race kind) {
-		this.kind = kind;
+	public void setRace(Race race) {
+		this.race = race;
 	}
 
 	public String getImageLocation() {

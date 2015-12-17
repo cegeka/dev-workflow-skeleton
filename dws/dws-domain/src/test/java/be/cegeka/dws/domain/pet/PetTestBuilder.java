@@ -13,7 +13,7 @@ public class PetTestBuilder {
 	public static PetTestBuilder aPet() {
 		return new PetTestBuilder()
 				.withName("Princess")
-				.withKind(CHICKEN)
+				.withRace(CHICKEN)
 				.withProfileText("A fluffy chicken")
 				.withImageLocation("/assets/princess.jpg");
 	}
@@ -27,8 +27,8 @@ public class PetTestBuilder {
 		return this;
 	}
 
-	public PetTestBuilder withKind(Race kind) {
-		pet.setKind(kind);
+	public PetTestBuilder withRace(Race race) {
+		pet.setRace(race);
 		return this;
 	}
 
