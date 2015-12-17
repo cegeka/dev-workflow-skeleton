@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>be.cegeka</groupId>
 		<artifactId>dws</artifactId>
@@ -9,7 +9,54 @@
 	</parent>
 	<artifactId>dws-ui</artifactId>
 	<packaging>pom</packaging>
-	
+
 	<name>dws-ui</name>
 	<description>DWS UI Layer</description>
+
+	<properties>
+		<frontend.maven.version>0.0.26</frontend.maven.version>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<version>${frontend.maven.version}</version>
+				<configuration>
+					<installDirectory>target</installDirectory>
+				</configuration>	
+				<executions>
+					<execution>
+						<id>install node and npm</id>
+						<goals>
+							<goal>install-node-and-npm</goal>
+						</goals>
+						<configuration>
+							<nodeVersion>v5.3.0</nodeVersion>
+      						<npmVersion>3.5.2</npmVersion>
+						</configuration>
+					</execution>
+					<execution>
+						<id>npm install</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>bower install</id>
+						<goals>
+							<goal>bower</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>gulp build</id>
+						<goals>
+							<goal>gulp</goal>						
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
