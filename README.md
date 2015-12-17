@@ -36,7 +36,7 @@ The goal of this innovation center is to set up a small project that can be used
   1. `curl -s http://apache.belnet.be/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz > apache-maven-3.3.9-bin.tar.gz`
   2. `tar xzvf apache-maven-3.3.9-bin.tar.gz`
   3. `sudo mv apache-maven-3.3.9 /opt`
-  4. `sudo ln -s /usr/local/bin/mvn /opt/apache-maven-3.3.9/bin/mvn`
+  4. `sudo ln -s /opt/apache-maven-3.3.9/bin/mvn /usr/local/bin/mvn`
 9. Install [Eclipse IDE For Java EE Developers](http://www.eclipse.org/downloads/)
 
 
