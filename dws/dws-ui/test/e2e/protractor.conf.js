@@ -16,5 +16,8 @@ exports.config = {
         require("../../dist/vendor/system.min.js");
         require("../../dist/test/e2e/e2e.js");
     },
+    capabilities: {
+        "browserName": "firefox"
+    },
     specs: ["protractor.bootstrap.js"]
 };
