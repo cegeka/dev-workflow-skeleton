@@ -24,6 +24,7 @@ The goal of this innovation center is to set up a small project that can be used
   2. `npm config set prefix=$HOME/.npm_global`
   3. `npm install -g npm`
   4. add `export PATH="$HOME/.npm_global/bin:$PATH"` to end of `~/.bashrc`
+  5. restart your terminal
 5. Install [Bower](http://bower.io/) 
   1. `npm install -g bower`
 6. Install [Gulp](http://gulpjs.com/)
