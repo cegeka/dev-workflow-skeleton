@@ -50,6 +50,5 @@ The goal of this innovation center is to set up a small project that can be used
 1. `cd dws/dws-ui` from project root to get to front-end root
 2. `npm install` in front-end root
 3. `bower install` in front-end root
-4. `node_modules/protractor/bin/webdriver-manager update` in front-end root
 5. `gulp` in front-end root to build front-end
 6. `gulp dev` in front-end root to start application, go to http://localhost:8080
