@@ -1,24 +1,33 @@
 package be.cegeka.dws.domain.pet;
 
-import static java.util.Arrays.asList;
+import static be.cegeka.dws.domain.pet.Pet.PetBuilder.pet;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.sql.DataSource;
+import org.skife.jdbi.v2.StatementContext;
+import org.skife.jdbi.v2.sqlobject.SqlQuery;
+import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
+import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
-@Named
-public class PetRepository {
+public interface PetRepository {
 
-	@Inject
-	private DataSource dataSource;
+	@SqlQuery("SELECT * FROM pet")
+	@Mapper(PetMapper.class)
+	public List<Pet> findAll();
 
-	
-	
-	public List<Pet> findAll() {
-		Pet pet = new Pet();
-		pet.setName("Pet");
-		return asList(pet);
+	public static class PetMapper implements ResultSetMapper<Pet> {
+
+		@Override
+		public Pet map(int index, ResultSet r, StatementContext ctx) throws SQLException {
+			return pet()
+					.withName(r.getString("name"))
+					.withRace(Race.valueOf(r.getString("race")))
+					.withImageLocation(r.getString("image_location"))
+					.withProfileText(r.getString("profile_text"))
+					.build();
+		}
+
 	}
 }

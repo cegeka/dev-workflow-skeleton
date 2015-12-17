@@ -7,6 +7,9 @@ public class Pet {
 	private String imageLocation;
 	private String profileText;
 
+	private Pet() {
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -37,5 +40,42 @@ public class Pet {
 
 	public void setProfileText(String profileText) {
 		this.profileText = profileText;
+	}
+
+	static class PetBuilder {
+
+		private Pet pet;
+
+		private PetBuilder() {
+			pet = new Pet();
+		}
+
+		public static PetBuilder pet() {
+			return new PetBuilder();
+		}
+
+		public Pet build() {
+			return pet;
+		}
+
+		public PetBuilder withName(String name) {
+			pet.setName(name);
+			return this;
+		}
+
+		public PetBuilder withRace(Race race) {
+			pet.setRace(race);
+			return this;
+		}
+
+		public PetBuilder withImageLocation(String imageLocation) {
+			pet.setImageLocation(imageLocation);
+			return this;
+		}
+
+		public PetBuilder withProfileText(String profileText) {
+			pet.setProfileText(profileText);
+			return this;
+		}
 	}
 }

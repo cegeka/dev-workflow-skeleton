@@ -2,44 +2,42 @@ package be.cegeka.dws.domain.pet;
 
 import static be.cegeka.dws.domain.pet.Race.CHICKEN;
 
+import be.cegeka.dws.domain.pet.Pet.PetBuilder;
+
 public class PetTestBuilder {
 
-	private Pet pet;
+	private PetBuilder petBuilder;
 
 	private PetTestBuilder() {
-		pet = new Pet();
+		petBuilder = PetBuilder.pet();
 	}
 
 	public static PetTestBuilder aPet() {
-		return new PetTestBuilder()
-				.withName("Princess")
-				.withRace(CHICKEN)
-				.withProfileText("A fluffy chicken")
+		return new PetTestBuilder().withName("Princess").withRace(CHICKEN).withProfileText("A fluffy chicken")
 				.withImageLocation("/assets/princess.jpg");
 	}
 
 	public Pet build() {
-		return pet;
+		return petBuilder.build();
 	}
 
 	public PetTestBuilder withName(String name) {
-		pet.setName(name);
+		petBuilder.withName(name);
 		return this;
 	}
 
 	public PetTestBuilder withRace(Race race) {
-		pet.setRace(race);
+		petBuilder.withRace(race);
 		return this;
 	}
 
 	public PetTestBuilder withImageLocation(String imageLocation) {
-		pet.setImageLocation(imageLocation);
+		petBuilder.withImageLocation(imageLocation);
 		return this;
 	}
 
 	public PetTestBuilder withProfileText(String profileText) {
-		pet.setProfileText(profileText);
+		petBuilder.withProfileText(profileText);
 		return this;
 	}
-
 }
