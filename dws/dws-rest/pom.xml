@@ -12,10 +12,6 @@
 	<name>dws-rest</name>
 	<description>DWS Rest Layer</description>
 
-	<properties>
-		<truezip.version>1.2</truezip.version>
-	</properties>
-
 	<dependencies>
 		<!-- dws -->
 		<dependency>
@@ -67,20 +63,21 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>truezip-maven-plugin</artifactId>
-				<version>${truezip.version}</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
 				<executions>
 					<execution>
 						<phase>process-resources</phase>
 						<goals>
-							<goal>copy</goal>
+							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<fileset>
-								<directory>${basedir}/../dws-ui/target/dws-ui-${project.version}-assembly.zip</directory>
-								<outputDirectory>${project.build.directory}/classes/static</outputDirectory>
-							</fileset>
+							<outputDirectory>${project.build.directory}/classes/static</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/../dws-ui/target/dist</directory>
+								</resource>
+							</resources>
 						</configuration>
 					</execution>
 				</executions>
