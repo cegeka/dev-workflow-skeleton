@@ -11,10 +11,10 @@
                 return __karma__.files.hasOwnProperty(filePath);
             })
             .filter(function isTestFile(filePath) {
-                return (/^\/base\/dist\/test\/unit\/(.*).spec.js$/).test(filePath);
+                return (/^\/base\/target\/test\/unit\/(.*).spec.js$/).test(filePath);
             })
             .map(function toTestName(filePath) {
-                return filePath.match(/^\/base\/dist\/test\/unit\/(.*).js$/)[1];
+                return filePath.match(/^\/base\/target\/test\/unit\/(.*).js$/)[1];
             })
             .map(function importModule(testModuleName) {
                 return System.import(testModuleName);

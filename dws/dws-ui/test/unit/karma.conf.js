@@ -4,11 +4,11 @@ module.exports = function(config) {
     config.set({
         basePath: "../..",
         files: [
-            "dist/vendor/polyfill.min.js",
-            "dist/vendor/es6-module-loader.min.js",
-            "dist/vendor/system.min.js",
-            "dist/app/**/*.js",
-            "dist/test/unit/**/*.spec.js",
+            "target/dist/vendor/polyfill.min.js",
+            "target/dist/vendor/es6-module-loader.min.js",
+            "target/dist/vendor/system.min.js",
+            "target/dist/app/**/*.js",
+            "target/test/unit/**/*.spec.js",
             "test/unit/karma.bootstrap.js"
         ],
         browsers: ["PhantomJS"],

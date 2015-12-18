@@ -27,14 +27,15 @@ const server = browserSync.create("dev-workflow-skeleton");
 const protractor = gulpProtractor.protractor;
 
 const src = "src";
-const dest = "dist";
+const dest = "target";
+const dist = "dist";
 const test = "test";
 
 const dirs = {
-    app: `${dest}/app`,
-    vendor: `${dest}/vendor`,
-    css: `${dest}/assets/css`,
-    img: `${dest}/assets/img`,
+    app: `${dest}/${dist}/app`,
+    vendor: `${dest}/${dist}/vendor`,
+    css: `${dest}/${dist}/assets/css`,
+    img: `${dest}/${dist}/assets/img`,
     test: {
         unit: `${dest}/${test}/unit`,
         e2e: `${dest}/${test}/e2e`
@@ -46,7 +47,7 @@ const files = {
     js: `${src}/app/**/*.js`,
     css: `${src}/assets/css/*`,
     img: `${src}/assets/img/*`,
-    dest: `${dest}/**/*`,
+    dest: `${dest}/${dist}/**/*`,
     test: {
         unit: `${test}/unit/**/*.spec.js`,
         e2e: `${test}/e2e/**/*.spec.js`
@@ -120,7 +121,7 @@ gulp.task("build:app:js", () =>
 gulp.task("build:app:html", () =>
     gulp
     .src(files.html)
-    .pipe(gulp.dest(dest))
+    .pipe(gulp.dest(`${dest}/${dist}`))
 );
 
 gulp.task("build:assets:css", () =>
@@ -225,7 +226,7 @@ gulp.task("serve:start", callback =>
             open: false,
             port: 8080,
             server: {
-                baseDir: dest
+                baseDir: `${dest}/${dist}`
             }
         },
         callback)
@@ -279,7 +280,7 @@ gulp.task("serve", callback =>
                 port: 8081
             },
             server: {
-                baseDir: dest
+                baseDir: `${dest}/${dist}`
             },
             files: files.dest
         },
