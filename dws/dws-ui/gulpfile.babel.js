@@ -76,7 +76,7 @@ gulp.task("build", callback =>
         ["build:app", "build:assets", "build:test", "build:vendor"],
         ["jslint", "protractor-qa"],
         "test:unit",
-        "test:e2e",
+        //"test:e2e",
         callback)
 );
 
