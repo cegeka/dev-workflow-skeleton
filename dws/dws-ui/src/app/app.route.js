@@ -6,7 +6,7 @@ export default class PetcupidAppCtrl {
             path: "/",
             component: "gallery"
         }, {
-            path: "/pets/:name",
+            path: "/pets/:id",
             component: "setupDate"
         }]);
     }

@@ -4,7 +4,7 @@
             <div class="gallery">
                 <div class="gallery-pet fader" ng-class="{active: gallery.selectedPet === pet}" ng-repeat="pet in gallery.pets | filter:gallery.searchCriteria
 " ng-click="gallery.selectPet($event, pet)">
-                    <img class="profile-picture" ng-src="{{pet.img}}">
+                    <img class="profile-picture" ng-src="{{pet.imageLocation}}">
                     <div class="overlay">
                         <div class="overlay-text">{{pet.name}}</div>
                     </div>
@@ -29,11 +29,11 @@
                             <input class="form-control" placeholder="Search" ng-model="gallery.searchCriteria.$">
                         </div>
                         <div class="form-group">
-                            <select class="form-control" ng-model="gallery.searchCriteria.kind">
+                            <select class="form-control" ng-model="gallery.searchCriteria.race">
                                 <option value="">All</option>
-                                <option value="cat">Cat</option>
-                                <option value="dog">Dog</option>
-                                <option value="chicken">Chicken</option>
+                                <option value="CAT">Cat</option>
+                                <option value="DOG">Dog</option>
+                                <option value="CHICKEN">Chicken</option>
                             </select>
                         </div>
                     </form>

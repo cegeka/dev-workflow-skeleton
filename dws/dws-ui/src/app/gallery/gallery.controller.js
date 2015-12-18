@@ -1,5 +1,5 @@
 export default class GalleryCtrl {
-    
+
     constructor(petService, $location) {
         "ngInject";
         this.petService = petService;
@@ -10,11 +10,11 @@ export default class GalleryCtrl {
         this.pets = this.petService.query();
         this.searchCriteria = {
             $: "",
-            kind: ""
+            race: ""
         };
         this.selectedPet = null;
     }
-    
+
     selectPet($event, newPet) {
         this.selectedPet = newPet;
         $event.stopPropagation();
@@ -25,6 +25,6 @@ export default class GalleryCtrl {
     }
 
     setupDate() {
-        this.location.path(`/pets/${this.selectedPet.name}`);
+        this.location.path(`/pets/${this.selectedPet.id}`);
     }
 }
