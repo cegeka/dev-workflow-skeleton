@@ -44,6 +44,11 @@
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>be.cegeka</groupId>
+			<artifactId>dws-ui</artifactId>
+			<type>pom</type>
+		</dependency>
 
 		<!-- spring -->
 		<dependency>

@@ -39,8 +39,8 @@
 		<module>dws-infrastructure</module>
 		<module>dws-domain</module>
 		<module>dws-service</module>
-		<module>dws-ui</module>
 		<module>dws-rest</module>
+		<module>dws-ui</module>
 	</modules>
 
 	<dependencies>
@@ -101,6 +101,12 @@
 				<type>test-jar</type>
 				<version>${project.version}</version>
 				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>be.cegeka</groupId>
+				<artifactId>dws-ui</artifactId>
+				<type>pom</type>
+				<version>${project.version}</version>
 			</dependency>
 
 			<!-- External -->
