@@ -62,7 +62,7 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
 					<descriptors>
-						<descriptor>ui-assembly.xml</descriptor>
+						<descriptor>assembly.xml</descriptor>
 					</descriptors>
 				</configuration>
 				<executions>

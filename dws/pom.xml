@@ -39,8 +39,8 @@
 		<module>dws-infrastructure</module>
 		<module>dws-domain</module>
 		<module>dws-service</module>
-		<module>dws-rest</module>
 		<module>dws-ui</module>
+		<module>dws-rest</module>
 	</modules>
 
 	<dependencies>
