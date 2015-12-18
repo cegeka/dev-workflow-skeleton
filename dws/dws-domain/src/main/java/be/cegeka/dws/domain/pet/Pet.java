@@ -2,12 +2,21 @@ package be.cegeka.dws.domain.pet;
 
 public class Pet {
 
+	private int id;
 	private String name;
 	private Race race;
 	private String imageLocation;
 	private String profileText;
 
 	private Pet() {
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -56,6 +65,11 @@ public class Pet {
 
 		public Pet build() {
 			return pet;
+		}
+
+		public PetBuilder withId(int id) {
+			pet.setId(id);
+			return this;
 		}
 
 		public PetBuilder withName(String name) {

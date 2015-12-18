@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.skife.jdbi.v2.StatementContext;
+import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
@@ -17,10 +18,15 @@ public interface PetRepository {
 	@Mapper(PetMapper.class)
 	public List<Pet> findAll();
 
+	@SqlQuery("SELECT * FROM pet WHERE id = :id")
+	@Mapper(PetMapper.class)
+	public Pet findById(@Bind("id") int id);
+
 	public static class PetMapper implements ResultSetMapper<Pet> {
 		@Override
 		public Pet map(int index, ResultSet r, StatementContext ctx) throws SQLException {
 			return pet()
+					.withId(r.getInt("id"))
 					.withName(r.getString("name"))
 					.withRace(Race.valueOf(r.getString("race")))
 					.withImageLocation(r.getString("image_location"))

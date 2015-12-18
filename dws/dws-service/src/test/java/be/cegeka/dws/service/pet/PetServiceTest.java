@@ -31,4 +31,14 @@ public class PetServiceTest extends UnitTest {
 
 		assertThat(actual).containsOnly(pet);
 	}
+
+	@Test
+	public void getById() {
+		Pet pet = aPet().build();
+		when(repository.findById(1)).thenReturn(pet);
+
+		Pet actual = service.getById(1);
+
+		assertThat(actual).isEqualTo(pet);
+	}
 }
