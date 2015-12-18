@@ -9,7 +9,7 @@ export default class GalleryPage {
         this.selectedPet = element(by.binding("gallery.selectedPet.name"));
         this.setupDateButton = element(by.id("setup-date"));
         this.textFilter = element(by.model("gallery.searchCriteria.$"));
-        this.kindFilter = element(by.model("gallery.searchCriteria.kind"));
+        this.kindFilter = element(by.model("gallery.searchCriteria.race"));
     }
 
     containsPetGallery() {

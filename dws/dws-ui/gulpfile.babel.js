@@ -10,6 +10,7 @@ import imagemin from "gulp-imagemin";
 import pngquant from "imagemin-pngquant";
 import mainBowerFiles from "main-bower-files";
 import browserSync from "browser-sync";
+import httpProxy from "http-proxy-middleware";
 import concat from "gulp-concat";
 import karma from "karma";
 import plumber from "gulp-plumber";
@@ -272,17 +273,19 @@ gulp.task("csslint", () =>
     .pipe(csslint.failReporter())
 );
 
-gulp.task("serve", callback =>
+gulp.task("serve", callback => {
+    let proxy = httpProxy("http://localhost:8080/api");
     server.init(
         {
-            port: 8080,
+            port: 8082,
             ui: {
-                port: 8081
+                port: 8083
             },
             server: {
-                baseDir: `${dest}/${dist}`
+                baseDir: `${dest}/${dist}`,
+                middleware: [proxy]
             },
             files: files.dest
         },
-        callback)
-);
+        callback);
+});
