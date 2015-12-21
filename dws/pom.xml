@@ -43,6 +43,7 @@
 		<module>dws-service</module>
 		<module>dws-rest</module>
 		<module>dws-ui</module>
+		<module>dws-acc-tests</module>
 	</modules>
 
 	<dependencies>
