@@ -107,6 +107,18 @@
 			</dependency>
 			<dependency>
 				<groupId>be.cegeka</groupId>
+				<artifactId>dws-rest</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>be.cegeka</groupId>
+				<artifactId>dws-rest</artifactId>
+				<type>test-jar</type>
+				<version>${project.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>be.cegeka</groupId>
 				<artifactId>dws-ui</artifactId>
 				<type>pom</type>
 				<version>${project.version}</version>

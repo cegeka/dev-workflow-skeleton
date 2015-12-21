@@ -16,17 +16,25 @@
 	<properties>
 		<dws.root>${basedir}/..</dws.root>
 	</properties>
-	
+
 	<dependencies>
+		<dependency>
+			<groupId>be.cegeka</groupId>
+			<artifactId>dws-rest</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>be.cegeka</groupId>
 			<artifactId>dws-ui</artifactId>
 			<type>pom</type>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -34,6 +42,28 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<executions>
+						<execution>
+							<phase>process-resources</phase>
+							<goals>
+								<goal>copy</goal>
+							</goals>
+							<configuration>
+								<artifactItems>
+									<artifactItem>
+										<groupId>be.cegeka</groupId>
+										<artifactId>dws-rest</artifactId>
+										<outputDirectory>${project.build.directory}/acceptance-tests/back-end</outputDirectory>
+										<destFileName>dws-rest.jar</destFileName>
+									</artifactItem>
+								</artifactItems>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
