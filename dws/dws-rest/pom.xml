@@ -74,24 +74,32 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/classes/static</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${basedir}/../dws-ui/target/dist</directory>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<executions>
+						<execution>
+							<phase>process-resources</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<resources>
+									<resource>
+										<directory>${dws.root}/dws-ui/target/dist</directory>
+									</resource>
+								</resources>
+								<outputDirectory>${project.build.directory}/classes/static</outputDirectory>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 	<profiles>
