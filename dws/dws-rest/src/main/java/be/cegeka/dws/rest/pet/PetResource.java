@@ -20,15 +20,15 @@ public class PetResource {
 	private PetService service;
 
 	@GET
-	@Produces(APPLICATION_JSON)
-	public List<Pet> getPets() {
-		return service.getAll();
-	}
-
-	@GET
 	@Path("/{id}")
 	@Produces(APPLICATION_JSON)
 	public Pet getPetById(@PathParam("id") int id) {
 		return service.getById(id);
+	}
+
+	@GET
+	@Produces(APPLICATION_JSON)
+	public List<Pet> getPets() {
+		return service.getAll();
 	}
 }

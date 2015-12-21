@@ -17,11 +17,11 @@ public class PetService {
 	@Inject
 	private PetRepository petRepository;
 
-	public List<Pet> getAll() {
-		return petRepository.findAll();
-	}
-
 	public Pet getById(int id) {
 		return petRepository.findById(id);
+	}
+
+	public List<Pet> getAll() {
+		return petRepository.findAll();
 	}
 }

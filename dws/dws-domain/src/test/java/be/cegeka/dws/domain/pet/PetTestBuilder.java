@@ -21,6 +21,11 @@ public class PetTestBuilder {
 		return petBuilder.build();
 	}
 
+	public PetTestBuilder withId(int id) {
+		petBuilder.withId(id);
+		return this;
+	}
+
 	public PetTestBuilder withName(String name) {
 		petBuilder.withName(name);
 		return this;

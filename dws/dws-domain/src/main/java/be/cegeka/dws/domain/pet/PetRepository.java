@@ -14,13 +14,13 @@ import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
 public interface PetRepository {
 
-	@SqlQuery("SELECT * FROM pet")
-	@Mapper(PetMapper.class)
-	public List<Pet> findAll();
-
 	@SqlQuery("SELECT * FROM pet WHERE id = :id")
 	@Mapper(PetMapper.class)
 	public Pet findById(@Bind("id") int id);
+
+	@SqlQuery("SELECT * FROM pet")
+	@Mapper(PetMapper.class)
+	public List<Pet> findAll();
 
 	public static class PetMapper implements ResultSetMapper<Pet> {
 		@Override
