@@ -9,12 +9,12 @@ exports.config = {
         slow: 5000
     },
     seleniumServerJar: "../../node_modules/protractor/selenium/selenium-server-standalone-2.48.2.jar",
-    baseUrl: "http://localhost:8080",
+    baseUrl: "http://localhost:8082",
     beforeLaunch: function() {
-        require("../../target/dist/vendor/polyfill.min.js");
-        require("../../target/dist/vendor/es6-module-loader.min.js");
-        require("../../target/dist/vendor/system.min.js");
-        require("../../target/test/e2e/e2e.js");
+        require("../../target/dist/vendor/polyfill.js");
+        require("../../target/dist/vendor/es6-module-loader.js");
+        require("../../target/dist/vendor/system.js");
+        require("../../target/dist/test/e2e/e2e.js");
     },
     capabilities: {
         "browserName": "firefox"

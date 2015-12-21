@@ -1,0 +1,34 @@
+{
+    "root": true,
+    "env": {
+        "es6": true
+    },
+    "parser": "babel-eslint",
+    "globals": {
+        "angular": false
+    },
+    "plugins": ["babel"],
+    "rules": {
+        "indent": [2, 4],
+        "quotes": [2, "double"],
+        "comma-spacing": [2, {"before": false, "after": true}],
+        "linebreak-style": [2, "unix"],
+        "semi": [2, "always"],
+        "strict": 0,
+
+        "generator-star-spacing": 0,
+        "new-cap": 0,
+        "object-curly-spacing": 0,
+        "object-shorthand": 0,
+        "arrow-parens": 0,
+        "no-await-in-loop": 0,
+
+        "babel/generator-star-spacing": [2, "after"],
+        "babel/new-cap": 2,
+        "babel/object-curly-spacing": [2, "never"],
+        "babel/object-shorthand": [2, "always"],
+        "babel/arrow-parens": [2, "as-needed"],
+        "babel/no-await-in-loop": 2
+    },
+    "extends": "eslint:recommended"
+}

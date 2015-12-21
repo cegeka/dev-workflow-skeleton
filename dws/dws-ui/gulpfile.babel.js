@@ -1,4 +1,4 @@
-/* global __dirname, process */
+/* global __dirname  */
 
 import gulp from "gulp";
 import runSequence from "run-sequence";
@@ -21,11 +21,8 @@ import sourceMaps from "gulp-sourcemaps";
 import autoprefixer from "gulp-autoprefixer";
 import minifyCss from "gulp-minify-css";
 import csslint from "gulp-csslint";
-import gulpProtractor from "gulp-protractor";
-import protractorQA from "gulp-protractor-qa";
 
 const server = browserSync.create("dev-workflow-skeleton");
-const protractor = gulpProtractor.protractor;
 
 const src = "src";
 const dest = "target";
@@ -38,8 +35,7 @@ const dirs = {
     css: `${dest}/${dist}/assets/css`,
     img: `${dest}/${dist}/assets/img`,
     test: {
-        unit: `${dest}/${test}/unit`,
-        e2e: `${dest}/${test}/e2e`
+        unit: `${dest}/${test}/unit`
     }
 };
 
@@ -50,8 +46,7 @@ const files = {
     img: `${src}/assets/img/*`,
     dest: `${dest}/${dist}/**/*`,
     test: {
-        unit: `${test}/unit/**/*.spec.js`,
-        e2e: `${test}/e2e/**/*.spec.js`
+        unit: `${test}/unit/**/*.spec.js`
     },
     ngNewRouter: `node_modules/angular-new-router/dist/router.es5.js`,
     babelPolyfill: `node_modules/babel-polyfill/dist/polyfill.js`,
@@ -66,7 +61,6 @@ gulp.task("dev", callback =>
     runSequence(
         "build",
         "watch",
-        "watch:protractor-qa",
         "serve",
         callback)
 );
@@ -75,9 +69,8 @@ gulp.task("build", callback =>
     runSequence(
         "clean",
         ["build:app", "build:assets", "build:test", "build:vendor"],
-        ["jslint", "protractor-qa"],
+        ["jslint"],
         "test:unit",
-        //"test:e2e",
         callback)
 );
 
@@ -88,7 +81,7 @@ gulp.task("clean", () =>
 gulp.task("build:app", ["build:app:js", "build:app:html"]);
 gulp.task("build:assets", ["build:assets:css", "build:assets:img"]);
 gulp.task("build:vendor", ["build:vendor:npm", "build:vendor:bower"]);
-gulp.task("build:test", ["build:test:unit", "build:test:e2e"]);
+gulp.task("build:test", ["build:test:unit"]);
 
 gulp.task("watch", () => {
     gulp.watch(files.html, ["build:app:html"]);
@@ -96,7 +89,6 @@ gulp.task("watch", () => {
     gulp.watch(files.css, ["build:assets:css"]);
     gulp.watch(files.img, ["build:assets:img"]);
     gulp.watch(files.bower, ["build:vendor:bower"]);
-    gulp.watch([files.test.e2e, `${test}/e2e/page/**/*.js`, `${test}/e2e/config/**/*.js`], ["build:test:e2e"]);
 });
 
 gulp.task("build:app:js", () =>
@@ -190,23 +182,6 @@ gulp.task("build:test:unit", () =>
     .pipe(gulp.dest(dirs.test.unit))
 );
 
-gulp.task("build:test:e2e", () =>
-    gulp
-    .src([files.test.e2e, `${test}/e2e/page/**/*.js`, `${test}/e2e/config/**/*.js`], {
-        base: "test/e2e/"
-    })
-    .pipe(sourceMaps.init())
-    .pipe(babel({
-        moduleIds: true,
-        presets: ["es2015"],
-        plugins: ["transform-es2015-modules-systemjs"]
-    }))
-    .pipe(gulp.dest(dirs.test.e2e))
-    .pipe(concat("e2e.js"))
-    .pipe(sourceMaps.init())
-    .pipe(gulp.dest(dirs.test.e2e))
-);
-
 gulp.task("test:unit", callback => {
     new karma.Server(
         {
@@ -217,50 +192,8 @@ gulp.task("test:unit", callback => {
     .start();
 });
 
-gulp.task("test:e2e", callback =>
-    runSequence("serve:start", "test:e2e:protractor", "serve:stop", callback)
-);
-
-gulp.task("serve:start", callback =>
-    server.init(
-        {
-            open: false,
-            port: 8080,
-            server: {
-                baseDir: `${dest}/${dist}`
-            }
-        },
-        callback)
-);
-
-gulp.task("serve:stop", () => server.exit());
-
-gulp.task("test:e2e:protractor", () =>
-    gulp
-        .src(`${test}/e2e/protractor.bootstrap.js`)
-        .pipe(protractor({
-            configFile: `${test}/e2e/protractor.conf.js`
-        }))
-        .on("error", () => process.exit(1))
-);
-
-let startProtractorQA = runOnce =>
-    protractorQA.init({
-        runOnce,
-        testSrc: `${dirs.test.e2e}/**/!(e2e).js`,
-        viewSrc: files.html
-    });
-
-gulp.task("protractor-qa", () =>
-    startProtractorQA(true)
-);
-
-gulp.task("watch:protractor-qa", () =>
-    startProtractorQA(false)
-);
-
 gulp.task("jslint", () =>
-    gulp.src([files.gulp, files.js, `${test}/unit/**/*.js`, `${test}/e2e/**/*.js`])
+    gulp.src([files.gulp, files.js, `${test}/unit/**/*.js`])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError())
