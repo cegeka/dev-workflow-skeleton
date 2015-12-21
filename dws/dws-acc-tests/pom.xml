@@ -16,4 +16,45 @@
 	<properties>
 		<dws.root>${basedir}/..</dws.root>
 	</properties>
+	
+	<dependencies>
+		<dependency>
+			<groupId>be.cegeka</groupId>
+			<artifactId>dws-ui</artifactId>
+			<type>pom</type>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<executions>
+						<execution>
+							<phase>process-resources</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<resources>
+									<resource>
+										<directory>${dws.root}/dws-ui/target/dist</directory>
+									</resource>
+								</resources>
+								<outputDirectory>${project.build.directory}/acceptance-tests/front-end</outputDirectory>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>
