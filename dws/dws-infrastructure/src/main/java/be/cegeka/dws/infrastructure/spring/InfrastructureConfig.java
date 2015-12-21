@@ -1,5 +1,6 @@
 package be.cegeka.dws.infrastructure.spring;
 
+import javax.inject.Inject;
 import javax.sql.DataSource;
 
 import org.apache.tomcat.jdbc.pool.PoolConfiguration;
@@ -8,20 +9,26 @@ import org.skife.jdbi.v2.DBI;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
+@PropertySource("classpath:/dws.properties")
 @ComponentScan("be.cegeka.dws.infrastructure")
 public class InfrastructureConfig {
+
+	@Inject
+	private Environment environment;
 
 	@Bean
 	public DataSource dataSource() {
 		PoolConfiguration poolConfiguration = new PoolProperties();
-		poolConfiguration.setDriverClassName("org.postgresql.Driver");
-		poolConfiguration.setUrl("jdbc:postgresql://localhost:5432/dws");
-		poolConfiguration.setUsername("dws");
-		poolConfiguration.setPassword("dws");
+		poolConfiguration.setDriverClassName(environment.getProperty("db.driver"));
+		poolConfiguration.setUrl(environment.getProperty("db.url"));
+		poolConfiguration.setUsername(environment.getProperty("db.username"));
+		poolConfiguration.setPassword(environment.getProperty("db.password"));
 		return new org.apache.tomcat.jdbc.pool.DataSource(poolConfiguration);
 	}
 

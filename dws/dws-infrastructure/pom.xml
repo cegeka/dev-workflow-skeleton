@@ -12,6 +12,10 @@
 	<name>dws-infrascructure</name>
 	<description>DWS Infrastructure Layer</description>
 
+	<properties>
+		<dws.root>${basedir}/..</dws.root>
+	</properties>
+
 	<dependencies>
 		<!-- DB -->
 		<dependency>

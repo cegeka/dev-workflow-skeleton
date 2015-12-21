@@ -11,7 +11,11 @@
 
 	<name>dws-service</name>
 	<description>DWS Service Layer</description>
-	
+
+	<properties>
+		<dws.root>${basedir}/..</dws.root>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>be.cegeka</groupId>

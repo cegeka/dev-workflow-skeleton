@@ -12,6 +12,10 @@
 	<name>dws-rest</name>
 	<description>DWS Rest Layer</description>
 
+	<properties>
+		<dws.root>${basedir}/..</dws.root>
+	</properties>
+
 	<dependencies>
 		<!-- dws -->
 		<dependency>

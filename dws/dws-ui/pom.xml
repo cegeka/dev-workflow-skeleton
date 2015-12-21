@@ -14,6 +14,7 @@
 	<description>DWS UI Layer</description>
 
 	<properties>
+		<dws.root>${basedir}/..</dws.root>
 		<frontend.version>0.0.26</frontend.version>
 	</properties>
 

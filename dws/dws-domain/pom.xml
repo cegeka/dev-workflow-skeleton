@@ -11,7 +11,11 @@
 
 	<name>dws-domain</name>
 	<description>DWS Domain Layer</description>
-	
+
+	<properties>
+		<dws.root>${basedir}/..</dws.root>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>be.cegeka</groupId>
