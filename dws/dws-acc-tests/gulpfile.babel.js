@@ -16,6 +16,7 @@ const protractor = gulpProtractor.protractor;
 gulp.task("test", callback =>
 	runSequence(
         "front-end:start",
+        // "end2end:test",
         "front-end:stop",
         callback)
 );
@@ -37,19 +38,24 @@ gulp.task("front-end:start", callback => {
 
 gulp.task("front-end:stop", () => server.exit());
 
-gulp.task("default", callback => 
-	runSequence(
-		"clean", 
+gulp.task("end2end:test", callback =>
+    runSequence(
+        "clean",
+        "lint",
         "build",
-		"lint",
-		"front-end:start", 
         "protractor:test",
-		"front-end:stop",
         callback)
 );
 
 gulp.task("clean", () =>
     del("target/dist")
+);
+
+gulp.task("lint", () =>
+    gulp.src(["gulpfile.babel.js", "test/e2e/**/*.js"])
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError())
 );
 
 gulp.task("build", ["build:e2e", "build:vendor"]);
@@ -74,13 +80,6 @@ gulp.task("build:vendor", () =>
     .pipe(gulp.dest("target/dist/vendor/"))
 );
 
-gulp.task("lint", () =>
-    gulp.src(["gulpfile.babel.js", "test/e2e/**/*.js"])
-    .pipe(eslint())
-    .pipe(eslint.format())
-    .pipe(eslint.failAfterError())
-);
-
 gulp.task("protractor:test", () =>
     gulp
         .src("test/e2e/protractor.bootstrap.js")
@@ -89,5 +88,3 @@ gulp.task("protractor:test", () =>
         }))
         .on("error", () => process.exit(1))
 );
-
-
