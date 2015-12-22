@@ -3,7 +3,7 @@
 The goal of this innovation center is to set up a small project that can be used to quickly bootstrap the development of new applications. 
 
 ## How to get it up and running from scratch (Linux)
-### General Setup
+### Software dependencies
 
 1. Install [Git](https://git-scm.com/)
   1. `sudo apt-get install git`
@@ -45,6 +45,7 @@ The goal of this innovation center is to set up a small project that can be used
   3. `sudo mv eclipse /opt`
   4. `sudo ln -s /opt/eclipse/eclipse /usr/local/bin/eclipse`
   5. If you want to access eclipse from the launcher create /usr/share/applications/eclipse.desktop as described at [link](http://difusal.blogspot.be/2015/06/how-to-install-eclipse-mars-45-on-ubuntu.html)
+10. Install [Docker](https://docs.docker.com/engine/installation/ubuntulinux/)
 
 
 ### Project Setup
