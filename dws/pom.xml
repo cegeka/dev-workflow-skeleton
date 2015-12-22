@@ -37,6 +37,7 @@
 		<assertj.version>3.2.0</assertj.version>
 		<frontend.version>0.0.26</frontend.version>
 		<m2e.version>1.0.0</m2e.version>
+		<exec.version>0.7</exec.version>
 	</properties>
 
 	<modules>

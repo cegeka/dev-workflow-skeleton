@@ -16,7 +16,7 @@ const protractor = gulpProtractor.protractor;
 gulp.task("test", callback =>
 	runSequence(
         "front-end:start",
-        // "end2end:test",
+        "end2end:test",
         "front-end:stop",
         callback)
 );

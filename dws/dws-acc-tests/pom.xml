@@ -20,6 +20,10 @@
 	<dependencies>
 		<dependency>
 			<groupId>be.cegeka</groupId>
+			<artifactId>dws-rest</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>be.cegeka</groupId>
 			<artifactId>dws-ui</artifactId>
 			<type>pom</type>
 		</dependency>
@@ -29,7 +33,15 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>com.bazaarvoice.maven.plugins</groupId>
+				<artifactId>process-exec-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<groupId>com.github.eirslett</groupId>
@@ -38,6 +50,28 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<executions>
+						<execution>
+							<phase>process-resources</phase>
+							<goals>
+								<goal>copy</goal>
+							</goals>
+							<configuration>
+								<artifactItems>
+									<artifactItem>
+										<groupId>be.cegeka</groupId>
+										<artifactId>dws-rest</artifactId>
+										<outputDirectory>${project.build.directory}/acceptance-tests/back-end</outputDirectory>
+										<destFileName>dws-rest.jar</destFileName>
+									</artifactItem>
+								</artifactItems>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
@@ -55,6 +89,36 @@
 								</resources>
 								<outputDirectory>${project.build.directory}/acceptance-tests/front-end</outputDirectory>
 							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>com.bazaarvoice.maven.plugins</groupId>
+					<artifactId>process-exec-maven-plugin</artifactId>
+					<version>${exec.version}</version>
+					<executions>
+						<execution>
+							<id>start-backend</id>
+							<phase>pre-integration-test</phase>
+							<goals>
+								<goal>start</goal>
+							</goals>
+							<configuration>
+								<name>dws-backend</name>
+								<waitAfterLaunch>10</waitAfterLaunch>
+								<arguments>
+									<argument>java</argument>
+									<argument>-jar</argument>
+									<argument>${project.build.directory}/acceptance-tests/back-end/dws-rest.jar</argument>
+								</arguments>
+							</configuration>
+						</execution>
+						<execution>
+							<id>stop-all</id>
+							<phase>post-integration-test</phase>
+							<goals>
+								<goal>stop-all</goal>
+							</goals>
 						</execution>
 					</executions>
 				</plugin>
@@ -92,7 +156,6 @@
 						</execution>
 					</executions>
 				</plugin>
-
 			</plugins>
 		</pluginManagement>
 	</build>
