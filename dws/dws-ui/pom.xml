@@ -15,7 +15,6 @@
 
 	<properties>
 		<dws.root>${basedir}/..</dws.root>
-		<frontend.version>0.0.26</frontend.version>
 	</properties>
 
 	<build>
@@ -23,13 +22,9 @@
 			<plugin>
 				<groupId>com.github.eirslett</groupId>
 				<artifactId>frontend-maven-plugin</artifactId>
-				<version>${frontend.version}</version>
-				<configuration>
-					<installDirectory>target</installDirectory>
-				</configuration>
 				<executions>
 					<execution>
-						<id>install node and npm</id>
+						<id>install-node-and-npm</id>
 						<goals>
 							<goal>install-node-and-npm</goal>
 						</goals>
@@ -39,19 +34,19 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>npm install</id>
+						<id>npm-install</id>
 						<goals>
 							<goal>npm</goal>
 						</goals>
 					</execution>
 					<execution>
-						<id>bower install</id>
+						<id>bower-install</id>
 						<goals>
 							<goal>bower</goal>
 						</goals>
 					</execution>
 					<execution>
-						<id>gulp build</id>
+						<id>gulp-build</id>
 						<goals>
 							<goal>gulp</goal>
 						</goals>

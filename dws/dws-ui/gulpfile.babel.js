@@ -34,9 +34,7 @@ const dirs = {
     vendor: `${dest}/${dist}/vendor`,
     css: `${dest}/${dist}/assets/css`,
     img: `${dest}/${dist}/assets/img`,
-    test: {
-        unit: `${dest}/${test}/unit`
-    }
+    test: `${dest}/${test}/unit`
 };
 
 const files = {
@@ -45,9 +43,7 @@ const files = {
     css: `${src}/assets/css/*`,
     img: `${src}/assets/img/*`,
     dest: `${dest}/${dist}/**/*`,
-    test: {
-        unit: `${test}/unit/**/*.spec.js`
-    },
+    test: `${test}/unit/**/*.spec.js`,
     ngNewRouter: `node_modules/angular-new-router/dist/router.es5.js`,
     babelPolyfill: `node_modules/babel-polyfill/dist/polyfill.js`,
     bower: "bower.json",
@@ -171,7 +167,7 @@ gulp.task("build:vendor:npm", () =>
 );
 
 gulp.task("build:test:unit", () =>
-    gulp.src(files.test.unit)
+    gulp.src(files.test)
     .pipe(sourceMaps.init())
     .pipe(babel({
         moduleIds: true,
@@ -179,7 +175,7 @@ gulp.task("build:test:unit", () =>
         plugins: ["transform-es2015-modules-systemjs"]
     }))
     .pipe(sourceMaps.init())
-    .pipe(gulp.dest(dirs.test.unit))
+    .pipe(gulp.dest(dirs.test))
 );
 
 gulp.task("test:unit", callback => {

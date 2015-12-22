@@ -35,6 +35,7 @@
 		<flyway.version>3.2.1</flyway.version>
 		<jdbi.version>2.70</jdbi.version>
 		<assertj.version>3.2.0</assertj.version>
+		<frontend.version>0.0.26</frontend.version>
 	</properties>
 
 	<modules>
@@ -226,6 +227,14 @@
 							</goals>
 						</execution>
 					</executions>
+				</plugin>
+				<plugin>
+					<groupId>com.github.eirslett</groupId>
+					<artifactId>frontend-maven-plugin</artifactId>
+					<version>${frontend.version}</version>
+					<configuration>
+						<installDirectory>target</installDirectory>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>

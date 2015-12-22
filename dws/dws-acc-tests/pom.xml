@@ -20,10 +20,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>be.cegeka</groupId>
-			<artifactId>dws-rest</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>be.cegeka</groupId>
 			<artifactId>dws-ui</artifactId>
 			<type>pom</type>
 		</dependency>
@@ -33,37 +29,15 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
+				<artifactId>maven-resources-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-dependency-plugin</artifactId>
-					<executions>
-						<execution>
-							<phase>process-resources</phase>
-							<goals>
-								<goal>copy</goal>
-							</goals>
-							<configuration>
-								<artifactItems>
-									<artifactItem>
-										<groupId>be.cegeka</groupId>
-										<artifactId>dws-rest</artifactId>
-										<outputDirectory>${project.build.directory}/acceptance-tests/back-end</outputDirectory>
-										<destFileName>dws-rest.jar</destFileName>
-									</artifactItem>
-								</artifactItems>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
@@ -84,6 +58,41 @@
 						</execution>
 					</executions>
 				</plugin>
+				<plugin>
+					<groupId>com.github.eirslett</groupId>
+					<artifactId>frontend-maven-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>install-node-and-npm</id>
+							<phase>generate-resources</phase>
+							<goals>
+								<goal>install-node-and-npm</goal>
+							</goals>
+							<configuration>
+								<nodeVersion>v5.3.0</nodeVersion>
+								<npmVersion>3.5.2</npmVersion>
+							</configuration>
+						</execution>
+						<execution>
+							<id>npm-install</id>
+							<phase>generate-resources</phase>
+							<goals>
+								<goal>npm</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>gulp-serve-and-test</id>
+							<phase>integration-test</phase>
+							<goals>
+								<goal>gulp</goal>
+							</goals>
+							<configuration>
+								<arguments>test</arguments>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+
 			</plugins>
 		</pluginManagement>
 	</build>

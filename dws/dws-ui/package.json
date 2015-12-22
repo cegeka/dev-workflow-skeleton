@@ -3,7 +3,6 @@
     "version": "0.0.0",
     "description": "Innovation center to setup a small project that can be used to quickly bootstrap the development of new applications.",
     "homepage": "https://github.com/cegeka/dev-workflow-skeleton",
-    "license": "WTFPL",
     "contributors": [
     {
         "name": "Dieter Van Peer",
@@ -43,18 +42,18 @@
         "eslint-plugin-angular": "~0.14.0",
         "eslint-plugin-babel": "~3.0.0",
         "gulp": "~3.9.0",
-        "gulp-autoprefixer": "^3.1.0",
+        "gulp-autoprefixer": "~3.1.0",
         "gulp-babel": "~6.1.1",
         "gulp-concat": "~2.6.0",
         "gulp-csslint": "0.2.0",
         "gulp-eslint": "~1.1.1",
         "gulp-ext-replace": "~0.2.0",
         "gulp-imagemin": "~2.4.0",
-        "gulp-minify-css": "^1.2.2",
+        "gulp-minify-css": "~1.2.2",
         "gulp-ng-annotate": "~1.1.0",
         "gulp-plumber": "~1.0.1",
         "gulp-rename": "~1.2.2",
-        "gulp-sourcemaps": "^1.6.0",
+        "gulp-sourcemaps": "~1.6.0",
         "gulp-uglify": "~1.5.1",
         "http-proxy-middleware": "~0.9.0",
         "imagemin-pngquant": "~4.2.0",
@@ -66,7 +65,6 @@
         "main-bower-files": "~2.9.0",
         "mocha": "~2.3.4",
         "phantomjs": "~1.9.19",
-        "protractor": "~3.0.0",
         "run-sequence": "~1.1.5",
         "sinon": "~1.17.2",
         "sinon-chai": "~2.8.0"
@@ -75,8 +73,5 @@
         "presets": [
             "es2015"
         ]
-    },
-    "scripts": {
-        "postinstall": "node_modules/protractor/bin/webdriver-manager update"
     }
 }

@@ -13,6 +13,30 @@ import gulpProtractor from "gulp-protractor";
 const server = browserSync.create("dev-workflow-skeleton");
 const protractor = gulpProtractor.protractor;
 
+gulp.task("test", callback =>
+	runSequence(
+        "front-end:start",
+        "front-end:stop",
+        callback)
+);
+
+
+gulp.task("front-end:start", callback => {
+    let proxy = httpProxy("http://localhost:8080/api");
+    server.init(
+        {
+            open: false,
+            port: 8082,
+            server: {
+                baseDir: "target/acceptance-tests/front-end",
+                middleware: [proxy]
+            }
+        },
+        callback);
+});
+
+gulp.task("front-end:stop", () => server.exit());
+
 gulp.task("default", callback => 
 	runSequence(
 		"clean", 
@@ -39,7 +63,7 @@ gulp.task("build:e2e", () =>
         plugins: ["transform-es2015-modules-systemjs"]
     }))
     .pipe(concat("e2e.js"))
-    .pipe(gulp.dest("target/dist/test/e2e"))
+    .pipe(gulp.dest("target/dist/test/e2e/"))
 );
 
 gulp.task("build:vendor", () =>
@@ -57,20 +81,6 @@ gulp.task("lint", () =>
     .pipe(eslint.failAfterError())
 );
 
-gulp.task("front-end:start", callback => {
-    let proxy = httpProxy("http://localhost:8080/api");
-    server.init(
-        {
-            open: false,
-            port: 8082,
-            server: {
-                baseDir: "target/acceptance-tests/front-end",
-                middleware: [proxy]
-            }
-        },
-        callback);
-});
-
 gulp.task("protractor:test", () =>
     gulp
         .src("test/e2e/protractor.bootstrap.js")
@@ -80,4 +90,4 @@ gulp.task("protractor:test", () =>
         .on("error", () => process.exit(1))
 );
 
-gulp.task("front-end:stop", () => server.exit());
+
