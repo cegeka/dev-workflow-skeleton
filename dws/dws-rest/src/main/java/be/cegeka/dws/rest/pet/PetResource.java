@@ -14,6 +14,7 @@ import be.cegeka.dws.domain.pet.Pet;
 import be.cegeka.dws.service.pet.PetService;
 
 @Path("/pet")
+@Produces(APPLICATION_JSON)
 public class PetResource {
 
 	@Inject
@@ -21,13 +22,11 @@ public class PetResource {
 
 	@GET
 	@Path("/{id}")
-	@Produces(APPLICATION_JSON)
 	public Pet getPetById(@PathParam("id") int id) {
 		return service.getById(id);
 	}
 
 	@GET
-	@Produces(APPLICATION_JSON)
 	public List<Pet> getPets() {
 		return service.getAll();
 	}
