@@ -48,13 +48,14 @@ The goal of this innovation center is to set up a small project that can be used
 10. Install [Docker](https://docs.docker.com/engine/installation/ubuntulinux/)
 
 
-### Project Setup
+### Setup
 1. `git clone https://github.com/cegeka/dev-workflow-skeleton.git`
-
-
-### Front-end Setup
-1. `cd dws/dws-ui` from project root to get to front-end root
-2. `npm install` in front-end root
-3. `bower install` in front-end root
-5. `gulp` in front-end root to build front-end
-6. `gulp dev` in front-end root to start application, go to http://localhost:8080
+2. `cd dev-workflow-skeleton/ops/postgress`
+2. `./build.sh` to build the docker container containing the data base
+3. `./run.sh` to run the data base
+4. `cd ../../dws` to get from the project root to the maven root
+5. `mvn clean install` to initiate the data base content
+6. run the application in eclipse
+7. `cd dws-ui`
+8. `gulp` in front-end root to build front-end
+9. `gulp dev` in front-end root to start application, go to http://localhost:8080
