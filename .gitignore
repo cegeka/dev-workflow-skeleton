@@ -12,3 +12,4 @@ target/
 bin/
 
 ops/front-end/dws-dist
+ops/back-end/dws-jar
