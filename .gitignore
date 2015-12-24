@@ -10,3 +10,5 @@ dist
 
 target/
 bin/
+
+ops/front-end/dws-dist
