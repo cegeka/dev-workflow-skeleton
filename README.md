@@ -46,6 +46,8 @@ The goal of this innovation center is to set up a small project that can be used
   4. `sudo ln -s /opt/eclipse/eclipse /usr/local/bin/eclipse`
   5. If you want to access eclipse from the launcher create /usr/share/applications/eclipse.desktop as described at [link](http://difusal.blogspot.be/2015/06/how-to-install-eclipse-mars-45-on-ubuntu.html)
 10. Install [Docker](https://docs.docker.com/engine/installation/ubuntulinux/)
+  1. `docker network create -d bridge dws`
+  2. Add `127.0.0.1 dws-db` to /etc/hosts 
 
 
 ### Setup
