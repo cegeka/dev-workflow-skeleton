@@ -2,3 +2,7 @@ db:
     build: ../db/
     ports: 
         - "5432:5432"
+back-end:
+    build: ../back-end/
+    ports:
+        - "8080:8080"
