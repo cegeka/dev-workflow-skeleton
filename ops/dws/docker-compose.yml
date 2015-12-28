@@ -1,15 +1,17 @@
 db:
-    build: ../db/
+    build: db/
     ports: 
         - "5432:5432"
+
 back-end:
-    build: ../back-end/
+    build: back-end/
     ports:
         - "8080:8080"
     links:
         - db
+        
 front-end:
-    build: ../front-end/
+    build: front-end/
     ports:
         - "80:80"
     links:

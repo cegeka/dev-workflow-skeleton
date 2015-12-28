@@ -46,8 +46,7 @@ The goal of this innovation center is to set up a small project that can be used
   4. `sudo ln -s /opt/eclipse/eclipse /usr/local/bin/eclipse`
   5. If you want to access eclipse from the launcher create /usr/share/applications/eclipse.desktop as described at [link](http://difusal.blogspot.be/2015/06/how-to-install-eclipse-mars-45-on-ubuntu.html)
 10. Install [Docker](https://docs.docker.com/engine/installation/ubuntulinux/)
-  1. `docker network create -d bridge dws`
-  2. Add `127.0.0.1 dws_db_1` to /etc/hosts 
+  1. Add `127.0.0.1 dws_db_1` to /etc/hosts 
 11. Install [Docker Compose](https://docs.docker.com/compose/install/)
   1. `sudo -i`
   2. `curl -L https://github.com/docker/compose/releases/download/1.5.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
@@ -59,9 +58,8 @@ The goal of this innovation center is to set up a small project that can be used
 
 ### Setup
 1. `git clone https://github.com/cegeka/dev-workflow-skeleton.git`
-2. `cd dev-workflow-skeleton/ops/db`
-2. `./build.sh` to build the docker container containing the data base
-3. `./run.sh` to run the data base
+2. `cd dev-workflow-skeleton/ops/scripts`
+2. `./start-local.db.sh` to run the database
 4. `cd ../../dws` to get from the project root to the maven root
 5. `mvn clean install` to initiate the data base content
 6. run the application in eclipse

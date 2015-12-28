@@ -11,5 +11,5 @@ dist
 target/
 bin/
 
-ops/front-end/dws-dist
-ops/back-end/dws-jar
+ops/dws/front-end/dws-dist
+ops/dws/back-end/dws-jar
