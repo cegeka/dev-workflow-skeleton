@@ -203,7 +203,7 @@ gulp.task("csslint", () =>
 );
 
 gulp.task("serve", callback => {
-    let proxy = httpProxy("http://localhost:8080/api");
+    let proxy = httpProxy("/api", {target: "http://localhost:8080"});
     server.init(
         {
             port: 8082,

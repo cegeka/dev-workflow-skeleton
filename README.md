@@ -59,7 +59,7 @@ The goal of this innovation center is to set up a small project that can be used
 
 ### Setup
 1. `git clone https://github.com/cegeka/dev-workflow-skeleton.git`
-2. `cd dev-workflow-skeleton/ops/postgress`
+2. `cd dev-workflow-skeleton/ops/db`
 2. `./build.sh` to build the docker container containing the data base
 3. `./run.sh` to run the data base
 4. `cd ../../dws` to get from the project root to the maven root
