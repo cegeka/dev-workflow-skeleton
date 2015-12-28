@@ -47,7 +47,7 @@ The goal of this innovation center is to set up a small project that can be used
   5. If you want to access eclipse from the launcher create /usr/share/applications/eclipse.desktop as described at [link](http://difusal.blogspot.be/2015/06/how-to-install-eclipse-mars-45-on-ubuntu.html)
 10. Install [Docker](https://docs.docker.com/engine/installation/ubuntulinux/)
   1. `docker network create -d bridge dws`
-  2. Add `127.0.0.1 dws-db` to /etc/hosts 
+  2. Add `127.0.0.1 dws_db_1` to /etc/hosts 
 11. Install [Docker Compose](https://docs.docker.com/compose/install/)
   1. `sudo -i`
   2. `curl -L https://github.com/docker/compose/releases/download/1.5.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
