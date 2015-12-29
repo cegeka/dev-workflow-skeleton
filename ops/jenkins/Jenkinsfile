@@ -1,1 +1,3 @@
-echo "test again"
+node("linux"){
+	sh "echo hello world";	
+}
