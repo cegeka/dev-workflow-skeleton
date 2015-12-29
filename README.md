@@ -63,6 +63,8 @@ The goal of this innovation center is to set up a small project that can be used
 2. `./start-local.db.sh` to run the database
 4. `cd ../../dws` to get from the project root to the maven root
 5. `mvn clean install` to initiate the data base content
+6. import the project as an maven project in eclipse
+7. switch your prefered maven installation within eclipse to the one you installed previously
 6. run the application in eclipse
 7. `cd dws-ui`
 8. `gulp` in front-end root to build front-end
