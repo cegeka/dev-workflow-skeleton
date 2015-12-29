@@ -49,7 +49,7 @@ The goal of this innovation center is to set up a small project that can be used
   1. Add `127.0.0.1 dws_db_1` to /etc/hosts 
 11. Install [Docker Compose](https://docs.docker.com/compose/install/)
   1. `sudo -i`
-  2. `curl -L https://github.com/docker/compose/releases/download/1.5.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+  2. `curl -L https://github.com/docker/compose/releases/download/1.5.2/docker-compose-``uname -s``-``uname -m`` > /usr/local/bin/docker-compose`
   3. `chmod +x /usr/local/bin/docker-compose`
   4. ` curl -L https://raw.githubusercontent.com/docker/compose/$(docker-compose --version | awk 'NR==1{print $NF}')/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose
 `
