@@ -13,6 +13,7 @@ ssh-credentials:1.11
 git:2.4.1
 
 # worfklow-aggregator dependencies
+script-security:1.15
 workflow-step-api:1.12
 workflow-basic-steps:1.12
 workflow-scm-step:1.12
