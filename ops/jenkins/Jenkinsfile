@@ -1,3 +1,12 @@
-node("linux"){
-	sh "echo hello world";	
-}
+stage 'build'
+	node('linux && jdk8 && mvn3'){
+	    /* Clone project */
+		git credentialsId: '385df167-99f7-408d-b9d8-ad982a7c997b', url: 'https://github.com/cegeka/dev-workflow-skeleton.git'
+		
+		/* Maven build */
+		dir('dws'){
+    		withEnv(["JAVA_HOME=${tool 'jdk8'}", "PATH+MAVEN=${tool 'mvn3'}/bin"]) {
+    		    sh 'mvn --version'
+    		}
+		}
+	}
