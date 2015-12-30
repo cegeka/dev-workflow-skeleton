@@ -5,4 +5,4 @@ WORKDIR /usr/src/
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "dws-rest.jar"]
+ENTRYPOINT ["java", "-jar", "-Ddws.environment=compose" , "dws-rest.jar"]
