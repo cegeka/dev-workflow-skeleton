@@ -3,7 +3,7 @@ JENKINS_HOME="/var/opt/jenkins-dws"
 
 if [ ! -d $JENKINS_HOME ] 
 then
-	echo "Creating mount point for JENKINS_HOME"
+	echo "Creating mount point for JENKINS_HOME, password please..."
     sudo mkdir -p $JENKINS_HOME
     sudo chown 1000 $JENKINS_HOME
 fi
