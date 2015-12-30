@@ -3,7 +3,7 @@ import hudson.tasks.*
 
 def jenkins = Jenkins.instance;
 jenkins.setNumExecutors(5);
-jenkins.setLabelString("linux jdk8 mvn3");
+jenkins.setLabelString("linux jdk8 mvn3 docker");
 
 def jdk8 = new hudson.model.JDK("jdk8", "/usr/lib/jvm/java-8-oracle");
 jenkins.setJDKs([jdk8]);

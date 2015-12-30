@@ -1,5 +1,5 @@
 stage 'build'
-	node('linux && jdk8 && mvn3'){
+	node('linux && jdk8 && mvn3 && docker'){
 	    /* Tools */
 	    def javaHome = tool "jdk8"
 	    def mvnHome = tool "mvn3"
@@ -11,6 +11,7 @@ stage 'build'
 		dir("dws"){
     		withEnv(["JAVA_HOME=${javaHome}", "PATH+MAVEN=${mvnHome}/bin"]) {
     		    sh "mvn --version"
+    		    sh "docker info"
     		}
 		}
 	}

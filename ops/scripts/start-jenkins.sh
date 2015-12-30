@@ -10,4 +10,8 @@ fi
 
 docker build -t dws_jenkins ../jenkins/
 docker rm -f dws_jenkins
-docker run -d -p 8888:8080 -v $JENKINS_HOME:/var/jenkins_home  --name dws_jenkins dws_jenkins
+docker run -d -p 8888:8080 \
+		   -v $JENKINS_HOME:/var/jenkins_home \
+		   -v /var/run/docker.sock:/var/run/docker.sock \
+		   -v $(which docker):/bin/docker \
+		   --name dws_jenkins dws_jenkins
