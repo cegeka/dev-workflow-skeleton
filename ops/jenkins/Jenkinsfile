@@ -1,29 +1,40 @@
 stage 'build'
 	node('linux && jdk8 && mvn3 && docker') {
-	    /* Tools */
-	    def javaHome = tool "jdk8"
-	    def mvnHome = tool "mvn3"
+		def javaHome = tool "jdk8"
+    	def mvnHome = tool "mvn3"
+    	def dbName = "dws_db_jenkins"
 	    
-	    /* Clear workspace */
-	    sh "rm -rf *"
-	    
-	    /* Clone project */
-		git credentialsId: "385df167-99f7-408d-b9d8-ad982a7c997b", url: "https://github.com/cegeka/dev-workflow-skeleton.git"
-		
-		/* Start db */
-		docker.build("dws_db", "ops/dws/db")
-		try {
-		    sh "docker rm -f dws_db_jenkins"
-		} catch(e) {}
-		def dbContainer = docker.image("dws_db").run("-d -p 5432:5432 --net jenkins --name dws_db_jenkins")
-		
-		/* Maven build */
-		dir("dws") {
-    		withEnv(["JAVA_HOME=${javaHome}", "PATH+MAVEN=${mvnHome}/bin"]) {
-    		    sh "mvn clean install -Ddws.environment=jenkins"
-    		}
-		}
-		
-		/* Stop db*/
-		dbContainer.stop()
+	    clearWorkspace()
+	    cloneProject()
+		startDb(dbName)
+		mavenBuildWithouAccTests(javaHome, mvnHome)
+		stopDb(dbName)
 	}
+
+/* Helper functions */
+def clearWorkspace() {
+	sh "rm -rf *"	
+}
+
+def cloneProject() {
+	git credentialsId: "385df167-99f7-408d-b9d8-ad982a7c997b", url: "https://github.com/cegeka/dev-workflow-skeleton.git"
+}
+
+def startDb(dbName) {
+	sh "docker build -t dws_db ops/dws/db/"
+	try { sh "docker rm -f ${dbName}" } catch(e) {}
+	sh "docker run -d --net jenkins --name ${dbName} dws_db"
+}
+
+def stopDb(dbName) {
+	sh "docker stop ${dbName}"
+	sh "docker rm ${dbName}"	
+}
+
+def mavenBuildWithouAccTests(javaHome, mvnHome) {	
+	dir("dws") {
+		withEnv(["JAVA_HOME=${javaHome}", "PATH+MAVEN=${mvnHome}/bin"]) {
+		    sh "mvn clean install -Ddws.environment=jenkins -pl '!:dws-acc-tests'"
+		}
+	}
+}
