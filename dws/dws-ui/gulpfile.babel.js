@@ -6,8 +6,6 @@ import del from "del";
 import babel from "gulp-babel";
 import ngAnnotate from "gulp-ng-annotate";
 import eslint from "gulp-eslint";
-import imagemin from "gulp-imagemin";
-import pngquant from "imagemin-pngquant";
 import mainBowerFiles from "main-bower-files";
 import browserSync from "browser-sync";
 import httpProxy from "http-proxy-middleware";
@@ -130,11 +128,6 @@ gulp.task("build:assets:css", () =>
 gulp.task("build:assets:img", () =>
     gulp
     .src(files.img)
-    .pipe(plumber())
-    .pipe(imagemin({
-        progressive: true,
-        use: [pngquant()]
-    }))
     .pipe(gulp.dest(dirs.img))
 );
 

@@ -1,5 +1,7 @@
 FROM jenkins:1.625.3
 
+ENV JENKINS_OPTS --httpPort=8888
+
 USER root
 
 # Instal jdk8
@@ -16,6 +18,9 @@ RUN curl -s http://apache.belnet.be/maven/maven-3/3.3.9/binaries/apache-maven-3.
 		mv /tmp/apache-maven-3.3.9 /opt && \
 		rm -r /tmp/apache-maven-3.3.9-bin.tar.gz
 
+# Install front-end build dependencies
+RUN apt-get install -y make g++ bzip2
+
 # Use host docker
 RUN apt-get install -y lxc
 
@@ -23,3 +28,5 @@ COPY config.groovy /usr/share/jenkins/ref/init.groovy.d/config.groovy
 
 COPY plugins.txt /usr/share/jenkins/ref/
 RUN /usr/local/bin/plugins.sh /usr/share/jenkins/ref/plugins.txt
+
+RUN git config --global url."https://".insteadOf git://

@@ -47,7 +47,6 @@
         "mocha": "~2.3.4",
         "run-sequence": "~1.1.5",
         "systemjs": "~0.19.9"
-
     },
     "babel": {
         "presets": [
