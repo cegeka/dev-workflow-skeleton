@@ -63,6 +63,7 @@ def archiveTestResults() {
 
 def archiveArtifacts() {
  	step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
+ 	step([$class: 'ArtifactArchiver', artifacts: '**/dws-ui/target/dist/**/*', fingerprint: true])
 }
 
 def stopWhenFailures() {
