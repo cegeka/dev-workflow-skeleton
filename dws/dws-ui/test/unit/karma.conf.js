@@ -17,6 +17,7 @@ module.exports = function(config) {
         junitReporter: {
             outputDir: "target/surefire-reports/",
             outputFile: "TEST-results.xml",
+            suite: "be.cegeka.dws.ui",
             useBrowserName: false
         },
         port: 9876

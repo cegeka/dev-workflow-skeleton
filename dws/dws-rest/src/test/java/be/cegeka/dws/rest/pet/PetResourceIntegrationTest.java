@@ -20,7 +20,7 @@ public class PetResourceIntegrationTest extends RestIntegrationTest {
 	private static final int BURT_ID = 3;
 	private static final Pet BURT = aPet()
 			.withId(BURT_ID)
-			.withName("Burts")
+			.withName("Burt")
 			.withRace(DOG)
 			.withImageLocation("assets/img/dog1.jpg")
 			.withProfileText("Burt looks cute, but is in reality a though guy. Secretly wants to work for the FBI")
