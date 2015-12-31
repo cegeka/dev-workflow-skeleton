@@ -7,11 +7,17 @@ stage concurrency: 1, name: "commit"
 	    clearWorkspace()
 	    cloneProject()
 		startDb(dbName)
-		mavenBuildWithouAccTests(javaHome, mvnHome)
+		mavenBuildWithoutUiTests(javaHome, mvnHome)
 		stopDb(dbName)
+		processTestResults()
 	}
 
-/* Helper functions */
+stage concurrency: 1, name: "test"
+	node("linux && jdk8 && mvn3 && docker") {
+		sh "echo 'reached this stage even with test failures'"
+	}
+
+/********** Helper functions **********/
 def clearWorkspace() {
 	sh "rm -rf *"	
 }
@@ -31,10 +37,26 @@ def stopDb(dbName) {
 	sh "docker rm ${dbName}"	
 }
 
-def mavenBuildWithouAccTests(javaHome, mvnHome) {	
+def mavenBuildWithoutUiTests(javaHome, mvnHome) {	
 	dir("dws") {
 		withEnv(["JAVA_HOME=${javaHome}", "PATH+MAVEN=${mvnHome}/bin"]) {
-		    sh "mvn clean install -Ddws.environment=jenkins -pl '!:dws-acc-tests'"
+		    sh "mvn clean install -Ddws.environment=jenkins -Dmaven.test.failure.ignore=true -pl '!:dws-acc-tests'"
 		}
+	}
+}
+
+def processTestResults() {
+	archiveTestResults()
+	stopWhenTestFailures()
+}
+
+def archiveTestResults() {
+	step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
+	step([$class: 'JUnitResultArchiver', testResults: '**/target/failsafe-reports/TEST-*.xml'])
+}
+
+def stopWhenTestFailures() {
+	if (currentBuild.result != null && !currentBuild.result.equalsIgnoreCase("STABLE")) {
+	    error 'There are test failures. The current build will be stopped.'
 	}
 }
