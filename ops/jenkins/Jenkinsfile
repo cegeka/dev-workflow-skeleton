@@ -13,6 +13,7 @@ stage concurrency: 1, name: "test"
 	node("linux && jdk8 && mvn3 && docker") {
 		clearWorkspace()
 		unstashWorkspace()
+		buildDockerImages()
 	}
 
 /********** Helper functions **********/
@@ -38,7 +39,7 @@ def setMvnVersion() {
 }
 
 def buildWithoutUiTests() {
-	def dbName = "dws_db_jenkins"
+	def dbName = "dws_db_jenkins_commit"
 	try {
 		startDb(dbName)
 		mvn("clean install -pl '!:dws-acc-tests'")
@@ -52,9 +53,13 @@ def buildWithoutUiTests() {
 }
 
 def startDb(dbName) {
-	sh "docker build -t dws_db ops/dws/db/"
+	sh "docker build -t dws/db:${versionNumber()} ops/dws/db/"
 	try { sh "docker rm -f ${dbName}" } catch(e) {}
-	sh "docker run -d --net jenkins --name ${dbName} dws_db"
+	sh "docker run -d --net jenkins --name ${dbName} dws/db:${versionNumber()}"
+}
+
+def buildDockerImages() {
+
 }
 
 def stopDb(dbName) {

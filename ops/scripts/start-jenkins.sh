@@ -10,11 +10,11 @@ fi
 
 docker network create -d bridge jenkins
 
-docker build -t dws_jenkins ../jenkins/
+docker build -t dws/jenkins ../jenkins/
 docker rm -f dws_jenkins
 docker run -d -p 8888:8888 \
 		   --net jenkins \
 		   -v $JENKINS_HOME:/var/jenkins_home \
 		   -v /var/run/docker.sock:/var/run/docker.sock \
 		   -v $(which docker):/bin/docker \
-		   --name dws_jenkins dws_jenkins
+		   --name dws_jenkins dws/jenkins
