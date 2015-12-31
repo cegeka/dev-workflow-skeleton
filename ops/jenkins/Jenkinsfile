@@ -1,11 +1,9 @@
-def version = ''
-
 stage concurrency: 1, name: "commit"
 	node("linux && jdk8 && mvn3 && docker") {
 	    clearWorkspace()
 	    cloneProject()
-	    version = versionNumber()
-	    setVersion()
+	    determineVersionNumber()
+	    setMvnVersion()
 		buildWithoutUiTests()
 		stopWhenFailures()
 	}
@@ -24,14 +22,17 @@ def cloneProject() {
 	git credentialsId: "385df167-99f7-408d-b9d8-ad982a7c997b", url: "https://github.com/cegeka/dev-workflow-skeleton.git"
 }
 
-def versionNumber() {
+def determineVersionNumber() {
 	sh "git rev-list --count HEAD > nb-commits.txt"
+}
+
+def versionNumber() {
 	def nbCommits = readFile('nb-commits.txt').trim()
 	return "0.0.${nbCommits}"
 }
 
-def setVersion() {
-	mvn("versions:set -DnewVersion=${version} -DgenerateBackupPoms=false")
+def setMvnVersion() {
+	mvn("versions:set -DnewVersion=${versionNumber()} -DgenerateBackupPoms=false")
 }
 
 def buildWithoutUiTests() {
