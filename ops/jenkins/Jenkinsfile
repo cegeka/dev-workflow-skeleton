@@ -1,5 +1,5 @@
-stage 'commit', concurrency: 1
-	node('linux && jdk8 && mvn3 && docker') {
+stage concurrency: 1, name: "commit"
+	node("linux && jdk8 && mvn3 && docker") {
 		def javaHome = tool "jdk8"
     	def mvnHome = tool "mvn3"
     	def dbName = "dws_db_jenkins"
@@ -34,7 +34,7 @@ def stopDb(dbName) {
 def mavenBuildWithouAccTests(javaHome, mvnHome) {	
 	dir("dws") {
 		withEnv(["JAVA_HOME=${javaHome}", "PATH+MAVEN=${mvnHome}/bin"]) {
-		    sh "mvn clean install -Ddws.environment=jenkins -pl '!:dws-acc-tests'"
+		    sh "mvn clean install -Ddws.environment=jenkins -pl "!:dws-acc-tests""
 		}
 	}
 }
