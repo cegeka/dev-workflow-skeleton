@@ -8,8 +8,8 @@ stage concurrency: 1, name: "commit"
 	    cloneProject()
 		startDb(dbName)
 		mavenBuildWithoutUiTests(javaHome, mvnHome)
-		processTestResults()
 		stopDb(dbName)
+		processTestResults()
 	}
 
 stage concurrency: 1, name: "test"
