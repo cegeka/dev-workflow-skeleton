@@ -39,6 +39,6 @@ public class PetServiceTest extends UnitTest {
 
 		Pet actual = service.getById(1);
 
-		assertThat(actual).isEqualTo(pet);
+		assertThat(actual).isEqualTo(aPet().build());
 	}
 }
