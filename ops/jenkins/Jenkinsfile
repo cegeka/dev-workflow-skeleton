@@ -68,7 +68,7 @@ def buildDbImage() {
 }
 
 def buildBackendImage() {
-	sh "cp --parents dws/dws-rest/target/dws-rest-${versionNumber()}.jar ops/dws/back-end/dws-jar/dws-rest-${versionNumber()}.jar"
+	sh "cp --parents dws/dws-rest/target/dws-rest-${versionNumber()}.jar ops/dws/back-end/dws-jar/dws-rest.jar"
 	dir("ops/dws/back-end") {
 		sh "docker build -t dws/back-end:${versionNumber()} ."
 	}
