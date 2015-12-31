@@ -12,7 +12,12 @@ stage concurrency: 1, name: "commit"
 		stopDb(dbName)
 	}
 
-/* Helper functions */
+stage concurrency: 1, name: "test"
+	node("linux && jdk8 && mvn3 && docker") {
+		sh "echo 'reached this stage even with test failures'"
+	}
+
+/********** Helper functions **********/
 def clearWorkspace() {
 	sh "rm -rf *"	
 }
