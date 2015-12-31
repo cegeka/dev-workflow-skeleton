@@ -17,7 +17,7 @@ public class PetRepositoryIntegrationTest extends DomainIntegrationTest {
 	private static final int BURT_ID = 3;
 	private static final Pet BURT = aPet()
 			.withId(BURT_ID)
-			.withName("Burt")
+			.withName("Burts")
 			.withRace(DOG)
 			.withImageLocation("assets/img/dog1.jpg")
 			.withProfileText("Burt looks cute, but is in reality a though guy. Secretly wants to work for the FBI")

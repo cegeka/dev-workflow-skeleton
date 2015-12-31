@@ -35,7 +35,7 @@ def stopDb(dbName) {
 def mavenBuildWithoutUiTests(javaHome, mvnHome) {	
 	dir("dws") {
 		withEnv(["JAVA_HOME=${javaHome}", "PATH+MAVEN=${mvnHome}/bin"]) {
-		    sh "mvn clean install -Ddws.environment=jenkins -pl '!:dws-acc-tests'"
+		    sh "mvn clean install -Ddws.environment=jenkins -Dmaven.test.failure.ignore=true -pl '!:dws-acc-tests'"
 		}
 	}
 }
