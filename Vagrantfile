@@ -86,6 +86,9 @@ Vagrant.configure(2) do |config|
   #   push.app = "YOUR_ATLAS_USERNAME/YOUR_APPLICATION_NAME"
   # end
 
+  config.vm.provision :docker
+  config.vm.provision :docker_compose
+
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
@@ -171,9 +174,6 @@ DELIM
     DISPLAY=:0 gsettings set org.gnome.desktop.screensaver lock-enabled false
 
   SHELL
-
-  config.vm.provision :docker
-  config.vm.provision :docker_compose
 
   # Start containers
   # config.vm.provision :docker_compose, yml: "/vagrant/ops/dws/docker-compose.yml", rebuild: true, project_name: "opsdws", run: "always"
