@@ -60,10 +60,18 @@ def startDb(dbName) {
 
 def buildDockerImages() {
 	buildDbImage()
+	buildBackendImage()
 }
 
 def buildDbImage() {
 	sh "docker build -t dws/db:${versionNumber()} ops/dws/db/"
+}
+
+def buildBackendImage() {
+	sh "cp --parents dws/dws-rest/target/dws-rest-${versionNumber()}.jar ops/dws/back-end/dws-jar/dws-rest-${versionNumber()}.jar"
+	dir("ops/dws/back-end") {
+		sh "docker build -t dws/back-end:${versionNumber()} ."
+	}
 }
 
 def stopDb(dbName) {
