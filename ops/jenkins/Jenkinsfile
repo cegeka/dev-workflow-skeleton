@@ -42,7 +42,9 @@ def setMvnVersion() {
 
 def buildWithoutUiTests() {
 	def dbName = "dws_db_jenkins_commit"
+
 	try {
+		buildDbImage()
 		startDb(dbName)
 		mvn("clean install -pl '!:dws-acc-tests'")
 	} catch(err) {
@@ -52,17 +54,6 @@ def buildWithoutUiTests() {
 		archiveTestResults()
 		archiveArtifacts()
 	}
-}
-
-def startDb(dbName) {
-	buildDbImage()
-	try { sh "docker rm -f ${dbName}" } catch(e) {}
-	sh "docker run -d --net jenkins --name ${dbName} dws/db:${versionNumber()}"
-}
-
-def stopDb(dbName) {
-	sh "docker stop ${dbName}"
-	sh "docker rm ${dbName}"	
 }
 
 def buildDockerImages() {
@@ -94,7 +85,51 @@ def buildFrontendImage() {
 }
 
 def buildUiTests() {
+	def dbName = "dws_db_jenkins_test"
+	def backendName = "dws_back-end_jenkins_test"
+	def frontendName = "dws_front-end_jenkins_test"
 
+	try {
+		startDb(dbName)
+		startBackend(backendName)
+		startFrontend(frontendName)
+	} catch(err) {
+		currentBuild.result  = "FAILURE"
+	} finally {
+		/*stopFrontend(frontendName)
+		stopBackend(backendName)
+		stopDb(dbName)*/
+	}
+}
+
+def startDb(dbName) {
+	try { sh "docker rm -f ${dbName}" } catch(e) {}
+	sh "docker run -d --net jenkins --name ${dbName} dws/db:${versionNumber()}"
+}
+
+def stopDb(dbName) {
+	sh "docker stop ${dbName}"
+	sh "docker rm ${dbName}"	
+}
+
+def startBackend(backendName) {
+	try { sh "docker rm -f ${backendName}" } catch(e) {}
+	sh "docker run -d --net jenkins --name ${backendName} dws/back-end:${versionNumber()}"
+}
+
+def stopBackend(backendName) {
+	sh "docker stop ${backendName}"
+	sh "docker rm ${backendName}"	
+}
+
+def startFrontend(frontendName) {
+	try { sh "docker rm -f ${frontendName}" } catch(e) {}
+	sh "docker run -d -p 80:80 --net jenkins --name ${frontendName} dws/front-end:${versionNumber()}"
+}
+
+def stopFrontend(frontendName) {
+	sh "docker stop ${frontendName}"
+	sh "docker rm ${frontendName}"	
 }
 
 def archiveTestResults() {
