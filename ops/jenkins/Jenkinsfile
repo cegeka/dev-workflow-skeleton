@@ -6,11 +6,13 @@ stage concurrency: 1, name: "commit"
 	    setMvnVersion()
 		buildWithoutUiTests()
 		stopWhenFailures()
+		stashWorkspace()
 	}
 
 stage concurrency: 1, name: "test"
 	node("linux && jdk8 && mvn3 && docker") {
 		clearWorkspace()
+		unstashWorkspace()
 	}
 
 /********** Helper functions **********/
@@ -74,6 +76,14 @@ def stopWhenFailures() {
 	if (currentBuild.result != null && !currentBuild.result.equalsIgnoreCase("STABLE")) {
 	    error 'There are failures in the current stage. The current build will be stopped.'
 	}
+}
+
+def stashWorkspace() {
+	stash includes: "**/*", name "workspace"
+}
+
+def unstashWorkspace() {
+	unstash "workspace"
 }
 
 def mvn(task) {
