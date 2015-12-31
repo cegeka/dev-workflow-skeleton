@@ -1,4 +1,4 @@
-stage 'build', concurrency: 1
+stage 'commit', concurrency: 1
 	node('linux && jdk8 && mvn3 && docker') {
 		def javaHome = tool "jdk8"
     	def mvnHome = tool "mvn3"
