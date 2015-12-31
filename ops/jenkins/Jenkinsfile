@@ -156,7 +156,7 @@ def unstashWorkspace() {
 	unstash "workspace"
 }
 
-def mvn(task, environment) {
+def mvn(environment, task) {
 	def javaHome = tool "jdk8"
 	def mvnHome = tool "mvn3"
 
