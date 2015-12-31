@@ -1,3 +1,5 @@
+def version = ''
+
 stage concurrency: 1, name: "commit"
 	node("linux && jdk8 && mvn3 && docker") {
 		def javaHome = tool "jdk8"
@@ -5,6 +7,7 @@ stage concurrency: 1, name: "commit"
 	    
 	    clearWorkspace()
 	    cloneProject()
+	    version = versionNumber()
 		buildWithoutUiTests(javaHome, mvnHome)
 		stopWhenFailures()
 	}
@@ -16,11 +19,15 @@ stage concurrency: 1, name: "test"
 
 /********** Helper functions **********/
 def clearWorkspace() {
-	sh "rm -rf *"	
+	sh "rm -rf *"
 }
 
 def cloneProject() {
 	git credentialsId: "385df167-99f7-408d-b9d8-ad982a7c997b", url: "https://github.com/cegeka/dev-workflow-skeleton.git"
+}
+
+def versionNumber() {
+	sh "echo 'git rev-list --count HEAD'"
 }
 
 def buildWithoutUiTests(javaHome, mvnHome) {
