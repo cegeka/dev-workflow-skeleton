@@ -11,7 +11,7 @@ stage concurrency: 1, name: "commit"
 
 stage concurrency: 1, name: "test"
 	node("linux && jdk8 && mvn3 && docker") {
-		sh "echo 'reached this stage even with test failures'"
+		sh "echo 'reached test stage'"
 	}
 
 /********** Helper functions **********/
@@ -33,6 +33,7 @@ def buildWithoutUiTests(javaHome, mvnHome) {
 	} finally {
 		stopDb(dbName)
 		archiveTestResults()
+		archiveArtifacts()
 	}
 }
 
@@ -58,6 +59,10 @@ def mavenBuildWithoutUiTests(javaHome, mvnHome) {
 def archiveTestResults() {
 	step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
 	step([$class: 'JUnitResultArchiver', testResults: '**/target/failsafe-reports/TEST-*.xml'])
+}
+
+def archiveArtifacts() {
+ 	step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
 }
 
 def stopWhenFailures() {
