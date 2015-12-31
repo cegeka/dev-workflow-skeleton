@@ -91,7 +91,6 @@ Vagrant.configure(2) do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
     sudo timedatectl set-timezone Europe/Brussels
-    #gsettings set org.gnome.desktop.screensaver lock-enabled false
 
     # Configure apt
     sudo add-apt-repository -y -r ppa:webupd8team/java
@@ -147,6 +146,15 @@ Categories=Development;IDE;
 Name[en]=Eclipse
 X-Desktop-File-Install-Version=0.22
 DELIM
+
+    # Prepare for dws docker containers
+    sudo cp -n /etc/hosts /etc/hosts.ori
+    sudo cp -f /etc/hosts.ori /etc/hosts
+    sudo echo "127.0.0.1 dws_db_1" >> /etc/hosts
+    sudo usermod -aG docker vagrant
+
+    # Disable screen locking
+    DISPLAY=:0 gsettings set org.gnome.desktop.screensaver lock-enabled false
 
   SHELL
 
