@@ -61,6 +61,7 @@ def startDb(dbName) {
 def buildDockerImages() {
 	buildDbImage()
 	buildBackendImage()
+	buildFrontendImage()
 }
 
 def buildDbImage() {
@@ -73,6 +74,15 @@ def buildBackendImage() {
 	sh "cp dws/dws-rest/target/dws-rest-${versionNumber}.jar ops/dws/back-end/dws-jar/dws-rest.jar"
 	dir("ops/dws/back-end") {
 		sh "docker build -t dws/back-end:${versionNumber} ."
+	}
+}
+
+def buildFrontendImage() {
+	def versionNumber = versionNumber()
+	sh "mkdir ops/dws/front-end/dws-dist"
+	sh "cp -r dws/dws-ui/target/dist/* ops/dws/front-end/dws-dist/"
+	dir("ops/dws/front-end") {
+		sh "docker build -t dws/front-end:${versionNumber} ."
 	}
 }
 
