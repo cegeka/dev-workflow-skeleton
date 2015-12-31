@@ -29,7 +29,7 @@ def buildWithoutUiTests(javaHome, mvnHome) {
 		startDb(dbName)
 		mavenBuildWithoutUiTests(javaHome, mvnHome)
 	} catch(err) {
-		echo "An error occurred: ${err}"
+		currentBuild.result  = "FAILURE"
 	} finally {
 		stopDb(dbName)
 		archiveTestResults()
