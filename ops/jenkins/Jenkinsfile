@@ -27,7 +27,7 @@ def cloneProject() {
 }
 
 def versionNumber() {
-	sh "echo 'git rev-list --count HEAD'"
+	sh "git rev-list --count HEAD"
 }
 
 def buildWithoutUiTests(javaHome, mvnHome) {
