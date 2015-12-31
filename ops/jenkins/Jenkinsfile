@@ -10,7 +10,7 @@ stage concurrency: 1, name: "commit"
 
 stage concurrency: 1, name: "test"
 	node("linux && jdk8 && mvn3 && docker") {
-		sh "echo 'reached test stage'"
+		clearWorkspace()
 	}
 
 /********** Helper functions **********/
