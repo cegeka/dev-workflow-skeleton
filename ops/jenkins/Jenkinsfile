@@ -79,7 +79,7 @@ def stopWhenFailures() {
 }
 
 def stashWorkspace() {
-	stash includes: "**/*", name "workspace"
+	stash includes: "**/*", name: "workspace"
 }
 
 def unstashWorkspace() {
