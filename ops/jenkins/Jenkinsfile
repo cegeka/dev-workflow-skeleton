@@ -53,13 +53,17 @@ def buildWithoutUiTests() {
 }
 
 def startDb(dbName) {
-	sh "docker build -t dws/db:${versionNumber()} ops/dws/db/"
+	buildDbImage()
 	try { sh "docker rm -f ${dbName}" } catch(e) {}
 	sh "docker run -d --net jenkins --name ${dbName} dws/db:${versionNumber()}"
 }
 
 def buildDockerImages() {
+	buildDbImage()
+}
 
+def buildDbImage() {
+	sh "docker build -t dws/db:${versionNumber()} ops/dws/db/"
 }
 
 def stopDb(dbName) {
