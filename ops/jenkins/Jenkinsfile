@@ -7,7 +7,8 @@ stage concurrency: 1, name: "commit"
 	    clearWorkspace()
 	    cloneProject()
 		startDb(dbName)
-		mavenBuildWithoutAccTests(javaHome, mvnHome)
+		mavenBuildWithoutUiTests(javaHome, mvnHome)
+		archiveTestResults()
 		stopDb(dbName)
 	}
 
@@ -31,10 +32,15 @@ def stopDb(dbName) {
 	sh "docker rm ${dbName}"	
 }
 
-def mavenBuildWithoutAccTests(javaHome, mvnHome) {	
+def mavenBuildWithoutUiTests(javaHome, mvnHome) {	
 	dir("dws") {
 		withEnv(["JAVA_HOME=${javaHome}", "PATH+MAVEN=${mvnHome}/bin"]) {
 		    sh "mvn clean install -Ddws.environment=jenkins -pl '!:dws-acc-tests'"
 		}
 	}
+}
+
+def archiveTestResults(){
+	step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
+	step([$class: 'JUnitResultArchiver', testResults: '**/target/failsafe-reports/TEST-*.xml'])
 }
