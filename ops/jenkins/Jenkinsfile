@@ -37,7 +37,7 @@ def versionNumber() {
 }
 
 def setMvnVersion() {
-	mvn("versions:set -DnewVersion=${versionNumber()} -DgenerateBackupPoms=false")
+	mvn("jenkins-commit", "versions:set -DnewVersion=${versionNumber()} -DgenerateBackupPoms=false")
 }
 
 def buildWithoutUiTests() {
@@ -46,7 +46,7 @@ def buildWithoutUiTests() {
 	try {
 		buildDbImage()
 		startDb(dbName)
-		mvn("clean install -pl '!:dws-acc-tests'")
+		mvn("jenkins-commit", "clean install -pl '!:dws-acc-tests'")
 	} catch(err) {
 		currentBuild.result  = "FAILURE"
 	} finally {
@@ -91,7 +91,7 @@ def buildUiTests() {
 
 	try {
 		startDb(dbName)
-		startBackend(backendName)
+		startBackend("jenkins-test", backendName)
 		startFrontend(frontendName)
 	} catch(err) {
 		currentBuild.result  = "FAILURE"
@@ -112,9 +112,9 @@ def stopDb(dbName) {
 	sh "docker rm ${dbName}"	
 }
 
-def startBackend(backendName) {
+def startBackend(environment, backendName) {
 	try { sh "docker rm -f ${backendName}" } catch(e) {}
-	sh "docker run -d --net jenkins --name ${backendName} dws/back-end:${versionNumber()}"
+	sh "docker run -d --net jenkins --env dws.environment=jenkins-test --name ${backendName} dws/back-end:${versionNumber()}"
 }
 
 def stopBackend(backendName) {
@@ -156,13 +156,13 @@ def unstashWorkspace() {
 	unstash "workspace"
 }
 
-def mvn(task) {
+def mvn(task, environment) {
 	def javaHome = tool "jdk8"
 	def mvnHome = tool "mvn3"
 
 	dir("dws") {
 		withEnv(["JAVA_HOME=${javaHome}", "PATH+MAVEN=${mvnHome}/bin"]) {
-		    sh "mvn -B -Ddws.environment=jenkins -Dmaven.test.failure.ignore=true ${task}"
+		    sh "mvn -B -Ddws.environment=${environment} -Dmaven.test.failure.ignore=true ${task}"
 		}
 	}
 }
