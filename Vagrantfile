@@ -93,6 +93,7 @@ Vagrant.configure(2) do |config|
     sudo timedatectl set-timezone Europe/Brussels
 
     # Configure apt
+    echo "Configuring apt..."
     sudo add-apt-repository -y -r ppa:webupd8team/java
     sudo add-apt-repository -y ppa:webupd8team/java
     sudo add-apt-repository -y -r ppa:webupd8team/sublime-text-3
@@ -100,10 +101,12 @@ Vagrant.configure(2) do |config|
     sudo apt-get update
 
     # Install java (automatically accept Oracle license)
+    echo "Installing Java..."
     /bin/echo /usr/bin/debconf shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections;/bin/echo /usr/bin/debconf shared/accepted-oracle-license-v1-1 seen true | sudo /usr/bin/debconf-set-selections;
-    sudo apt-get -y install oracle-java8-installer > /dev/null
+    sudo apt-get -y -qq install oracle-java8-installer > /dev/null
 
     # Install git
+    echo "Installing git..."
     sudo apt-get -y -q install git
     git config --global push.default "simple"
     git config --global pull.rebase true
@@ -111,16 +114,25 @@ Vagrant.configure(2) do |config|
     git config --global credential.helper 'cache --timeout=18000'
 
     # Install Sublime Text
-    sudo apt-get -y -q install sublime-text-installer
+    echo "Installing Sublime Text..."
+    sudo apt-get -y -qq install sublime-text-installer
 
     # Install node.js
+    echo "Installing node.js, bower and gulp..."
     sudo apt-get -y -q install curl
     curl -s -L https://deb.nodesource.com/setup_5.x | sudo bash -
     sudo apt-get -y -q install nodejs
-    sudo npm install -g bower
-    sudo npm install -g gulp
+    mkdir $HOME/.npm_global
+    npm config set prefix=$HOME/.npm_global
+    npm install -g npm
+    cp -n .bashrc .bashrc.ori
+    cp -f .bashrc.ori .bashrc
+    echo 'export PATH="$HOME/.npm_global/bin:$PATH"' >> .bashrc
+    npm install -g bower
+    npm install -g gulp
 
     # Install maven
+    echo "Installing Maven..."
     curl -s http://apache.belnet.be/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz > maven.tgz
     tar xzf maven.tgz
     sudo mv apache-maven-3.3.9 /opt
@@ -128,7 +140,8 @@ Vagrant.configure(2) do |config|
     rm maven.tgz
 
     # Install Eclipse
-    curl -s http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/mars/1/eclipse-jee-mars-1-linux-gtk-x86_64.tar.gz > eclipse.tgz
+    echo "Installing Eclipse..."
+    curl -s http://developer.eclipsesource.com/technology/epp/mars/eclipse-jee-mars-1-linux-gtk-x86_64.tar.gz > eclipse.tgz
     tar xzf eclipse.tgz
     sudo mv eclipse /opt
     sudo ln -sf /opt/eclipse/eclipse /usr/local/bin/eclipse
@@ -148,6 +161,7 @@ X-Desktop-File-Install-Version=0.22
 DELIM
 
     # Prepare for dws docker containers
+    echo "Preparing docker..."
     sudo cp -n /etc/hosts /etc/hosts.ori
     sudo cp -f /etc/hosts.ori /etc/hosts
     sudo echo "127.0.0.1 dws_db_1" >> /etc/hosts
