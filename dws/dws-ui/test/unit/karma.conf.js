@@ -13,7 +13,12 @@ module.exports = function(config) {
         ],
         browsers: ["PhantomJS"],
         frameworks: ["mocha", "chai-sinon"],
-        reporters: ["mocha"],
+        reporters: ["mocha", "junit"],
+        junitReporter: {
+            outputDir: "target/surefire-reports/",
+            outputFile: "TEST-results.xml",
+            useBrowserName: false
+        },
         port: 9876
     });
 };
