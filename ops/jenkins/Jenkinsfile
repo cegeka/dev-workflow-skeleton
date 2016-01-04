@@ -98,9 +98,9 @@ def e2eTests() {
 	} catch(err) {
 		currentBuild.result  = "FAILURE"
 	} finally {
-		stopFrontend(frontendName)
+		/*stopFrontend(frontendName)
 		stopBackend(backendName)
-		stopDb(dbName)
+		stopDb(dbName)*/
 	}
 }
 
@@ -135,7 +135,7 @@ def stopBackend(backendName) {
 
 def startFrontend(frontendName, backendName) {
 	try { sh "docker rm -f ${frontendName}" } catch(e) {}
-	sh "docker run -d --net jenkins --env dws_api_proxy=${backendName}:8080 --name ${frontendName} dws/front-end:${versionNumber()}"
+	sh "docker run -d -p 8282:80 --net jenkins --env dws_api_proxy=${backendName}:8080 --name ${frontendName} dws/front-end:${versionNumber()}"
 }
 
 def stopFrontend(frontendName) {

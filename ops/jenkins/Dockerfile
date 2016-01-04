@@ -4,7 +4,7 @@ ENV JENKINS_OPTS --httpPort=8888
 
 USER root
 
-# Instal jdk8
+# Install jdk8
 RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee /etc/apt/sources.list.d/webupd8team-java.list && \
 		echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee -a /etc/apt/sources.list.d/webupd8team-java.list && \
 		echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections && \
@@ -18,7 +18,7 @@ RUN curl -s http://apache.belnet.be/maven/maven-3/3.3.9/binaries/apache-maven-3.
 		mv /tmp/apache-maven-3.3.9 /opt && \
 		rm -r /tmp/apache-maven-3.3.9-bin.tar.gz
 
-# Instal xvfb
+# Install xvfb
 RUN apt-get update && \
 		apt-get install -y xvfb
 
