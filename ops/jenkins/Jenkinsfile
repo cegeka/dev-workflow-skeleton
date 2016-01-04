@@ -10,7 +10,7 @@ stage concurrency: 1, name: "commit"
 	}
 
 stage concurrency: 1, name: "test"
-	node("linux && jdk8 && mvn3 && docker") {
+	node("linux && jdk8 && mvn3 && docker && xvfb") {
 		clearWorkspace()
 		unstashWorkspace()
 		buildDockerImages()
@@ -94,12 +94,18 @@ def e2eTests() {
 		initDb("jenkins-test")
 		startBackend("jenkins-test", backendName)
 		startFrontend(backendName, frontendName)
+		runProtractor()
 	} catch(err) {
 		currentBuild.result  = "FAILURE"
 	} finally {
 		stopFrontend(frontendName)
 		stopBackend(backendName)
 		stopDb(dbName)
+	}
+}
+
+def runProtractor() {
+	wrap([$class: 'Xvfb']) {
 	}
 }
 

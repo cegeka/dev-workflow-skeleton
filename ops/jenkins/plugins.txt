@@ -1,6 +1,9 @@
 # green balls
 greenballs:1.15
 
+# xvfb
+xvfb:1.1.2
+
 # git dependencies
 git-client:1.19.1
 scm-api:1.0
