@@ -40,7 +40,7 @@ def setMvnVersion() {
 	mvn("jenkins-commit", "versions:set -DnewVersion=${versionNumber()} -DgenerateBackupPoms=false")
 }
 
-def buildWithoute2eTests() {
+def buildWithoutUiTests() {
 	def dbName = "dws_db_jenkins_commit"
 
 	try {
