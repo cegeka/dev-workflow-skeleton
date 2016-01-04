@@ -15,7 +15,7 @@ back-end:
 front-end:
     build: front-end/
     environment:
-        - dws_api_proxy=dws_back-end_1
+        - dws_api_proxy=dws_back-end_1:8080
     ports:
         - "80:80"
     links:

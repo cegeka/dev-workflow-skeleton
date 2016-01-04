@@ -1,6 +1,6 @@
 FROM nginx:1.9.9
 
-ENV dws_api_proxy localhost
+ENV dws_api_proxy dws_back-end_1:8080
 
 RUN rm /etc/nginx/conf.d/default.conf
 COPY dws-dist/ /data/dws/

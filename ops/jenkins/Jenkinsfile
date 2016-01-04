@@ -92,8 +92,8 @@ def e2eTests() {
 	try {
 		startDb(dbName)
 		initDb("jenkins-test")
-		startBackend("jenkins-test", backendName)
-		startFrontend(backendName, frontendName)
+		startBackend(backendName, "jenkins-test")
+		startFrontend(frontendName, "${backendName}:8080")
 		runProtractor()
 	} catch(err) {
 		currentBuild.result  = "FAILURE"
@@ -123,7 +123,7 @@ def initDb(environment) {
 	retry(3) { mvn(environment, "process-resources flyway:clean flyway:migrate -pl :dws-infrastructure") }
 }
 
-def startBackend(environment, backendName) {
+def startBackend(backendName, environment) {
 	try { sh "docker rm -f ${backendName}" } catch(e) {}
 	sh "docker run -d --net jenkins --env dws_environment=${environment} --name ${backendName} dws/back-end:${versionNumber()}"
 }
@@ -133,9 +133,9 @@ def stopBackend(backendName) {
 	sh "docker rm ${backendName}"	
 }
 
-def startFrontend(backendName, frontendName) {
+def startFrontend(frontendName, apiProxy) {
 	try { sh "docker rm -f ${frontendName}" } catch(e) {}
-	sh "docker run -p 8282:80 -d --net jenkins --env dws_api_proxy=${backendName} --name ${frontendName} dws/front-end:${versionNumber()}"
+	sh "docker run -d --net jenkins --env dws_api_proxy=${apiProxy} --name ${frontendName} dws/front-end:${versionNumber()}"
 }
 
 def stopFrontend(frontendName) {
