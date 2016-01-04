@@ -1,6 +1,6 @@
 FROM java:8u66-jdk
 
-ENV dws_environment compose
+ENV db.host dws_db_1:5432
 
 COPY dws-jar/dws-rest.jar /usr/src/dws-rest.jar
 WORKDIR /usr/src/

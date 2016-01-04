@@ -38,7 +38,6 @@
 		<frontend.version>0.0.26</frontend.version>
 		<m2e.version>1.0.0</m2e.version>
 		<exec.version>0.7</exec.version>
-		<dws_environment>default</dws_environment>
 	</properties>
 
 	<modules>
@@ -175,7 +174,6 @@
 							<configuration>
 								<files>
 									<file>${dws.root}/dws-infrastructure/src/main/resources/dws.default.properties</file>
-									<file>${dws.root}/dws-infrastructure/src/main/resources/dws.${dws_environment}.properties</file>
 								</files>
 							</configuration>
 						</execution>
@@ -186,7 +184,7 @@
 					<artifactId>flyway-maven-plugin</artifactId>
 					<version>${flyway.version}</version>
 					<configuration>
-						<url>${db.url}</url>
+						<url>jdbc:postgresql://${db.host}/dws</url>
 						<user>${db.username}</user>
 						<password>${db.password}</password>
 					</configuration>

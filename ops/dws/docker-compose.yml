@@ -6,7 +6,7 @@ db:
 back-end:
     build: back-end/
     environment:
-        - dws_environment=compose
+        - db.host=dws_db_1:5432
     ports:
         - "8080:8080"
     links:

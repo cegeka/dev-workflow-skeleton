@@ -109,7 +109,6 @@
 								<arguments>
 									<argument>java</argument>
 									<argument>-jar</argument>
-									<argument>-Ddws_environment=${dws_environment}</argument>
 									<argument>${project.build.directory}/acceptance-tests/back-end/dws-rest.jar</argument>
 								</arguments>
 							</configuration>

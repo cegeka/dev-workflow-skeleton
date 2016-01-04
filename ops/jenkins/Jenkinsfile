@@ -37,7 +37,7 @@ def versionNumber() {
 }
 
 def setMvnVersion() {
-	mvn("jenkins-commit", "versions:set -DnewVersion=${versionNumber()} -DgenerateBackupPoms=false")
+	mvn("versions:set -DnewVersion=${versionNumber()} -DgenerateBackupPoms=false")
 }
 
 def buildWithoutE2ETests() {
@@ -46,7 +46,7 @@ def buildWithoutE2ETests() {
 	try {
 		buildDbImage()
 		startDb(dbName)
-		mvn("jenkins-commit", "clean install -pl '!:dws-acc-tests'")
+		mvn("clean install -Ddb.host=${dbName}:5432 -pl '!:dws-acc-tests'")
 	} catch(err) {
 		currentBuild.result  = "FAILURE"
 	} finally {
@@ -91,9 +91,9 @@ def e2eTests() {
 
 	try {
 		startDb(dbName)
-		initDb("jenkins-test")
-		startBackend(backendName, "jenkins-test")
-		startFrontend(frontendName, "${backendName}:8080")
+		initDb(dbName)
+		startBackend(backendName, dbName)
+		startFrontend(frontendName, backendName)
 		runProtractor()
 	} catch(err) {
 		currentBuild.result  = "FAILURE"
@@ -119,13 +119,13 @@ def stopDb(dbName) {
 	sh "docker rm ${dbName}"	
 }
 
-def initDb(environment) {
-	retry(3) { mvn(environment, "process-resources flyway:clean flyway:migrate -pl :dws-infrastructure") }
+def initDb(dbName) {
+	retry(3) { mvn("process-resources flyway:clean flyway:migrate -Ddb.host=${dbName}:5432 -pl :dws-infrastructure") }
 }
 
-def startBackend(backendName, environment) {
+def startBackend(backendName, dbName) {
 	try { sh "docker rm -f ${backendName}" } catch(e) {}
-	sh "docker run -d --net jenkins --env dws_environment=${environment} --name ${backendName} dws/back-end:${versionNumber()}"
+	sh "docker run -d --net jenkins --env db.host=${dbName}:5432 --name ${backendName} dws/back-end:${versionNumber()}"
 }
 
 def stopBackend(backendName) {
@@ -133,9 +133,9 @@ def stopBackend(backendName) {
 	sh "docker rm ${backendName}"	
 }
 
-def startFrontend(frontendName, apiProxy) {
+def startFrontend(frontendName, backendName) {
 	try { sh "docker rm -f ${frontendName}" } catch(e) {}
-	sh "docker run -d --net jenkins --env dws_api_proxy=${apiProxy} --name ${frontendName} dws/front-end:${versionNumber()}"
+	sh "docker run -d --net jenkins --env dws_api_proxy=${backendName}:8080 --name ${frontendName} dws/front-end:${versionNumber()}"
 }
 
 def stopFrontend(frontendName) {
@@ -167,13 +167,13 @@ def unstashWorkspace() {
 	unstash "workspace"
 }
 
-def mvn(environment, task) {
+def mvn(task) {
 	def javaHome = tool "jdk8"
 	def mvnHome = tool "mvn3"
 
 	dir("dws") {
 		withEnv(["JAVA_HOME=${javaHome}", "PATH+MAVEN=${mvnHome}/bin"]) {
-		    sh "mvn -B -Ddws_environment=${environment} -Dmaven.test.failure.ignore=true ${task}"
+		    sh "mvn -B -Dmaven.test.failure.ignore=true ${task}"
 		}
 	}
 }
