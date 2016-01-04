@@ -14,7 +14,7 @@ stage concurrency: 1, name: "test"
 		clearWorkspace()
 		unstashWorkspace()
 		buildDockerImages()
-		buildUiTests()
+		e2eTests()
 		stopWhenFailures()
 	}
 
@@ -40,7 +40,7 @@ def setMvnVersion() {
 	mvn("jenkins-commit", "versions:set -DnewVersion=${versionNumber()} -DgenerateBackupPoms=false")
 }
 
-def buildWithoutUiTests() {
+def buildWithoute2eTests() {
 	def dbName = "dws_db_jenkins_commit"
 
 	try {
@@ -84,7 +84,7 @@ def buildFrontendImage() {
 	}
 }
 
-def buildUiTests() {
+def e2eTests() {
 	def dbName = "dws_db_jenkins_test"
 	def backendName = "dws_back-end_jenkins_test"
 	def frontendName = "dws_front-end_jenkins_test"
