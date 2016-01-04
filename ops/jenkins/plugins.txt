@@ -31,8 +31,6 @@ workflow-cps-global-lib:1.12
 workflow-job:1.12
 workflow-durable-task-step:1.12
 authentication-tokens:1.2
-docker-commons:1.2
-docker-workflow:1.2
 
 # worklfow plugin
 workflow-aggregator:1.12

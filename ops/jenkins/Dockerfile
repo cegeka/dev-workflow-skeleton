@@ -18,6 +18,10 @@ RUN curl -s http://apache.belnet.be/maven/maven-3/3.3.9/binaries/apache-maven-3.
 		mv /tmp/apache-maven-3.3.9 /opt && \
 		rm -r /tmp/apache-maven-3.3.9-bin.tar.gz
 
+# Instal xvfb
+RUN apt-get update && \
+		apt-get install -y xvfb
+
 # Install front-end build dependencies
 RUN apt-get install -y make g++ bzip2
 
