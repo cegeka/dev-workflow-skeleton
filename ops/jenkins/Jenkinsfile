@@ -91,7 +91,9 @@ def e2eTests() {
 
 	try {
 		startDb(dbName)
-		initDb("jenkins-test")
+		retry(5) {
+			initDb("jenkins-test")
+		}
 		startBackend("jenkins-test", backendName)
 		startFrontend(backendName, frontendName)
 	} catch(err) {
