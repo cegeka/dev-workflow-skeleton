@@ -6,7 +6,7 @@ db:
 back-end:
     build: back-end/
     environment:
-        - dws.environment=compose
+        - dws_environment=compose
     ports:
         - "8080:8080"
     links:
@@ -14,6 +14,8 @@ back-end:
         
 front-end:
     build: front-end/
+    environment:
+        - dws_api_proxy=dws_back-end_1
     ports:
         - "80:80"
     links:

@@ -17,7 +17,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @PropertySource(value = {
 		"classpath:/dws.default.properties",
-		"classpath:/dws.${dws.environment}.properties"
+		"classpath:/dws.${dws_environment}.properties"
 }, ignoreResourceNotFound = true)
 @ComponentScan("be.cegeka.dws.infrastructure")
 public class InfrastructureConfig {
