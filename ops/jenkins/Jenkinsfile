@@ -91,6 +91,7 @@ def e2eTests() {
 
 	try {
 		startDb(dbName)
+		initDb("jenkins-test")
 		startBackend("jenkins-test", backendName)
 		startFrontend(backendName, frontendName)
 	} catch(err) {
@@ -110,6 +111,10 @@ def startDb(dbName) {
 def stopDb(dbName) {
 	sh "docker stop ${dbName}"
 	sh "docker rm ${dbName}"	
+}
+
+def initDb(environment) {
+	mvn(environment, "process-resources flyway:clean flyway:migrate -pl :dws-infrastructure");
 }
 
 def startBackend(environment, backendName) {
