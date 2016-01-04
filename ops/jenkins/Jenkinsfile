@@ -91,24 +91,25 @@ def e2eTests() {
 
 	try {
 		startDb(dbName)
-		retry(5) {
-			initDb("jenkins-test")
-		}
+		initDb("jenkins-test")
 		startBackend("jenkins-test", backendName)
 		startFrontend(backendName, frontendName)
 	} catch(err) {
 		currentBuild.result  = "FAILURE"
 	} finally {
-		/*stopFrontend(frontendName)
+		stopFrontend(frontendName)
 		stopBackend(backendName)
-		stopDb(dbName)*/
+		stopDb(dbName)
 	}
 }
 
 def startDb(dbName) {
 	try { sh "docker rm -f ${dbName}" } catch(e) {}
 	sh "docker run -d --net jenkins --name ${dbName} dws/db:${versionNumber()}"
-}
+	waitUntil {
+		telnet dbName 5432
+	}
+ }
 
 def stopDb(dbName) {
 	sh "docker stop ${dbName}"
@@ -116,7 +117,7 @@ def stopDb(dbName) {
 }
 
 def initDb(environment) {
-	mvn(environment, "process-resources flyway:clean flyway:migrate -pl :dws-infrastructure");
+	retry(3) { mvn(environment, "process-resources flyway:clean flyway:migrate -pl :dws-infrastructure") }
 }
 
 def startBackend(environment, backendName) {
