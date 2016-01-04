@@ -114,7 +114,7 @@ def stopDb(dbName) {
 
 def startBackend(environment, backendName) {
 	try { sh "docker rm -f ${backendName}" } catch(e) {}
-	sh "docker run -d --net jenkins --env dws.environment=${environment} --name ${backendName} dws/back-end:${versionNumber()}"
+	sh "docker run -d --net jenkins --env dws_environment=${environment} --name ${backendName} dws/back-end:${versionNumber()}"
 }
 
 def stopBackend(backendName) {
@@ -162,7 +162,7 @@ def mvn(environment, task) {
 
 	dir("dws") {
 		withEnv(["JAVA_HOME=${javaHome}", "PATH+MAVEN=${mvnHome}/bin"]) {
-		    sh "mvn -B -Ddws.environment=${environment} -Dmaven.test.failure.ignore=true ${task}"
+		    sh "mvn -B -Ddws_environment=${environment} -Dmaven.test.failure.ignore=true ${task}"
 		}
 	}
 }
