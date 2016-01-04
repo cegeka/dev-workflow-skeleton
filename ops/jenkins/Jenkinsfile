@@ -124,7 +124,7 @@ def stopBackend(backendName) {
 
 def startFrontend(backendName, frontendName) {
 	try { sh "docker rm -f ${frontendName}" } catch(e) {}
-	sh "docker run -d --net jenkins --env dws_api_proxy=${backendName} --name ${frontendName} dws/front-end:${versionNumber()}"
+	sh "docker run -p 8282:80 -d --net jenkins --env dws_api_proxy=${backendName} --name ${frontendName} dws/front-end:${versionNumber()}"
 }
 
 def stopFrontend(frontendName) {
