@@ -9,7 +9,7 @@ export default class HomePage {
     }
 
     assertTitle() {
-        expect(browser.getTitle()).to.eventually.equal("PetCupid");
+        expect(browser.getTitle()).to.eventually.equal("Pet Cupid");
         return this;
     }
 
