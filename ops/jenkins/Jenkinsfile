@@ -146,16 +146,16 @@ def stopFrontend(frontendName) {
 }
 
 def archiveAllTestResults() {
-	archiveTestResults("**")
+	archiveTestResults("")
 }
 
 def archiveUiTestResults() {
-	archiveTestResults("dws-acc-tests")
+	archiveTestResults("/dws-acc-tests")
 }
 
 def archiveTestResults(project) {
-	step([$class: 'JUnitResultArchiver', testResults: '**/${project}/target/surefire-reports/TEST-*.xml'])
-	step([$class: 'JUnitResultArchiver', testResults: '**/${project}/target/failsafe-reports/TEST-*.xml'])
+	step([$class: 'JUnitResultArchiver', testResults: '**${project}/target/surefire-reports/TEST-*.xml'])
+	step([$class: 'JUnitResultArchiver', testResults: '**${project}/target/failsafe-reports/TEST-*.xml'])
 }
 
 def archiveArtifacts() {
