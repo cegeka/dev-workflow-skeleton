@@ -4,7 +4,12 @@
 exports.config = {
     framework: "mocha",
     mochaOpts: {
-        reporter: "spec",
+        reporter: "mocha-jenkins-reporter",
+        reporterOptions: {
+            junit_report_name: "be.cegeka.dws.acc-tests",             
+            junit_report_path: "target/surefire-reports/TEST-results.xml",
+            junit_report_stack: 1
+        },
         timeout: 120000,
         slow: 5000
     },
@@ -17,7 +22,7 @@ exports.config = {
         require("../../target/dist/test/e2e/e2e.js");
     },
     capabilities: {
-        "browserName": "firefox"
+        browserName: "firefox"
     },
     specs: ["protractor.bootstrap.js"]
 };
