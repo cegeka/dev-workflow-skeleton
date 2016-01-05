@@ -154,6 +154,11 @@ def archiveUiTestResults() {
 	step([$class: "JUnitResultArchiver", testResults: "**/dws-acc-tests/target/surefire-reports/TEST-*.xml"])
 }
 
+def archiveArtifacts() {
+ 	step([$class: "ArtifactArchiver", artifacts: "**/target/*.jar", fingerprint: true])
+ 	step([$class: "ArtifactArchiver", artifacts: "**/dws-ui/target/dist/**/*", fingerprint: true])
+}
+
 def stopWhenFailures() {
 	if (currentBuild.result != null && !currentBuild.result.equalsIgnoreCase("STABLE")) {
 	    error "There are failures in the current stage. The current build will be stopped."
