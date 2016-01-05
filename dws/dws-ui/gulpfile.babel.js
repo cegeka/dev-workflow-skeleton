@@ -18,6 +18,7 @@ import extReplace from "gulp-ext-replace";
 import sourceMaps from "gulp-sourcemaps";
 import autoprefixer from "gulp-autoprefixer";
 import minifyCss from "gulp-minify-css";
+import imagemin from "gulp-imagemin";
 import csslint from "gulp-csslint";
 
 const server = browserSync.create("dev-workflow-skeleton");
@@ -128,6 +129,10 @@ gulp.task("build:assets:css", () =>
 gulp.task("build:assets:img", () =>
     gulp
     .src(files.img)
+    .pipe(imagemin({
+        optimizationLevel: 4,
+        progressive: true
+    }))
     .pipe(gulp.dest(dirs.img))
 );
 
