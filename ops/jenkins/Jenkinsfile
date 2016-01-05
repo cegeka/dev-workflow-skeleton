@@ -32,7 +32,7 @@ def determineVersionNumber() {
 }
 
 def versionNumber() {
-	def nbCommits = readFile('nb-commits.txt').trim()
+	def nbCommits = readFile("nb-commits.txt").trim()
 	return "0.0.${nbCommits}"
 }
 
@@ -106,7 +106,7 @@ def e2eTests() {
 }
 
 def runProtractor() {
-	wrap([$class: 'Xvfb', installationName: 'xvfb']) {
+	wrap([$class: "Xvfb", installationName: "xvfb"]) {
 		mvn("clean install -Ddb.host=dws_db_jenkins_test:5432 -pl :dws-acc-tests")
 	}
 }
@@ -154,18 +154,18 @@ def archiveUiTestResults() {
 }
 
 def archiveTestResults(project) {
-	step([$class: 'JUnitResultArchiver', testResults: '**${project}/target/surefire-reports/TEST-*.xml'])
-	step([$class: 'JUnitResultArchiver', testResults: '**${project}/target/failsafe-reports/TEST-*.xml'])
+	step([$class: "JUnitResultArchiver", testResults: "**${project}/target/surefire-reports/TEST-*.xml"])
+	step([$class: "JUnitResultArchiver", testResults: "**${project}/target/failsafe-reports/TEST-*.xml"])
 }
 
 def archiveArtifacts() {
- 	step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
- 	step([$class: 'ArtifactArchiver', artifacts: '**/dws-ui/target/dist/**/*', fingerprint: true])
+ 	step([$class: "ArtifactArchiver", artifacts: "**/target/*.jar", fingerprint: true])
+ 	step([$class: "ArtifactArchiver", artifacts: "**/dws-ui/target/dist/**/*", fingerprint: true])
 }
 
 def stopWhenFailures() {
 	if (currentBuild.result != null && !currentBuild.result.equalsIgnoreCase("STABLE")) {
-	    error 'There are failures in the current stage. The current build will be stopped.'
+	    error "There are failures in the current stage. The current build will be stopped."
 	}
 }
 
