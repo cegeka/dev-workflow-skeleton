@@ -107,7 +107,7 @@ def e2eTests() {
 
 def runProtractor() {
 	wrap([$class: "Xvfb", installationName: "xvfb"]) {
-		mvn("clean install -Ddb.host=dws_db_jenkins_test:5432 -pl :dws-acc-tests")
+		mvn("clean install -pl :dws-acc-tests")
 	}
 }
 

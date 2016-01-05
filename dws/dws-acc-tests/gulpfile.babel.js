@@ -13,14 +13,15 @@ import gulpProtractor from "gulp-protractor";
 const server = browserSync.create("dev-workflow-skeleton");
 const protractor = gulpProtractor.protractor;
 
-gulp.task("test", callback =>
+gulp.task("test:local", callback =>
 	runSequence(
         "front-end:start",
-        "end2end:test",
+        "end2end:test:local",
         "front-end:stop",
         callback)
 );
 
+gulp.task("test:jenkins", ["end2end:test:jenkins"]);
 
 gulp.task("front-end:start", callback => {
     let proxy = httpProxy("http://localhost:8080/api");
@@ -38,12 +39,21 @@ gulp.task("front-end:start", callback => {
 
 gulp.task("front-end:stop", () => server.exit());
 
-gulp.task("end2end:test", callback =>
+gulp.task("end2end:test:local", callback =>
     runSequence(
         "clean",
         "lint",
         "build",
-        "protractor:test",
+        "protractor:test:local",
+        callback)
+);
+
+gulp.task("end2end:test:jenkins", callback =>
+    runSequence(
+        "clean",
+        "lint",
+        "build",
+        "protractor:test:jenkins",
         callback)
 );
 
@@ -80,11 +90,21 @@ gulp.task("build:vendor", () =>
     .pipe(gulp.dest("target/dist/vendor/"))
 );
 
-gulp.task("protractor:test", () =>
+gulp.task("protractor:test:local", () =>
     gulp
         .src("test/e2e/protractor.bootstrap.js")
         .pipe(protractor({
             configFile: "test/e2e/protractor.conf.js"
+        }))
+        .on("error", () => process.exit(1))
+);
+
+gulp.task("protractor:test:jenkins", () =>
+    gulp
+        .src("test/e2e/protractor.bootstrap.js")
+        .pipe(protractor({
+            configFile: "test/e2e/protractor.conf.js",
+            args: ["--baseUrl", "http://dws_front-end_jenkins_test:80"]
         }))
         .on("error", () => process.exit(1))
 );
