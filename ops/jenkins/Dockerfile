@@ -22,6 +22,11 @@ RUN curl -s http://apache.belnet.be/maven/maven-3/3.3.9/binaries/apache-maven-3.
 RUN apt-get update && \
 		apt-get install -y xvfb
 
+# Install firefox
+RUN echo "deb http://packages.linuxmint.com debian import" >> /etc/apt/sources.list && \
+		apt-get update && \
+		apt-get install -y --force-yes firefox
+
 # Install front-end build dependencies
 RUN apt-get install -y make g++ bzip2
 

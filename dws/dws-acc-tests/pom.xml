@@ -103,6 +103,7 @@
                                 <arguments>
                                     <argument>java</argument>
                                     <argument>-jar</argument>
+                                    <argument>-Ddb.host=${db.host}</argument>
                                     <argument>${project.build.directory}/acceptance-tests/back-end/dws-rest.jar</argument>
                                 </arguments>
                             </configuration>
