@@ -107,7 +107,7 @@ def e2eTests() {
 
 def runProtractor() {
 	wrap([$class: "Xvfb", installationName: "xvfb"]) {
-		mvn("clean install -pl :dws-acc-tests")
+		mvn("clean install -Djenkins -pl :dws-acc-tests")
 	}
 }
 

@@ -19,7 +19,7 @@
 			<id>protractor-local</id>
 			<activation>
 				<property>
-					<name>!JENKINS_HOME</name>
+					<name>!jenkins</name>
 				</property>
 			</activation>
 			<dependencies>
@@ -171,7 +171,7 @@
 			<id>protractor-jenkins</id>
 			<activation>
 				<property>
-					<name>JENKINS_HOME</name>
+					<name>jenkins</name>
 				</property>
 			</activation>
 			<build>
