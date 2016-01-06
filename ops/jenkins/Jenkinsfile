@@ -199,7 +199,7 @@ def stopBackend(backendName) {
 
 def startFrontend(frontendName, port, backendName, network) {
 	try { sh "docker rm -vf ${frontendName}" } catch(e) {}
-	sh "docker run -d -p${port}:80 --net ${network} --env dws_api_proxy=${backendName}:8080 --name ${frontendName} dws/front-end:${versionNumber()}"
+	sh "docker run -d -p ${port}:80 --net ${network} --env dws_api_proxy=${backendName}:8080 --name ${frontendName} dws/front-end:${versionNumber()}"
 }
 
 def stopFrontend(frontendName) {
