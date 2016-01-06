@@ -167,8 +167,8 @@ def stopWhenFailures() {
 }
 
 def tag() {
-	sh "git tag -a $versionNumber() -m 'Tag version $versionNumber()'"
-	sh "git push origin $versionNumber()"
+	sh "git tag -a ${versionNumber()} -m 'Tag version ${versionNumber()}'"
+	sh "git push origin ${versionNumber()}"
 }
 
 def stashWorkspace() {
