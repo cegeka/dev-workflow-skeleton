@@ -135,6 +135,7 @@ def stopAcc() {
 	stopFrontend("dws_front-end_jenkins_acc")
 	stopBackend("dws_back-end_jenkins_acc")
 	stopDb("dws_db_jenkins_acc")
+	removeNetwork("dws-acc")
 }
 
 def startAcc() {
@@ -154,6 +155,7 @@ def stopPrd() {
 	stopFrontend("dws_front-end_jenkins_prd")
 	stopBackend("dws_back-end_jenkins_prd")
 	stopDb("dws_db_jenkins_prd")
+	removeNetwork("dws-prd")
 }
 
 def startPrd() {
@@ -173,8 +175,12 @@ def createNetwork(network) {
 	sh "docker network create -d bridge ${network}"
 }
 
+def removeNetwork(network) {
+	try { sh "docker network rm ${network}" } catch(err){}
+}
+
 def startDb(dbName, network) {
-	try { sh "docker rm -vf ${dbName}" } catch(e) {}
+	try { sh "docker rm -vf ${dbName}" } catch(err) {}
 	sh "docker run -d --net ${network} --name ${dbName} dws/db:${versionNumber()}"
  }
 
@@ -192,7 +198,7 @@ def initDb(dbName) {
 }
 
 def startBackend(backendName, dbName, network) {
-	try { sh "docker rm -vf ${backendName}" } catch(e) {}
+	try { sh "docker rm -vf ${backendName}" } catch(err) {}
 	sh "docker run -d --net ${network} --env db.host=${dbName}:5432 --name ${backendName} dws/back-end:${versionNumber()}"
 }
 
@@ -204,7 +210,7 @@ def stopBackend(backendName) {
 }
 
 def startFrontend(frontendName, port, backendName, network) {
-	try { sh "docker rm -vf ${frontendName}" } catch(e) {}
+	try { sh "docker rm -vf ${frontendName}" } catch(err) {}
 	sh "docker run -d -p ${port}:80 --net ${network} --env dws_api_proxy=${backendName}:8080 --name ${frontendName} dws/front-end:${versionNumber()}"
 }
 
