@@ -112,13 +112,13 @@ def runProtractor() {
 }
 
 def startDb(dbName) {
-	try { sh "docker rm -f ${dbName}" } catch(e) {}
+	try { sh "docker rm -vf ${dbName}" } catch(e) {}
 	sh "docker run -d --net jenkins --name ${dbName} dws/db:${versionNumber()}"
  }
 
 def stopDb(dbName) {
 	sh "docker stop ${dbName}"
-	sh "docker rm ${dbName}"	
+	sh "docker rm -v ${dbName}"	
 }
 
 def initDb(dbName) {
@@ -126,23 +126,23 @@ def initDb(dbName) {
 }
 
 def startBackend(backendName, dbName) {
-	try { sh "docker rm -f ${backendName}" } catch(e) {}
+	try { sh "docker rm -vf ${backendName}" } catch(e) {}
 	sh "docker run -d --net jenkins --env db.host=${dbName}:5432 --name ${backendName} dws/back-end:${versionNumber()}"
 }
 
 def stopBackend(backendName) {
 	sh "docker stop ${backendName}"
-	sh "docker rm ${backendName}"	
+	sh "docker rm -v ${backendName}"	
 }
 
 def startFrontend(frontendName, backendName) {
-	try { sh "docker rm -f ${frontendName}" } catch(e) {}
+	try { sh "docker rm -vf ${frontendName}" } catch(e) {}
 	sh "docker run -d --net jenkins --env dws_api_proxy=${backendName}:8080 --name ${frontendName} dws/front-end:${versionNumber()}"
 }
 
 def stopFrontend(frontendName) {
 	sh "docker stop ${frontendName}"
-	sh "docker rm ${frontendName}"	
+	sh "docker rm -v ${frontendName}"	
 }
 
 def archiveAllTestResults() {
