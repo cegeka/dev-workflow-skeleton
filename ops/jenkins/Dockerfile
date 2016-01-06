@@ -42,4 +42,5 @@ RUN git config --global user.name "jenkins-dws" && \
 		git config --global user.email "j1291760@trbvm.com" && \
 		git config --global push.default "simple" && \
 		git config --global pull.rebase true && \
-		git config --global url."https://".insteadOf git://
+		git config --global url."https://".insteadOf git:// && \
+		git config --global credential.helper 'cache --timeout=18000'
