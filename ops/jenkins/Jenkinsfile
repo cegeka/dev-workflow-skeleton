@@ -186,7 +186,9 @@ def stopDb(dbName) {
 }
 
 def initDb(dbName) {
+	sh "docker network connect jenkins ${dbName}"
 	retry(3) { mvn("process-resources flyway:clean flyway:migrate -Ddb.host=${dbName}:5432 -pl :dws-infrastructure") }
+	sh "docker network disconnect jenkins ${dbName}"
 }
 
 def startBackend(backendName, dbName, network) {
