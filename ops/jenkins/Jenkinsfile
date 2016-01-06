@@ -184,11 +184,11 @@ def removeNetwork(network) {
 }
 
 def connectToNetwork(network, container) {
-	sh "docker netwerk connect ${network} ${container}"
+	sh "docker network connect ${network} ${container}"
 }
 
 def disconnectFromNetwork(network, container) {
-	sh "docker netwerk disconnect ${network} ${container}"
+	sh "docker network disconnect ${network} ${container}"
 }
 
 def startDb(dbName, network) {
