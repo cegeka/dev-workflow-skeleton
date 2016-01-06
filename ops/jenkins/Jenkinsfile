@@ -179,8 +179,10 @@ def startDb(dbName, network) {
  }
 
 def stopDb(dbName) {
-	sh "docker stop ${dbName}"
-	sh "docker rm -v ${dbName}"	
+	try {
+		sh "docker stop ${dbName}"
+		sh "docker rm -v ${dbName}"	
+	} catch(err){}
 }
 
 def initDb(dbName) {
@@ -193,8 +195,10 @@ def startBackend(backendName, dbName, network) {
 }
 
 def stopBackend(backendName) {
-	sh "docker stop ${backendName}"
-	sh "docker rm -v ${backendName}"	
+	try {
+		sh "docker stop ${backendName}"
+		sh "docker rm -v ${backendName}"	
+	} catch(err){}
 }
 
 def startFrontend(frontendName, port, backendName, network) {
@@ -203,8 +207,10 @@ def startFrontend(frontendName, port, backendName, network) {
 }
 
 def stopFrontend(frontendName) {
-	sh "docker stop ${frontendName}"
-	sh "docker rm -v ${frontendName}"	
+	try {
+		sh "docker stop ${frontendName}"
+		sh "docker rm -v ${frontendName}"	
+	} catch(err){}
 }
 
 def archiveAllTestResults() {
