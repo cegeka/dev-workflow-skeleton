@@ -19,6 +19,24 @@ stage concurrency: 1, name: "test"
 		tag()
 	}
 
+stage name: "pre-acc"
+	input "Do you want to deploy to acc?"
+
+stage concurrency: 1, name: "acc"
+	node("linux && mvn3 && docker") {
+		stopAcc()
+		startAcc()
+	}
+
+stage name: "pre-prd"
+	input "Do you want to deploy to prd?"
+
+stage concurrency: 1, name: "prd"
+	node("linux && mvn3 && docker") {
+		stopPrd()
+		startPrd()
+	}
+
 /********** Helper functions **********/
 def clearWorkspace() {
 	sh "rm -rf *"
@@ -46,7 +64,7 @@ def buildWithoutE2ETests() {
 
 	try {
 		buildDbImage()
-		startDb(dbName)
+		startDb(dbName, "dws-jenkins")
 		mvn("clean install -Ddb.host=${dbName}:5432 -pl '!:dws-acc-tests'")
 	} catch(err) {
 		currentBuild.result  = "FAILURE"
@@ -86,15 +104,16 @@ def buildFrontendImage() {
 }
 
 def e2eTests() {
+	def network = "dws-jenkins"
 	def dbName = "dws_db_jenkins_test"
 	def backendName = "dws_back-end_jenkins_test"
 	def frontendName = "dws_front-end_jenkins_test"
 
 	try {
-		startDb(dbName)
+		startDb(dbName, network)
 		initDb(dbName)
-		startBackend(backendName, dbName)
-		startFrontend(frontendName, backendName)
+		startBackend(backendName, dbName, network)
+		startFrontend(frontendName, 9090 ,backendName, network)
 		runProtractor()
 	} catch(err) {
 		currentBuild.result  = "FAILURE"
@@ -112,9 +131,51 @@ def runProtractor() {
 	}
 }
 
-def startDb(dbName) {
+def stopAcc() {
+	stopFrontend("dws_front-end_jenkins_acc")
+	stopBackend("dws_back-end_jenkins_acc")
+	stopDb("dws_db_jenkins_acc")
+}
+
+def startAcc() {
+	def network = "dws-acc"
+	def dbName = "dws_db_jenkins_acc"
+	def backendName = "dws_back-end_jenkins_acc"
+	def frontendName = "dws_front-end_jenkins_acc"	
+		
+	createNetwork(network)	
+	startDb(dbName, network)
+	initDb(dbName)
+	startBackend(backendName, dbName, network)
+	startFrontend(frontendName, 5050 backendName, network)
+}
+
+def stopPrd() {
+	stopFrontend("dws_front-end_jenkins_prd")
+	stopBackend("dws_back-end_jenkins_prd")
+	stopDb("dws_db_jenkins_prd")
+}
+
+def startPrd() {
+	def network = "dws-prd"
+	def dbName = "dws_db_jenkins_prd"
+	def backendName = "dws_back-end_jenkins_prd"
+	def frontendName = "dws_front-end_jenkins_prd"	
+		
+	createNetwork(network)	
+	startDb(dbName, network)
+	initDb(dbName)
+	startBackend(backendName, dbName, network)
+	startFrontend(frontendName, 6060 backendName, network)
+}
+
+def createNetwork(network) {
+	sh "docker network create -d bridge ${network}"
+}
+
+def startDb(dbName, network) {
 	try { sh "docker rm -vf ${dbName}" } catch(e) {}
-	sh "docker run -d --net jenkins --name ${dbName} dws/db:${versionNumber()}"
+	sh "docker run -d --net ${network} --name ${dbName} dws/db:${versionNumber()}"
  }
 
 def stopDb(dbName) {
@@ -126,9 +187,9 @@ def initDb(dbName) {
 	retry(3) { mvn("process-resources flyway:clean flyway:migrate -Ddb.host=${dbName}:5432 -pl :dws-infrastructure") }
 }
 
-def startBackend(backendName, dbName) {
+def startBackend(backendName, dbName, network) {
 	try { sh "docker rm -vf ${backendName}" } catch(e) {}
-	sh "docker run -d --net jenkins --env db.host=${dbName}:5432 --name ${backendName} dws/back-end:${versionNumber()}"
+	sh "docker run -d --net ${network} --env db.host=${dbName}:5432 --name ${backendName} dws/back-end:${versionNumber()}"
 }
 
 def stopBackend(backendName) {
@@ -136,9 +197,9 @@ def stopBackend(backendName) {
 	sh "docker rm -v ${backendName}"	
 }
 
-def startFrontend(frontendName, backendName) {
+def startFrontend(frontendName, port, backendName, network) {
 	try { sh "docker rm -vf ${frontendName}" } catch(e) {}
-	sh "docker run -d --net jenkins --env dws_api_proxy=${backendName}:8080 --name ${frontendName} dws/front-end:${versionNumber()}"
+	sh "docker run -d -p${port}:80 --net ${network} --env dws_api_proxy=${backendName}:8080 --name ${frontendName} dws/front-end:${versionNumber()}"
 }
 
 def stopFrontend(frontendName) {

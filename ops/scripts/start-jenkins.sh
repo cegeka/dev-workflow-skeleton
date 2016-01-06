@@ -8,12 +8,12 @@ then
     sudo chown 1000 $JENKINS_HOME
 fi
 
-docker network create -d bridge jenkins
+docker network create -d bridge dws-jenkins
 
 docker build -t dws/jenkins ../jenkins/
 docker rm -vf dws_jenkins
 docker run -d -p 8888:8888 \
-		   --net jenkins \
+		   --net dws-jenkins \
 		   -v $JENKINS_HOME:/var/jenkins_home \
 		   -v /var/run/docker.sock:/var/run/docker.sock \
 		   -v $(which docker):/bin/docker \
