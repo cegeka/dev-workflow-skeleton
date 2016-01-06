@@ -38,4 +38,8 @@ COPY config.groovy /usr/share/jenkins/ref/init.groovy.d/config.groovy
 COPY plugins.txt /usr/share/jenkins/ref/
 RUN /usr/local/bin/plugins.sh /usr/share/jenkins/ref/plugins.txt
 
-RUN git config --global url."https://".insteadOf git://
+RUN git config --global user.name "jenkins-dws" && \
+		git config --global user.email "j1291760@trbvm.com" && \
+		git config --global push.default "simple" && \
+		git config --global pull.rebase true && \
+		git config --global url."https://".insteadOf git://
