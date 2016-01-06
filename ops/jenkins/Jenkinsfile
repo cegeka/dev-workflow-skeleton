@@ -146,7 +146,9 @@ def startAcc() {
 		
 	createNetwork(network)	
 	startDb(dbName, network)
+	connectToNetwork("dws-jenkins", dbName)
 	initDb(dbName)
+	disconnectFromNetwork("dws-jenkins", dbName)
 	startBackend(backendName, dbName, network)
 	startFrontend(frontendName, 5050, backendName, network)
 }
@@ -166,7 +168,9 @@ def startPrd() {
 		
 	createNetwork(network)	
 	startDb(dbName, network)
+	connectToNetwork("dws-jenkins", dbName)
 	initDb(dbName)
+	disconnectFromNetwork("dws-jenkins", dbName)
 	startBackend(backendName, dbName, network)
 	startFrontend(frontendName, 6060, backendName, network)
 }
@@ -177,6 +181,14 @@ def createNetwork(network) {
 
 def removeNetwork(network) {
 	try { sh "docker network rm ${network}" } catch(err){}
+}
+
+def connectToNetwork(network, container) {
+	sh "docker netwerk connect ${network} ${container}"
+}
+
+def disconnectFromNetwork(network, container) {
+	sh "docker netwerk disconnect ${network} ${container}"
 }
 
 def startDb(dbName, network) {
@@ -192,9 +204,7 @@ def stopDb(dbName) {
 }
 
 def initDb(dbName) {
-	sh "docker network connect dws-jenkins ${dbName}"
 	retry(3) { mvn("process-resources flyway:clean flyway:migrate -Ddb.host=${dbName}:5432 -pl :dws-infrastructure") }
-	sh "docker network disconnect dws-jenkins ${dbName}"
 }
 
 def startBackend(backendName, dbName, network) {
