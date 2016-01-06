@@ -16,6 +16,7 @@ stage concurrency: 1, name: "test"
 		buildDockerImages()
 		e2eTests()
 		stopWhenFailures()
+		tag()
 	}
 
 /********** Helper functions **********/
@@ -163,6 +164,11 @@ def stopWhenFailures() {
 	if (currentBuild.result != null && !currentBuild.result.equalsIgnoreCase("STABLE")) {
 	    error "There are failures in the current stage. The current build will be stopped."
 	}
+}
+
+def tag() {
+	sh "git tag -a $versionNumber() -m 'Tag version $versionNumber()'"
+	sh "git push origin $versionNumber()"
 }
 
 def stashWorkspace() {
