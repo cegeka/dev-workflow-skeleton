@@ -147,7 +147,7 @@ def startAcc() {
 	startDb(dbName, network)
 	initDb(dbName)
 	startBackend(backendName, dbName, network)
-	startFrontend(frontendName, 5050 backendName, network)
+	startFrontend(frontendName, 5050, backendName, network)
 }
 
 def stopPrd() {
@@ -166,7 +166,7 @@ def startPrd() {
 	startDb(dbName, network)
 	initDb(dbName)
 	startBackend(backendName, dbName, network)
-	startFrontend(frontendName, 6060 backendName, network)
+	startFrontend(frontendName, 6060, backendName, network)
 }
 
 def createNetwork(network) {
