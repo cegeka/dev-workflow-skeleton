@@ -1,4 +1,4 @@
-final JENKINS_NETWORK = "dws-jenkins"
+JENKINS_NETWORK = "dws-jenkins"
 
 stage concurrency: 1, name: "commit"
 	node("linux && jdk8 && mvn3 && docker") {
