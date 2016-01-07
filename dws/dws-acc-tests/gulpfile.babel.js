@@ -104,7 +104,7 @@ gulp.task("protractor:test:jenkins", () =>
         .src("test/e2e/protractor.bootstrap.js")
         .pipe(protractor({
             configFile: "test/e2e/protractor.conf.js",
-            args: ["--baseUrl", "http://dws_front-end_jenkins_test:80"]
+            args: ["--baseUrl", `http://${process.env.FRONTEND_HOST}:80`]
         }))
         .on("error", () => process.exit(1))
 );
