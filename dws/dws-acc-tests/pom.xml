@@ -215,7 +215,7 @@
 										<goal>gulp</goal>
 									</goals>
 									<configuration>
-										<arguments>test:jenkins</arguments>
+										<arguments>--frontendHost=${frontendHost} test:jenkins</arguments>
 									</configuration>
 								</execution>
 							</executions>

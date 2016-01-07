@@ -1,6 +1,7 @@
 /* global process */
 
 import gulp from "gulp";
+import gutil from "gulp-util";
 import runSequence from "run-sequence";
 import del from "del";
 import babel from "gulp-babel";
@@ -104,7 +105,7 @@ gulp.task("protractor:test:jenkins", () =>
         .src("test/e2e/protractor.bootstrap.js")
         .pipe(protractor({
             configFile: "test/e2e/protractor.conf.js",
-            args: ["--baseUrl", `http://${process.env.FRONTEND_HOST}:80`]
+            args: ["--baseUrl", `http://${gutil.env.frontendHost}:80`]
         }))
         .on("error", () => process.exit(1))
 );

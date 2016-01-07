@@ -1,61 +1,61 @@
 {
-  "name": "dev-workflow-skeleton",
-  "version": "0.0.0",
-  "description": "Innovation center to setup a small project that can be used to quickly bootstrap the development of new applications.",
-  "homepage": "https://github.com/cegeka/dev-workflow-skeleton",
-  "contributors": [
+    "name": "dev-workflow-skeleton",
+    "version": "0.0.0",
+    "description": "Innovation center to setup a small project that can be used to quickly bootstrap the development of new applications.",
+    "homepage": "https://github.com/cegeka/dev-workflow-skeleton",
+    "contributors": [
     {
-      "name": "Dieter Van Peer",
-      "email": "dieter.vanpeer@cegeka.be",
-      "url": "https://github.com/dietervanpeer"
+        "name": "Dieter Van Peer",
+        "email": "dieter.vanpeer@cegeka.be",
+        "url": "https://github.com/dietervanpeer"
     },
     {
-      "name": "Bruno Lannoo",
-      "email": "bruno.lannoo@cegeka.be",
-      "url": "https://github.com/BLannoo"
+        "name": "Bruno Lannoo",
+        "email": "bruno.lannoo@cegeka.be",
+        "url": "https://github.com/BLannoo"
     },
     {
-      "name": "Gilliam Flebus",
-      "email": "gilliam.flebus@cegeka.be",
-      "url": "https://github.com/Gi11i4m"
+        "name": "Gilliam Flebus",
+        "email": "gilliam.flebus@cegeka.be",
+        "url": "https://github.com/Gi11i4m"
+    }],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/cegeka/dev-workflow-skeleton.git"
+    },
+    "bugs": {
+        "url": "https://github.com/cegeka/dev-workflow-skeleton/issues"
+    },
+    "devDependencies": {
+        "babel-core": "~6.3.21",
+        "babel-eslint": "~4.1.5",
+        "babel-plugin-transform-es2015-modules-systemjs": "~6.3.13",
+        "babel-polyfill": "~6.3.14",
+        "babel-preset-es2015": "~6.3.13",
+        "browser-sync": "~2.10.1",
+        "chai": "~3.4.1",
+        "chai-as-promised": "~5.1.0",
+        "del": "~2.2.0",
+        "es6-module-loader": "~0.17.9",
+        "eslint-plugin-babel": "~3.0.0",
+        "gulp": "~3.9.0",
+        "gulp-babel": "~6.1.1",
+        "gulp-concat": "~2.6.0",
+        "gulp-eslint": "~1.1.1",
+        "gulp-protractor": "~2.1.0",
+        "gulp-util": "~3.0.7",
+        "http-proxy-middleware": "~0.9.0",
+        "mocha": "~2.3.4",
+        "mocha-jenkins-reporter": "~0.1.9",
+        "run-sequence": "~1.1.5",
+        "systemjs": "~0.19.9"
+    },
+    "babel": {
+        "presets": [
+            "es2015"
+        ]
+    },
+    "scripts": {
+        "postinstall": "node_modules/protractor/bin/webdriver-manager update"
     }
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/cegeka/dev-workflow-skeleton.git"
-  },
-  "bugs": {
-    "url": "https://github.com/cegeka/dev-workflow-skeleton/issues"
-  },
-  "devDependencies": {
-    "babel-core": "~6.3.21",
-    "babel-eslint": "~4.1.5",
-    "babel-plugin-transform-es2015-modules-systemjs": "~6.3.13",
-    "babel-polyfill": "~6.3.14",
-    "babel-preset-es2015": "~6.3.13",
-    "browser-sync": "~2.10.1",
-    "chai": "~3.4.1",
-    "chai-as-promised": "~5.1.0",
-    "del": "~2.2.0",
-    "es6-module-loader": "~0.17.9",
-    "eslint-plugin-babel": "~3.0.0",
-    "gulp": "~3.9.0",
-    "gulp-babel": "~6.1.1",
-    "gulp-concat": "~2.6.0",
-    "gulp-eslint": "~1.1.1",
-    "gulp-protractor": "~2.1.0",
-    "http-proxy-middleware": "~0.9.0",
-    "mocha": "~2.3.4",
-    "mocha-jenkins-reporter": "~0.1.9",
-    "run-sequence": "~1.1.5",
-    "systemjs": "~0.19.9"
-  },
-  "babel": {
-    "presets": [
-      "es2015"
-    ]
-  },
-  "scripts": {
-    "postinstall": "node_modules/protractor/bin/webdriver-manager update"
-  }
 }
