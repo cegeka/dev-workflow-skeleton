@@ -1,4 +1,4 @@
-def jenkinsNetwork = "dws-jenkins"
+final JENKINS_NETWORK = "dws-jenkins"
 
 stage concurrency: 1, name: "commit"
 	node("linux && jdk8 && mvn3 && docker") {
@@ -66,7 +66,7 @@ def buildWithoutE2ETests() {
 
 	try {
 		buildDbImage()
-		startDb(dbName, jenkinsNetwork)
+		startDb(dbName, JENKINS_NETWORK)
 		mvn("clean install -Ddb.host=${dbName}:5432 -pl '!:dws-acc-tests'")
 	} catch(err) {
 		currentBuild.result  = "FAILURE"
@@ -111,10 +111,10 @@ def e2eTests() {
 	def frontendName = "dws_front-end_jenkins_test"
 
 	try {
-		startDb(dbName, jenkinsNetwork)
+		startDb(dbName, JENKINS_NETWORK)
 		initDb(dbName)
-		startBackend(backendName, dbName, jenkinsNetwork)
-		startFrontend(frontendName, 9090 ,backendName, jenkinsNetwork)
+		startBackend(backendName, dbName, JENKINS_NETWORK)
+		startFrontend(frontendName, 9090 ,backendName, JENKINS_NETWORK)
 		runProtractor()
 	} catch(err) {
 		currentBuild.result  = "FAILURE"
@@ -147,9 +147,9 @@ def startAcc() {
 		
 	createNetwork(network)	
 	startDbWithMount(dbName, network, "acc")
-	connectToNetwork(jenkinsNetwork, dbName)
+	connectToNetwork(JENKINS_NETWORK, dbName)
 	migrateDb(dbName)
-	disconnectFromNetwork(jenkinsNetwork, dbName)
+	disconnectFromNetwork(JENKINS_NETWORK, dbName)
 	startBackend(backendName, dbName, network)
 	startFrontend(frontendName, 5050, backendName, network)
 }
@@ -169,9 +169,9 @@ def startPrd() {
 		
 	createNetwork(network)	
 	startDbWithMount(dbName, network, "prd")
-	connectToNetwork(jenkinsNetwork, dbName)
+	connectToNetwork(JENKINS_NETWORK, dbName)
 	migrateDb(dbName)
-	disconnectFromNetwork(jenkinsNetwork, dbName)
+	disconnectFromNetwork(JENKINS_NETWORK, dbName)
 	startBackend(backendName, dbName, network)
 	startFrontend(frontendName, 6060, backendName, network)
 }
