@@ -1,3 +1,4 @@
+VERSION_NUMBER = "";
 JENKINS_NETWORK = "dws-jenkins"
 
 stage concurrency: 1, name: "commit"
@@ -50,15 +51,12 @@ def cloneProject() {
 
 def determineVersionNumber() {
 	sh "git rev-list --count HEAD > nb-commits.txt"
-}
-
-def versionNumber() {
 	def nbCommits = readFile("nb-commits.txt").trim()
-	return "0.0.${nbCommits}"
+	VERSION_NUMBER = "0.0.${nbCommits}"
 }
 
 def setMvnVersion() {
-	mvn("versions:set -DnewVersion=${versionNumber()} -DgenerateBackupPoms=false")
+	mvn("versions:set -DnewVersion=${VERSION_NUMBER} -DgenerateBackupPoms=false")
 }
 
 def buildWithoutE2ETests() {
@@ -84,24 +82,22 @@ def buildDockerImages() {
 }
 
 def buildDbImage() {
-	sh "docker build -t dws/db:${versionNumber()} ops/dws/db/"
+	sh "docker build -t dws/db:${VERSION_NUMBER} ops/dws/db/"
 }
 
 def buildBackendImage() {
-	def versionNumber = versionNumber()
 	sh "mkdir ops/dws/back-end/dws-jar"
-	sh "cp dws/dws-rest/target/dws-rest-${versionNumber}.jar ops/dws/back-end/dws-jar/dws-rest.jar"
+	sh "cp dws/dws-rest/target/dws-rest-${VERSION_NUMBER}.jar ops/dws/back-end/dws-jar/dws-rest.jar"
 	dir("ops/dws/back-end") {
-		sh "docker build -t dws/back-end:${versionNumber} ."
+		sh "docker build -t dws/back-end:${VERSION_NUMBER} ."
 	}
 }
 
 def buildFrontendImage() {
-	def versionNumber = versionNumber()
 	sh "mkdir ops/dws/front-end/dws-dist"
 	sh "cp -r dws/dws-ui/target/dist/* ops/dws/front-end/dws-dist/"
 	dir("ops/dws/front-end") {
-		sh "docker build -t dws/front-end:${versionNumber} ."
+		sh "docker build -t dws/front-end:${VERSION_NUMBER} ."
 	}
 }
 
@@ -194,12 +190,12 @@ def disconnectFromNetwork(network, container) {
 
 def startDb(dbName, network) {
 	try { sh "docker rm -vf ${dbName}" } catch(err) {}
-	sh "docker run -d --net ${network} --name ${dbName} dws/db:${versionNumber()}"
+	sh "docker run -d --net ${network} --name ${dbName} dws/db:${VERSION_NUMBER}"
 }
 
 def startDbWithMount(dbName, network, mountPoint) {
 	try { sh "docker rm -vf ${dbName}" } catch(err) {}
-	sh "docker run -d -v /data/dws/db/${mountPoint}:/var/lib/postgresql/data --net ${network} --name ${dbName} dws/db:${versionNumber()}"
+	sh "docker run -d -v /data/dws/db/${mountPoint}:/var/lib/postgresql/data --net ${network} --name ${dbName} dws/db:${VERSION_NUMBER}"
 }
 
 def stopDb(dbName) {
@@ -219,7 +215,7 @@ def migrateDb(dbName) {
 
 def startBackend(backendName, dbName, network) {
 	try { sh "docker rm -vf ${backendName}" } catch(err) {}
-	sh "docker run -d --net ${network} --env db.host=${dbName}:5432 --name ${backendName} dws/back-end:${versionNumber()}"
+	sh "docker run -d --net ${network} --env db.host=${dbName}:5432 --name ${backendName} dws/back-end:${VERSION_NUMBER}"
 }
 
 def stopBackend(backendName) {
@@ -231,7 +227,7 @@ def stopBackend(backendName) {
 
 def startFrontend(frontendName, port, backendName, network) {
 	try { sh "docker rm -vf ${frontendName}" } catch(err) {}
-	sh "docker run -d -p ${port}:80 --net ${network} --env dws_api_proxy=${backendName}:8080 --name ${frontendName} dws/front-end:${versionNumber()}"
+	sh "docker run -d -p ${port}:80 --net ${network} --env dws_api_proxy=${backendName}:8080 --name ${frontendName} dws/front-end:${VERSION_NUMBER}"
 }
 
 def stopFrontend(frontendName) {
@@ -262,8 +258,8 @@ def stopWhenFailures() {
 }
 
 def tag() {
-	sh "git tag -a ${versionNumber()} -m 'Tag version ${versionNumber()}'"
-	sh "git push origin ${versionNumber()}"
+	sh "git tag -a ${VERSION_NUMBER} -m 'Tag version ${VERSION_NUMBER}'"
+	sh "git push origin ${VERSION_NUMBER}"
 }
 
 def stashWorkspace() {
