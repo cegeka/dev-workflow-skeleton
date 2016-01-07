@@ -1,4 +1,4 @@
-VERSION_NUMBER = ""; 
+VERSION_NUMBER = "";
 
 JENKINS_NETWORK = "dws-jenkins"
 
