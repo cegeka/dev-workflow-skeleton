@@ -23,9 +23,8 @@ PRD_FRONTEND_PORT = 6060
 
 stage concurrency: 1, name: "commit"
 	node("linux && jdk8 && mvn3 && docker") {
-		sh "mkdir build-${currentBuild.number}"
+		createCleanWorkspace("build-${currentBuild.number}")
 		dir("build-${currentBuild.number}") {
-	    	clearWorkspace()
 	    	cloneProject()
 	    	determineVersionNumber()
 	    	setMvnVersion()
@@ -35,17 +34,17 @@ stage concurrency: 1, name: "commit"
 		}
 	}
 
-stage name: "pre-test"
-	input "Do you want to proceed to test stage?"
-
 stage concurrency: 1, name: "test"
 	node("linux && jdk8 && mvn3 && docker && xvfb") {
-		clearWorkspace()
-		unstashWorkspace()
-		buildDockerImages()
-		e2eTests()
-		stopWhenFailures()
-		tag()
+		createCleanWorkspace("build-${currentBuild.number}")
+		dir("build-${currentBuild.number}") {
+			unstashWorkspace()
+			buildDockerImages()
+			e2eTests()
+			stopWhenFailures()
+			tag()
+			stashWorkspace()
+		}
 	}
 
 stage name: "pre-acc"
@@ -53,7 +52,7 @@ stage name: "pre-acc"
 
 stage concurrency: 1, name: "acc"
 	node("linux && mvn3 && docker") {
-		stopAcc()
+		stopAcc()	
 		startAcc()
 	}
 
@@ -67,8 +66,9 @@ stage concurrency: 1, name: "prd"
 	}
 
 /********** Helper functions **********/
-def clearWorkspace() {
-	sh "rm -rf *"
+def createCleanWorkspace(name) {
+	sh "rm -rf ${name}"
+	sh "mkdir ${name}"
 }
 
 def cloneProject() {
