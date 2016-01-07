@@ -23,14 +23,20 @@ PRD_FRONTEND_PORT = 6060
 
 stage concurrency: 1, name: "commit"
 	node("linux && jdk8 && mvn3 && docker") {
-	    clearWorkspace()
-	    cloneProject()
-	    determineVersionNumber()
-	    setMvnVersion()
-		buildWithoutE2ETests()
-		stopWhenFailures()
-		stashWorkspace()
+		sh "mkdir ${currentBuild.number}"
+		dir(currentBuild.number) {
+	    	clearWorkspace()
+	    	cloneProject()
+	    	determineVersionNumber()
+	    	setMvnVersion()
+			buildWithoutE2ETests()
+			stopWhenFailures()
+			stashWorkspace()
+		}
 	}
+
+stage name: "pre-test"
+	input "Do you want to proceed to test stage?"
 
 stage concurrency: 1, name: "test"
 	node("linux && jdk8 && mvn3 && docker && xvfb") {
