@@ -95,7 +95,8 @@ gulp.task("protractor:test:local", () =>
     gulp
         .src("test/e2e/protractor.bootstrap.js")
         .pipe(protractor({
-            configFile: "test/e2e/protractor.conf.js"
+            configFile: "test/e2e/protractor.conf.js",
+            args: ["--baseUrl", "http://localhost:8082"]
         }))
         .on("error", () => process.exit(1))
 );
@@ -105,7 +106,7 @@ gulp.task("protractor:test:jenkins", () =>
         .src("test/e2e/protractor.bootstrap.js")
         .pipe(protractor({
             configFile: "test/e2e/protractor.conf.js",
-            args: ["--baseUrl", `http://${gutil.env.frontendHost}:80`]
+            args: ["--baseUrl", `http://${gutil.env.frontendHost}`]
         }))
         .on("error", () => process.exit(1))
 );

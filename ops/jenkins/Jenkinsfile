@@ -20,7 +20,7 @@ PRD_BACKEND_NAME = "dws_back-end_jenkins_prd"
 PRD_FRONTEND_NAME = "dws_front-end_jenkins_prd"
 PRD_FRONTEND_PORT = 6060
 
-stage concurrency: 1, name: "commit"
+stage name: "commit"
 	node("linux && jdk8 && mvn3 && docker") {
 		createCleanWorkspace("build-${currentBuild.number}")
 		dir("build-${currentBuild.number}") {
@@ -143,7 +143,7 @@ def e2eTests() {
 		initDb(dbName)
 		startBackend(backendName, dbName, JENKINS_NETWORK)
 		startFrontend(frontendName ,backendName, JENKINS_NETWORK)
-		runProtractor(frontendName)
+		runProtractor(frontendName, backendName)
 	} catch(err) {
 		currentBuild.result  = "FAILURE"
 	} finally {
@@ -154,9 +154,9 @@ def e2eTests() {
 	}
 }
 
-def runProtractor(frontendName) {
+def runProtractor(frontendName, backendName) {
 	wrap([$class: "Xvfb", installationName: "xvfb"]) {
-		mvn("clean install -Djenkins -DfrontendHost=${frontendName} -pl :dws-acc-tests")
+		mvn("clean install -Djenkins -DfrontendHost=${frontendName}:80 -DbackendHost=${backendName}:8080 -pl :dws-acc-tests")
 	}
 }
 
@@ -265,6 +265,7 @@ def archiveAllTestResults() {
 
 def archiveUiTestResults() {
 	step([$class: "JUnitResultArchiver", testResults: "**/dws-acc-tests/target/surefire-reports/TEST-*.xml"])
+	step([$class: "JUnitResultArchiver", testResults: "**/dws-acc-tests/target/failsafe-reports/TEST-*.xml"])
 }
 
 def archiveArtifacts() {

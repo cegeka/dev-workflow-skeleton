@@ -1,4 +1,4 @@
-package be.cegeka.dws.rest.pet;
+package be.cegeka.dws.acctests;
 
 import static be.cegeka.dws.domain.pet.PetTestBuilder.aPet;
 import static be.cegeka.dws.domain.pet.Race.DOG;
@@ -13,9 +13,8 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.client.RestTemplate;
 
 import be.cegeka.dws.domain.pet.Pet;
-import be.cegeka.dws.rest.RestIntegrationTest;
 
-public class PetResourceIntegrationTest extends RestIntegrationTest {
+public class PetResourceIntegrationTest extends ResourceIntegrationTest {
 
 	private static final int BURT_ID = 3;
 	private static final Pet BURT = aPet()
@@ -32,14 +31,14 @@ public class PetResourceIntegrationTest extends RestIntegrationTest {
 
 	@Test
 	public void getPetById() {
-		Pet pet = httpClient.getForObject("http://localhost:8080/api/pet/" + BURT_ID, Pet.class);
+		Pet pet = httpClient.getForObject("http://" + backendHost() + "/api/pet/" + BURT_ID, Pet.class);
 
 		assertThat(pet).isEqualToComparingFieldByField(BURT);
 	}
 
 	@Test
 	public void getPets() {
-		List<Pet> pets = httpClient.exchange("http://localhost:8080/api/pet", GET, null, PET_LIST).getBody();
+		List<Pet> pets = httpClient.exchange("http://" + backendHost() + "/api/pet", GET, null, PET_LIST).getBody();
 
 		assertThat(pets).hasSize(7);
 		assertThat(pets.stream().filter(pet -> pet.getId() == BURT_ID).findFirst().get())
