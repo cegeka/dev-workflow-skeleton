@@ -7,7 +7,6 @@ COMMIT_DB_NAME = "dws_db_jenkins_commit"
 TEST_DB_NAME = "dws_db_jenkins_test"
 TEST_BACKEND_NAME = "dws_back-end_jenkins_test"
 TEST_FRONTEND_NAME = "dws_front-end_jenkins_test"
-TEST_FRONTEND_PORT = 9090
 
 ACC_NETWORK = "dws-acc"
 ACC_DB_NAME = "dws_db_jenkins_acc"
@@ -135,25 +134,29 @@ def buildFrontendImage() {
 }
 
 def e2eTests() {
+	def dbName = "${TEST_DB_NAME}_${VERSION_NUMBER}"
+	def backendName = "${TEST_BACKEND_NAME}_${VERSION_NUMBER}"
+	def frontendName = "${TEST_FRONTEND_NAME}_${VERSION_NUMBER}"
+
 	try {
-		startDb(TEST_DB_NAME, JENKINS_NETWORK)
-		initDb(TEST_DB_NAME)
-		startBackend(TEST_BACKEND_NAME, TEST_DB_NAME, JENKINS_NETWORK)
-		startFrontend(TEST_FRONTEND_NAME, TEST_FRONTEND_PORT ,TEST_BACKEND_NAME, JENKINS_NETWORK)
-		runProtractor()
+		startDb(dbName, JENKINS_NETWORK)
+		initDb(dbName)
+		startBackend(backendName, dbName, JENKINS_NETWORK)
+		startFrontend(frontendName ,backendName, JENKINS_NETWORK)
+		runProtractor(frontendName)
 	} catch(err) {
 		currentBuild.result  = "FAILURE"
 	} finally {
-		stopFrontend(TEST_FRONTEND_NAME)
-		stopBackend(TEST_BACKEND_NAME)
-		stopDb(TEST_DB_NAME)
+		stopFrontend(frontendName)
+		stopBackend(backendName)
+		stopDb(dbName)
 		archiveUiTestResults()
 	}
 }
 
-def runProtractor() {
+def runProtractor(frontendName) {
 	wrap([$class: "Xvfb", installationName: "xvfb"]) {
-		mvn("clean install -Djenkins -DfrontendHost=${TEST_FRONTEND_NAME} -pl :dws-acc-tests")
+		mvn("clean install -Djenkins -DfrontendHost=${frontendName} -pl :dws-acc-tests")
 	}
 }
 
@@ -171,7 +174,7 @@ def startAcc() {
 	migrateDb(ACC_DB_NAME)
 	disconnectFromNetwork(JENKINS_NETWORK, ACC_DB_NAME)
 	startBackend(ACC_BACKEND_NAME, ACC_DB_NAME, ACC_NETWORK)
-	startFrontend(ACC_FRONTEND_NAME, ACC_FRONTEND_PORT, ACC_BACKEND_NAME, ACC_NETWORK)
+	startExposedFrontend(ACC_FRONTEND_NAME, ACC_FRONTEND_PORT, ACC_BACKEND_NAME, ACC_NETWORK)
 }
 
 def stopPrd() {
@@ -188,7 +191,7 @@ def startPrd() {
 	migrateDb(PRD_DB_NAME)
 	disconnectFromNetwork(JENKINS_NETWORK, PRD_DB_NAME)
 	startBackend(PRD_BACKEND_NAME, PRD_DB_NAME, PRD_NETWORK)
-	startFrontend(PRD_FRONTEND_NAME, PRD_FRONTEND_PORT, PRD_BACKEND_NAME, PRD_NETWORK)
+	startExposedFrontend(PRD_FRONTEND_NAME, PRD_FRONTEND_PORT, PRD_BACKEND_NAME, PRD_NETWORK)
 }
 
 def createNetwork(network) {
@@ -240,7 +243,12 @@ def stopBackend(backendName) {
 	try { sh "docker rm -v ${backendName}" } catch(err){}
 }
 
-def startFrontend(frontendName, port, backendName, network) {
+def startFrontend(frontendName, backendName, network) {
+	stopFrontend(frontendName)
+	sh "docker run -d --net ${network} --env dws_api_proxy=${backendName}:8080 --name ${frontendName} dws/front-end:${VERSION_NUMBER}"
+}
+
+def startExposedFrontend(frontendName, port, backendName, network) {
 	stopFrontend(frontendName)
 	sh "docker run -d -p ${port}:80 --net ${network} --env dws_api_proxy=${backendName}:8080 --name ${frontendName} dws/front-end:${VERSION_NUMBER}"
 }
