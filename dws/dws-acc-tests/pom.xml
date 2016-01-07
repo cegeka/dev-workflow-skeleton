@@ -20,6 +20,16 @@
 		<!-- dws -->
 		<dependency>
 			<groupId>be.cegeka</groupId>
+			<artifactId>dws-infrastructure</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>be.cegeka</groupId>
+			<artifactId>dws-infrastructure</artifactId>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>be.cegeka</groupId>
 			<artifactId>dws-domain</artifactId>
 		</dependency>
 		<dependency>
@@ -27,6 +37,31 @@
 			<artifactId>dws-domain</artifactId>
 			<type>test-jar</type>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>be.cegeka</groupId>
+			<artifactId>dws-service</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>be.cegeka</groupId>
+			<artifactId>dws-service</artifactId>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>be.cegeka</groupId>
+			<artifactId>dws-rest</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>be.cegeka</groupId>
+			<artifactId>dws-rest</artifactId>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>be.cegeka</groupId>
+			<artifactId>dws-ui</artifactId>
+			<type>pom</type>
 		</dependency>
 	</dependencies>
 
@@ -38,17 +73,6 @@
 					<name>!jenkins</name>
 				</property>
 			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>be.cegeka</groupId>
-					<artifactId>dws-rest</artifactId>
-				</dependency>
-				<dependency>
-					<groupId>be.cegeka</groupId>
-					<artifactId>dws-ui</artifactId>
-					<type>pom</type>
-				</dependency>
-			</dependencies>
 			<build>
 				<plugins>
 					<plugin>
