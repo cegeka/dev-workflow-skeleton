@@ -20,7 +20,7 @@ PRD_BACKEND_NAME = "dws_back-end_jenkins_prd"
 PRD_FRONTEND_NAME = "dws_front-end_jenkins_prd"
 PRD_FRONTEND_PORT = 6060
 
-stage name: "commit"
+stage concurrency: 1, name: "commit"
 	node("linux && jdk8 && mvn3 && docker") {
 		createCleanWorkspace("build-${currentBuild.number}")
 		dir("build-${currentBuild.number}") {
