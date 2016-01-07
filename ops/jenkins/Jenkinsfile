@@ -267,7 +267,7 @@ def tag() {
 }
 
 def stashWorkspace() {
-	stash includes: "**/*", name: "workspace"
+	stash includes: '**/*', name: 'workspace', useDefaultExcludes: false
 }
 
 def unstashWorkspace() {
