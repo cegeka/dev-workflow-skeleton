@@ -1,5 +1,25 @@
 VERSION_NUMBER = "";
+
 JENKINS_NETWORK = "dws-jenkins"
+
+COMMIT_DB_NAME = "dws_db_jenkins_commit"
+
+TEST_DB_NAME = "dws_db_jenkins_test"
+TEST_BACKEND_NAME = "dws_back-end_jenkins_test"
+TEST_FRONTEND_NAME = "dws_front-end_jenkins_test"
+TEST_FRONTEND_PORT = 9090
+
+ACC_NETWORK = "dws-acc"
+ACC_DB_NAME = "dws_db_jenkins_acc"
+ACC_BACKEND_NAME = "dws_back-end_jenkins_acc"
+ACC_FRONTEND_NAME = "dws_front-end_jenkins_acc"
+ACC_FRONTEND_PORT = 5050
+
+PRD_NETWORK = "dws-prd"
+PRD_DB_NAME = "dws_db_jenkins_prd"
+PRD_BACKEND_NAME = "dws_back-end_jenkins_prd"
+PRD_FRONTEND_NAME = "dws_front-end_jenkins_prd"
+PRD_FRONTEND_PORT = 6060
 
 stage concurrency: 1, name: "commit"
 	node("linux && jdk8 && mvn3 && docker") {
@@ -60,16 +80,14 @@ def setMvnVersion() {
 }
 
 def buildWithoutE2ETests() {
-	def dbName = "dws_db_jenkins_commit"
-
 	try {
 		buildDbImage()
-		startDb(dbName, JENKINS_NETWORK)
-		mvn("clean install -Ddb.host=${dbName}:5432 -pl '!:dws-acc-tests'")
+		startDb(COMMIT_DB_NAME, JENKINS_NETWORK)
+		mvn("clean install -Ddb.host=${COMMIT_DB_NAME}:5432 -pl '!:dws-acc-tests'")
 	} catch(err) {
 		currentBuild.result  = "FAILURE"
 	} finally {
-		stopDb(dbName)
+		stopDb(COMMIT_DB_NAME)
 		archiveAllTestResults()
 		archiveArtifacts()
 	}
@@ -102,22 +120,18 @@ def buildFrontendImage() {
 }
 
 def e2eTests() {
-	def dbName = "dws_db_jenkins_test"
-	def backendName = "dws_back-end_jenkins_test"
-	def frontendName = "dws_front-end_jenkins_test"
-
 	try {
-		startDb(dbName, JENKINS_NETWORK)
-		initDb(dbName)
-		startBackend(backendName, dbName, JENKINS_NETWORK)
-		startFrontend(frontendName, 9090 ,backendName, JENKINS_NETWORK)
+		startDb(TEST_DB_NAME, JENKINS_NETWORK)
+		initDb(TEST_DB_NAME)
+		startBackend(TEST_BACKEND_NAME, TEST_DB_NAME, JENKINS_NETWORK)
+		startFrontend(TEST_FRONTEND_NAME, TEST_FRONTEND_PORT ,TEST_BACKEND_NAME, JENKINS_NETWORK)
 		runProtractor()
 	} catch(err) {
 		currentBuild.result  = "FAILURE"
 	} finally {
-		stopFrontend(frontendName)
-		stopBackend(backendName)
-		stopDb(dbName)
+		stopFrontend(TEST_FRONTEND_NAME)
+		stopBackend(TEST_BACKEND_NAME)
+		stopDb(TEST_DB_NAME)
 		archiveUiTestResults()
 	}
 }
@@ -129,47 +143,37 @@ def runProtractor() {
 }
 
 def stopAcc() {
-	stopFrontend("dws_front-end_jenkins_acc")
-	stopBackend("dws_back-end_jenkins_acc")
-	stopDb("dws_db_jenkins_acc")
-	removeNetwork("dws-acc")
+	stopFrontend(ACC_FRONTEND_NAME)
+	stopBackend(ACC_BACKEND_NAME)
+	stopDb(ACC_DB_NAME)
+	removeNetwork(ACC_NETWORK)
 }
 
 def startAcc() {
-	def network = "dws-acc"
-	def dbName = "dws_db_jenkins_acc"
-	def backendName = "dws_back-end_jenkins_acc"
-	def frontendName = "dws_front-end_jenkins_acc"	
-		
-	createNetwork(network)	
-	startDbWithMount(dbName, network, "acc")
-	connectToNetwork(JENKINS_NETWORK, dbName)
-	migrateDb(dbName)
-	disconnectFromNetwork(JENKINS_NETWORK, dbName)
-	startBackend(backendName, dbName, network)
-	startFrontend(frontendName, 5050, backendName, network)
+	createNetwork(ACC_NETWORK)	
+	startDbWithMount(ACC_DB_NAME, ACC_NETWORK, "acc")
+	connectToNetwork(JENKINS_NETWORK, ACC_DB_NAME)
+	migrateDb(ACC_DB_NAME)
+	disconnectFromNetwork(JENKINS_NETWORK, ACC_DB_NAME)
+	startBackend(ACC_BACKEND_NAME, ACC_DB_NAME, ACC_NETWORK)
+	startFrontend(ACC_FRONTEND_NAME, ACC_FRONTEND_PORT, ACC_BACKEND_NAME, ACC_NETWORK)
 }
 
 def stopPrd() {
-	stopFrontend("dws_front-end_jenkins_prd")
-	stopBackend("dws_back-end_jenkins_prd")
-	stopDb("dws_db_jenkins_prd")
-	removeNetwork("dws-prd")
+	stopFrontend(PRD_FRONTEND_NAME)
+	stopBackend(PRD_BACKEND_NAME)
+	stopDb(PRD_DB_NAME)
+	removeNetwork(PRD_NETWORK)
 }
 
 def startPrd() {
-	def network = "dws-prd"
-	def dbName = "dws_db_jenkins_prd"
-	def backendName = "dws_back-end_jenkins_prd"
-	def frontendName = "dws_front-end_jenkins_prd"	
-		
-	createNetwork(network)	
-	startDbWithMount(dbName, network, "prd")
-	connectToNetwork(JENKINS_NETWORK, dbName)
-	migrateDb(dbName)
-	disconnectFromNetwork(JENKINS_NETWORK, dbName)
-	startBackend(backendName, dbName, network)
-	startFrontend(frontendName, 6060, backendName, network)
+	createNetwork(PRD_NETWORK)	
+	startDbWithMount(PRD_DB_NAME, PRD_NETWORK, "prd")
+	connectToNetwork(JENKINS_NETWORK, PRD_DB_NAME)
+	migrateDb(PRD_DB_NAME)
+	disconnectFromNetwork(JENKINS_NETWORK, PRD_DB_NAME)
+	startBackend(PRD_BACKEND_NAME, PRD_DB_NAME, PRD_NETWORK)
+	startFrontend(PRD_FRONTEND_NAME, PRD_FRONTEND_PORT, PRD_BACKEND_NAME, PRD_NETWORK)
 }
 
 def createNetwork(network) {
@@ -199,10 +203,8 @@ def startDbWithMount(dbName, network, mountPoint) {
 }
 
 def stopDb(dbName) {
-	try {
-		sh "docker stop ${dbName}"
-		sh "docker rm -v ${dbName}"	
-	} catch(err){}
+	try { sh "docker stop ${dbName}" } catch(err){}
+	try { sh "docker rm -v ${dbName}" } catch(err){}
 }
 
 def initDb(dbName) {
@@ -214,27 +216,23 @@ def migrateDb(dbName) {
 }
 
 def startBackend(backendName, dbName, network) {
-	try { sh "docker rm -vf ${backendName}" } catch(err) {}
+	stopBackend(backendName)
 	sh "docker run -d --net ${network} --env db.host=${dbName}:5432 --name ${backendName} dws/back-end:${VERSION_NUMBER}"
 }
 
 def stopBackend(backendName) {
-	try {
-		sh "docker stop ${backendName}"
-		sh "docker rm -v ${backendName}"	
-	} catch(err){}
+	try { sh "docker stop ${backendName}" } catch(err){}
+	try { sh "docker rm -v ${backendName}" } catch(err){}
 }
 
 def startFrontend(frontendName, port, backendName, network) {
-	try { sh "docker rm -vf ${frontendName}" } catch(err) {}
+	stopFrontend(frontendName)
 	sh "docker run -d -p ${port}:80 --net ${network} --env dws_api_proxy=${backendName}:8080 --name ${frontendName} dws/front-end:${VERSION_NUMBER}"
 }
 
 def stopFrontend(frontendName) {
-	try {
-		sh "docker stop ${frontendName}"
-		sh "docker rm -v ${frontendName}"	
-	} catch(err){}
+	try { sh "docker stop ${frontendName}" } catch(err){}
+	try { sh "docker rm -v ${frontendName}" } catch(err){}	
 }
 
 def archiveAllTestResults() {
