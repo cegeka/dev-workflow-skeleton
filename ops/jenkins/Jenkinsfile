@@ -43,7 +43,6 @@ stage concurrency: 1, name: "test"
 			e2eTests()
 			stopWhenFailures()
 			tag()
-			stashWorkspace()
 		}
 	}
 
@@ -52,8 +51,12 @@ stage name: "pre-acc"
 
 stage concurrency: 1, name: "acc"
 	node("linux && mvn3 && docker") {
-		stopAcc()	
-		startAcc()
+		createCleanWorkspace("build-${currentBuild.number}")
+		dir("build-${currentBuild.number}") {
+			unstashWorkspace()
+			stopAcc()	
+			startAcc()
+		}
 	}
 
 stage name: "pre-prd"
@@ -61,8 +64,12 @@ stage name: "pre-prd"
 
 stage concurrency: 1, name: "prd"
 	node("linux && mvn3 && docker") {
-		stopPrd()
-		startPrd()
+		createCleanWorkspace("build-${currentBuild.number}")
+		dir("build-${currentBuild.number}") {
+			unstashWorkspace()
+			stopPrd()
+			startPrd()
+		}
 	}
 
 /********** Helper functions **********/
