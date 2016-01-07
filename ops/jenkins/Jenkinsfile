@@ -1,4 +1,4 @@
-VERSION_NUMBER = "";
+VERSION_NUMBER = ""; 
 
 JENKINS_NETWORK = "dws-jenkins"
 
@@ -94,7 +94,7 @@ def setMvnVersion() {
 
 def buildWithoutE2ETests() {
 	def dbName = "${COMMIT_DB_NAME}_${VERSION_NUMBER}"
-	
+
 	try {
 		buildDbImage()
 		startDb(dbName, JENKINS_NETWORK)
