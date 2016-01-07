@@ -93,14 +93,16 @@ def setMvnVersion() {
 }
 
 def buildWithoutE2ETests() {
+	def dbName = "${COMMIT_DB_NAME}_${VERSION_NUMBER}"
+	
 	try {
 		buildDbImage()
-		startDb(COMMIT_DB_NAME, JENKINS_NETWORK)
-		mvn("clean install -Ddb.host=${COMMIT_DB_NAME}:5432 -pl '!:dws-acc-tests'")
+		startDb(dbName, JENKINS_NETWORK)
+		mvn("clean install -Ddb.host=${dbName}:5432 -pl '!:dws-acc-tests'")
 	} catch(err) {
 		currentBuild.result  = "FAILURE"
 	} finally {
-		stopDb(COMMIT_DB_NAME)
+		stopDb(dbName)
 		archiveAllTestResults()
 		archiveArtifacts()
 	}
