@@ -145,9 +145,9 @@ def startAcc() {
 	def frontendName = "dws_front-end_jenkins_acc"	
 		
 	createNetwork(network)	
-	startDb(dbName, network)
+	startDbWithMount(dbName, network, "acc")
 	connectToNetwork("dws-jenkins", dbName)
-	initDb(dbName)
+	migrateDb(dbName)
 	disconnectFromNetwork("dws-jenkins", dbName)
 	startBackend(backendName, dbName, network)
 	startFrontend(frontendName, 5050, backendName, network)
@@ -167,9 +167,9 @@ def startPrd() {
 	def frontendName = "dws_front-end_jenkins_prd"	
 		
 	createNetwork(network)	
-	startDb(dbName, network)
+	startDbWithMount(dbName, network, "prd")
 	connectToNetwork("dws-jenkins", dbName)
-	initDb(dbName)
+	migrateDb(dbName)
 	disconnectFromNetwork("dws-jenkins", dbName)
 	startBackend(backendName, dbName, network)
 	startFrontend(frontendName, 6060, backendName, network)
@@ -194,7 +194,12 @@ def disconnectFromNetwork(network, container) {
 def startDb(dbName, network) {
 	try { sh "docker rm -vf ${dbName}" } catch(err) {}
 	sh "docker run -d --net ${network} --name ${dbName} dws/db:${versionNumber()}"
- }
+}
+
+def startDbWithMount(dbName, network, mountPoint) {
+	try { sh "docker rm -vf ${dbName}" } catch(err) {}
+	sh "docker run -d -v /data/dws/db/${mountPoint}:/var/lib/postgresql/data --net ${network} --name ${dbName} dws/db:${versionNumber()}"
+}
 
 def stopDb(dbName) {
 	try {
@@ -205,6 +210,10 @@ def stopDb(dbName) {
 
 def initDb(dbName) {
 	retry(3) { mvn("process-resources flyway:clean flyway:migrate -Ddb.host=${dbName}:5432 -pl :dws-infrastructure") }
+}
+
+def migrateDb(dbName) {
+	retry(3) { mvn("process-resources flyway:migrate -Ddb.host=${dbName}:5432 -pl :dws-infrastructure") }
 }
 
 def startBackend(backendName, dbName, network) {
