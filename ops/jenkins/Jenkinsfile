@@ -23,8 +23,8 @@ PRD_FRONTEND_PORT = 6060
 
 stage concurrency: 1, name: "commit"
 	node("linux && jdk8 && mvn3 && docker") {
-		sh "mkdir ${currentBuild.number}"
-		dir(currentBuild.number) {
+		sh "mkdir build-${currentBuild.number}"
+		dir("build-${currentBuild.number}") {
 	    	clearWorkspace()
 	    	cloneProject()
 	    	determineVersionNumber()
