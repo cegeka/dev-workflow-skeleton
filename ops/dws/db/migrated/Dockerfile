@@ -1,1 +1,0 @@
-FROM dws/db:$version_number

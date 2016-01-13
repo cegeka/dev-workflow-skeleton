@@ -57,5 +57,6 @@ def buildCleanDbImage() {
 }
 
 def buildMigratedDbImage() {
-	sh "docker build -t dws/db-migrated:${VERSION_NUMBER} --build-arg version_number="${VERSION_NUMBER}" ops/dws/db/migrated/"
+	sh "echo 'FROM dws/db:${version_number}' && cat ops/dws/db/migrated/Dockerfile.template > ops/dws/db/migrated/Dockerfile"
+	sh "docker build -t dws/db-migrated:${VERSION_NUMBER} ops/dws/db/migrated/"
 }
