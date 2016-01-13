@@ -1,0 +1,2 @@
+flyway clean
+flyway migrate
