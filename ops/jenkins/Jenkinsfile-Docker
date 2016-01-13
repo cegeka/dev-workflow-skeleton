@@ -44,30 +44,19 @@ def determineVersionNumber() {
 }
 
 def setMvnVersion() {
-	def mvnName = "${JENKINS_MAVEN_NAME}_version_${VERSION_NUMBER}"
-	def currentDir = pwd()
-
-	killContainer(mvnName)
-	sh "docker run -t -d --name ${mvnName} -v $currentDir/dws:/usr/src/dws -v /var/jenkins_home/.m2:/root/.m2 ${MVN_IMAGE} cat"
-	sh "docker exec ${mvnName} mvn -B versions:set -DnewVersion=${VERSION_NUMBER} -DgenerateBackupPoms=false"
-	removeContainer(mvnName)
+	mvn("versions:set -DnewVersion=${VERSION_NUMBER} -DgenerateBackupPoms=false", MVN_IMAGE, JENKINS_NETWORK)
 }
 
 def buildWithoutE2ETests() {
 	def dbName = "${COMMIT_DB_NAME}_${VERSION_NUMBER}"
-	def mvnName = "${JENKINS_MAVEN_NAME}_commit_${VERSION_NUMBER}"
-	def currentDir = pwd()
-
+	
 	try {
 		startContainer(DB_MIGRATED_IMAGE, dbName, JENKINS_NETWORK)
-
-		killContainer(mvnName)
-		sh "docker run -t -d --net ${JENKINS_NETWORK} --name ${mvnName} -v $currentDir/dws:/usr/src/dws -v /var/jenkins_home/.m2:/root/.m2 ${MVN_FRONTEND_IMAGE} cat"
-		sh "docker exec ${mvnName} mvn -B -Dmaven.test.failure.ignore=true -Djenkins clean install -Ddb.host=${dbName}:5432 -pl '!:dws-acc-tests'"
+		mvn("clean install -Djenkins -Ddb.host=${dbName}:5432 -pl '!:dws-acc-tests'", MVN_FRONTEND_IMAGE, JENKINS_NETWORK)
 	} catch(err) {
+		printError(err)
 		currentBuild.result  = "FAILURE"
 	} finally {
-		removeContainer(mvnName)
 		removeContainer(dbName)
 		archiveAllTestResults()
 		archiveArtifacts()
@@ -94,6 +83,26 @@ def stashWorkspace() {
 	stash includes: '**/*', name: 'workspace', useDefaultExcludes: false
 }
 
+def mvn(task, mvnImageName, network) {
+	def mvnName = "${JENKINS_MAVEN_NAME}_${VERSION_NUMBER}"
+
+	try {
+		startMvnContainer(mvnImageName, mvnName, network)
+		execMvn(mvnName, task)	
+	} catch(err) {
+		printError(err)
+		currentBuild.result  = "FAILURE"
+	} finally {
+		removeContainer(mvnName)
+	}
+}
+
+def printError(error) {
+	println "******************************* WORKFLOW ERROR *******************************"
+	println "${error}"
+	println "******************************************************************************"
+}
+
 /********** DWS Docker functions **********/
 def buildCleanDbImage() {
 	sh "docker build -t ${DB_CLEAN_IMAGE}:${VERSION_NUMBER} ops/dws/db/clean/"
@@ -110,6 +119,16 @@ def buildMigratedDbImage() {
 def startContainer(imageName, containerName, network) {
 	killContainer(containerName)
 	sh "docker run -d --net ${network} --name ${containerName} ${imageName}:${VERSION_NUMBER}"
+}
+
+def startMvnContainer(mvnImageName, mvnContainerName, network) {
+	def currentDir = pwd()
+	killContainer(mvnContainerName)
+	sh "docker run -t -d --name ${mvnContainerName} --net ${network} -v $currentDir/dws:/usr/src/dws -v /var/jenkins_home/.m2:/root/.m2 ${mvnImageName} cat"
+}
+
+def execMvn(mvnContainerName, task) {
+	sh "docker exec ${mvnContainerName} mvn -B -Dmaven.test.failure.ignore=true ${task}"
 }
 
 def killContainer(name) {

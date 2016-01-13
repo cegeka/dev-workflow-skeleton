@@ -13,9 +13,6 @@ RUN echo "deb http://packages.linuxmint.com debian import" >> /etc/apt/sources.l
 		apt-get update && \
 		apt-get install -y --force-yes firefox
 
-# Install front-end build dependencies
-RUN apt-get install -y make g++ bzip2
-
 # Use host docker
 RUN apt-get install -y lxc
 
