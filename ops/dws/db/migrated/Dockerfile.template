@@ -1,0 +1,1 @@
+COPY db/migration/ /usr/src/db/migration/
