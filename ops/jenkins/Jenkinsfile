@@ -65,8 +65,8 @@ stage name: "test"
 	}
 
 stage name: "pre-acc"
-	input "Do you want to deploy to acc?
-"
+	input "Do you want to deploy to acc?"
+	
 stage concurrency: 1, name: "acc"
 	node("linux && docker") {
 		unstashWorkspace()
