@@ -1,13 +1,1 @@
-RUN apt-get update && \
-		apt-get install -y wget && \
-		wget -q https://bintray.com/artifact/download/business/maven/flyway-commandline-3.2.1-linux-x64.tar.gz -O /tmp/flyway-3.2.1.tar.gz && \
-		tar xzvf /tmp/flyway-3.2.1.tar.gz -C /tmp && \
-		mv /tmp/flyway-3.2.1 /opt && \
-		rm -r /tmp/flyway-3.2.1.tar.gz && \
-		ln -s /opt/flyway-3.2.1/flyway /usr/local/bin/flyway
-
-COPY db/migration/ /opt/flyway-3.2.1/sql/
-COPY flyway.conf /opt/flyway-3.2.1/conf/
-
-COPY start.sh /usr/bin/start.sh
-CMD ["/bin/bash", "/usr/bin/start.sh"]
+COPY db/migration/ /docker-entrypoint-initdb.d/
