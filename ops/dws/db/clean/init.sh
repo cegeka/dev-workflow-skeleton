@@ -1,2 +1,3 @@
 psql -U $POSTGRES_USER -w -c "CREATE USER dws WITH ENCRYPTED PASSWORD 'dws'" dws
+psql -U $POSTGRES_USER -w -c "ALTER SCHEMA public OWNER TO dws" dws
 psql -U $POSTGRES_USER -w -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO dws" dws
