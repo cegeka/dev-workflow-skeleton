@@ -1,0 +1,102 @@
+ACC_NETWORK = "dws-acc"
+ACC_DB_NAME = "dws_db_acc"
+ACC_BACKEND_NAME = "dws_back-end_acc"
+ACC_FRONTEND_NAME = "dws_front-end_acc"
+ACC_FRONTEND_PORT = 5050
+
+PRD_NETWORK = "dws-prd"
+PRD_DB_NAME = "dws_db_prd"
+PRD_BACKEND_NAME = "dws_back-end_prd"
+PRD_FRONTEND_NAME = "dws_front-end_prd"
+PRD_FRONTEND_PORT = 6060
+
+stage name: "pre-acc"
+	input "Do you want to deploy to acc?"
+
+stage concurrency: 1, name: "acc"
+	node("linux && mvn3 && docker") {
+		createCleanWorkspace("build-${currentBuild.number}")
+		dir("build-${currentBuild.number}") {
+			unstashWorkspace()
+			stopAcc()	
+			startAcc()
+		}
+	}
+
+stage name: "pre-prd"
+	input "Do you want to deploy to prd?"
+
+stage concurrency: 1, name: "prd"
+	node("linux && mvn3 && docker") {
+		createCleanWorkspace("build-${currentBuild.number}")
+		dir("build-${currentBuild.number}") {
+			unstashWorkspace()
+			stopPrd()
+			startPrd()
+		}
+	}
+
+/********** Helper functions **********/
+def stopAcc() {
+	stopFrontend(ACC_FRONTEND_NAME)
+	stopBackend(ACC_BACKEND_NAME)
+	stopDb(ACC_DB_NAME)
+	removeNetwork(ACC_NETWORK)
+}
+
+def startAcc() {
+	createNetwork(ACC_NETWORK)	
+	startDbWithMount(ACC_DB_NAME, ACC_NETWORK, "acc")
+	connectToNetwork(JENKINS_NETWORK, ACC_DB_NAME)
+	migrateDb(ACC_DB_NAME)
+	disconnectFromNetwork(JENKINS_NETWORK, ACC_DB_NAME)
+	startBackend(ACC_BACKEND_NAME, ACC_DB_NAME, ACC_NETWORK)
+	startExposedFrontend(ACC_FRONTEND_NAME, ACC_FRONTEND_PORT, ACC_BACKEND_NAME, ACC_NETWORK)
+}
+
+def stopPrd() {
+	stopFrontend(PRD_FRONTEND_NAME)
+	stopBackend(PRD_BACKEND_NAME)
+	stopDb(PRD_DB_NAME)
+	removeNetwork(PRD_NETWORK)
+}
+
+def startPrd() {
+	createNetwork(PRD_NETWORK)	
+	startDbWithMount(PRD_DB_NAME, PRD_NETWORK, "prd")
+	connectToNetwork(JENKINS_NETWORK, PRD_DB_NAME)
+	migrateDb(PRD_DB_NAME)
+	disconnectFromNetwork(JENKINS_NETWORK, PRD_DB_NAME)
+	startBackend(PRD_BACKEND_NAME, PRD_DB_NAME, PRD_NETWORK)
+	startExposedFrontend(PRD_FRONTEND_NAME, PRD_FRONTEND_PORT, PRD_BACKEND_NAME, PRD_NETWORK)
+}
+
+def createNetwork(network) {
+	sh "docker network create -d bridge ${network}"
+}
+
+def removeNetwork(network) {
+	try { sh "docker network rm ${network}" } catch(err){}
+}
+
+def connectToNetwork(network, container) {
+	sh "docker network connect ${network} ${container}"
+}
+
+def disconnectFromNetwork(network, container) {
+	sh "docker network disconnect ${network} ${container}"
+}
+
+def startDbWithMount(dbName, network, mountPoint) {
+	try { sh "docker rm -vf ${dbName}" } catch(err) {}
+	sh "docker run -d -v /data/dws/db/${mountPoint}:/var/lib/postgresql/data --net ${network} --name ${dbName} dws/db:${VERSION_NUMBER}"
+}
+
+def migrateDb(dbName) {
+	retry(3) { mvn("process-resources flyway:migrate -Ddb.host=${dbName}:5432 -pl :dws-infrastructure") }
+}
+
+def startExposedFrontend(frontendName, port, backendName, network) {
+	stopFrontend(frontendName)
+	sh "docker run -d -p ${port}:80 --net ${network} --env dws_api_proxy=${backendName}:8080 --name ${frontendName} dws/front-end:${VERSION_NUMBER}"
+}
