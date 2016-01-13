@@ -60,7 +60,7 @@ def buildWithoutE2ETests() {
 
 		killContainer(mvnName)
 		sh "docker run -t -d --net ${JENKINS_NETWORK} --name ${mvnName} -v $currentDir/dws:/usr/src/dws -v /var/jenkins_home/.m2:/root/.m2 ${MVN_IMAGE} cat"
-		sh "docker exec ${mvnName} mvn -B -Dmaven.test.failure.ignore=true clean install -Ddb.host=${dbName}:5432 -pl '!:dws-acc-tests'"
+		sh "docker exec ${mvnName} mvn -B -Dmaven.test.failure.ignore=true -Djenkins clean install -Ddb.host=${dbName}:5432 -pl '!:dws-acc-tests'"
 	} catch(err) {
 		currentBuild.result  = "FAILURE"
 	} finally {
