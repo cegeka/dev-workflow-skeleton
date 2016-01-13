@@ -23,9 +23,7 @@ PRD_FRONTEND_NAME = "dws_front-end_prd"
 PRD_FRONTEND_PORT = 6060
 
 
-	
 
-			buildWithoutE2ETests()
 			stopWhenFailures()
 			stashWorkspace()
 		}

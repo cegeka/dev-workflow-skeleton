@@ -1,10 +1,16 @@
 /********** Global variables **********/
 VERSION_NUMBER = "";
 
-JENKINS_MAVEN_NAME = "dws_jenkins_mvn"
-
+/***** Networks *****/
 JENKINS_NETWORK = "dws-jenkins"
 
+/***** Images *****/
+MVN_IMAGE = "dws/mvn"
+DB_CLEAN_IMAGE = "dws/db"
+DB_MIGRATED_IMAGE = "dws/db-migrated"
+
+/***** Containers *****/
+JENKINS_MAVEN_NAME = "dws_jenkins_mvn"
 COMMIT_DB_NAME = "dws_jenkins_db_commit"
 
 /*********** Build workflow ***********/
@@ -16,6 +22,7 @@ stage name: "commit"
 		setMvnVersion()
 		buildCleanDbImage()
 		buildMigratedDbImage()
+		buildWithoutE2ETests()
 	}
 
 /********** Helper functions **********/
@@ -38,9 +45,58 @@ def setMvnVersion() {
 	def currentDir = pwd()
 
 	killContainer(mvnName)
-	sh "docker run -t -d --name ${mvnName} -v $currentDir/dws:/usr/src/dws -v /var/jenkins_home/.m2:/root/.m2 dws/mvn cat"
+	sh "docker run -t -d --name ${mvnName} -v $currentDir/dws:/usr/src/dws -v /var/jenkins_home/.m2:/root/.m2 ${MVN_IMAGE} cat"
 	sh "docker exec ${mvnName} mvn -B versions:set -DnewVersion=${VERSION_NUMBER} -DgenerateBackupPoms=false"
 	removeContainer(mvnName)
+}
+
+def buildWithoutE2ETests() {
+	def dbName = "${COMMIT_DB_NAME}_${VERSION_NUMBER}"
+	def mvnName = "${JENKINS_MAVEN_NAME}_commit_${VERSION_NUMBER}"
+	def currentDir = pwd()
+
+	try {
+		startContainer(DB_MIGRATED_IMAGE, dbName, JENKINS_NETWORK)
+
+		killContainer(mvnName)
+		sh "docker run -t -d --net ${JENKINS_NETWORK} --name ${mvnName} -v $currentDir/dws:/usr/src/dws -v /var/jenkins_home/.m2:/root/.m2 ${MVN_IMAGE} cat"
+		sh "docker exec ${mvnName} mvn -B -Dmaven.test.failure.ignore=true clean install -Ddb.host=${dbName}:5432 -pl '!:dws-acc-tests'"
+	} catch(err) {
+		currentBuild.result  = "FAILURE"
+	} finally {
+		removeContainer(mvnName)
+		removeContainer(dbName)
+		archiveAllTestResults()
+		archiveArtifacts()
+	}
+}
+
+def archiveAllTestResults() {
+	step([$class: "JUnitResultArchiver", testResults: "**/target/surefire-reports/TEST-*.xml"])
+	step([$class: "JUnitResultArchiver", testResults: "**/target/failsafe-reports/TEST-*.xml"])
+}
+
+def archiveArtifacts() {
+ 	step([$class: "ArtifactArchiver", artifacts: "**/target/*.jar", fingerprint: true])
+ 	step([$class: "ArtifactArchiver", artifacts: "**/dws-ui/target/dist/**/*", fingerprint: true])
+}
+
+/********** DWS Docker functions **********/
+def buildCleanDbImage() {
+	sh "docker build -t ${DB_CLEAN_IMAGE}:${VERSION_NUMBER} ops/dws/db/clean/"
+}
+
+def buildMigratedDbImage() {
+	sh "(echo 'FROM dws/db:${VERSION_NUMBER}' && cat ops/dws/db/migrated/Dockerfile.template) > ops/dws/db/migrated/Dockerfile"
+	sh "mkdir -p ops/dws/db/migrated/db/migration"
+	sh "cp -r dws/dws-infrastructure/src/main/resources/db/migration/* ops/dws/db/migrated/db/migration/"
+	sh "docker build -t ${DB_MIGRATED_IMAGE}:${VERSION_NUMBER} ops/dws/db/migrated/"
+}
+
+/********** Basic Docker functions **********/
+def startContainer(imageName, containerName, network) {
+	killContainer(containerName)
+	sh "docker run -d --net ${network} --name ${containerName} ${imageName}:${VERSION_NUMBER}"
 }
 
 def killContainer(name) {
@@ -50,15 +106,4 @@ def killContainer(name) {
 def removeContainer(name) {
 	try { sh "docker stop ${name}" } catch(err){}
 	try { sh "docker rm -v ${name}" } catch(err){}
-}
-
-def buildCleanDbImage() {
-	sh "docker build -t dws/db:${VERSION_NUMBER} ops/dws/db/clean/"
-}
-
-def buildMigratedDbImage() {
-	sh "(echo 'FROM dws/db:${VERSION_NUMBER}' && cat ops/dws/db/migrated/Dockerfile.template) > ops/dws/db/migrated/Dockerfile"
-	sh "mkdir -p ops/dws/db/migrated/db/migration"
-	sh "cp -r dws/dws-infrastructure/src/main/resources/db/migration/* ops/dws/db/migrated/db/migration/"
-	sh "docker build -t dws/db-migrated:${VERSION_NUMBER} ops/dws/db/migrated/"
 }
