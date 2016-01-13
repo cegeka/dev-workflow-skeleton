@@ -2,6 +2,8 @@ VERSION_NUMBER = "";
 
 JENKINS_NETWORK = "dws-jenkins"
 
+JENKINS_MAVEN_NAME = "dws_jenkins_mvn"
+
 COMMIT_DB_NAME = "dws_db_jenkins_commit"
 
 TEST_DB_NAME = "dws_db_jenkins_test"
@@ -20,13 +22,9 @@ PRD_BACKEND_NAME = "dws_back-end_prd"
 PRD_FRONTEND_NAME = "dws_front-end_prd"
 PRD_FRONTEND_PORT = 6060
 
-stage name: "commit"
-	node("linux && jdk8 && mvn3 && docker") {
-		createCleanWorkspace("build-${currentBuild.number}")
-		dir("build-${currentBuild.number}") {
-	    	cloneProject()
-	    	determineVersionNumber()
-	    	setMvnVersion()
+
+	
+
 			buildWithoutE2ETests()
 			stopWhenFailures()
 			stashWorkspace()
@@ -88,7 +86,7 @@ def determineVersionNumber() {
 }
 
 def setMvnVersion() {
-	mvn("versions:set -DnewVersion=${VERSION_NUMBER} -DgenerateBackupPoms=false")
+	mvnDocker("versions:set -DnewVersion=${VERSION_NUMBER} -DgenerateBackupPoms=false", JENKINS_NETWORK)
 }
 
 def buildWithoutE2ETests() {
@@ -97,7 +95,7 @@ def buildWithoutE2ETests() {
 	try {
 		buildDbImage()
 		startDb(dbName, JENKINS_NETWORK)
-		mvn("clean install -Ddb.host=${dbName}:5432 -pl '!:dws-acc-tests'")
+		mvnDocker("clean install -Ddb.host=${dbName}:5432 -pl '!:dws-acc-tests'", JENKINS_NETWORK)
 	} catch(err) {
 		currentBuild.result  = "FAILURE"
 	} finally {
@@ -290,6 +288,15 @@ def stashWorkspace() {
 
 def unstashWorkspace() {
 	unstash "workspace"
+}
+
+def mvnDocker(task, network) {
+	def mvnName = "${JENKINS_MAVEN_NAME}_${VERSION_NUMBER}"
+
+	try { sh "docker rm -vf ${mvnName}" } catch(err) {}
+	sh "docker run -i --net ${network} --name ${mvnName} -v /var/jenkins_home/.m2:/root/.m2 -v \$(pwd)/dws/:/usr/src/dws/ -w /usr/src/dws maven:3.3-jdk-8 mvn -B -Dmaven.test.failure.ignore=true ${task}" 
+	try { sh "docker stop ${mvnName}" } catch(err){}
+	try { sh "docker rm -v ${mvnName}" } catch(err){}
 }
 
 def mvn(task) {

@@ -1,0 +1,61 @@
+/********** Global variables **********/
+VERSION_NUMBER = "";
+
+JENKINS_MAVEN_NAME = "dws_jenkins_mvn"
+
+JENKINS_NETWORK = "dws-jenkins"
+
+COMMIT_DB_NAME = "dws_jenkins_db_commit"
+
+/*********** Build workflow ***********/
+stage name: "commit"
+	node("linux && docker") {
+		cleanWorkspace()
+		cloneProject()
+		determineVersionNumber()
+		setMvnVersion()
+		buildCleanDbImage()
+		buildMigratedDbImage()
+	}
+
+/********** Helper functions **********/
+def cleanWorkspace() {
+	sh "rm -rf *"
+}
+
+def cloneProject() {
+	git credentialsId: "385df167-99f7-408d-b9d8-ad982a7c997b", url: "https://github.com/cegeka/dev-workflow-skeleton.git"
+}	
+
+def determineVersionNumber() {
+	sh "git rev-list --count HEAD > nb-commits.txt"
+	def nbCommits = readFile("nb-commits.txt").trim()
+	VERSION_NUMBER = "0.0.${nbCommits}"
+}
+
+def setMvnVersion() {
+	def mvnName = "${JENKINS_MAVEN_NAME}_version_${VERSION_NUMBER}"
+	def currentDir = pwd()
+
+	killContainer(mvnName)
+	sh "docker run -t -d --name ${mvnName} -v $currentDir/dws:/usr/src/dws -v /var/jenkins_home/.m2:/root/.m2 dws/mvn cat"
+	sh "docker exec ${mvnName} mvn -B versions:set -DnewVersion=${VERSION_NUMBER} -DgenerateBackupPoms=false"
+	removeContainer(mvnName)
+}
+
+def killContainer(name) {
+	try { sh "docker rm -vf ${name}" } catch(err) {}	
+}
+
+def removeContainer(name) {
+	try { sh "docker stop ${name}" } catch(err){}
+	try { sh "docker rm -v ${name}" } catch(err){}
+}
+
+def buildCleanDbImage() {
+	sh "docker build -t dws/db:${VERSION_NUMBER} ops/dws/db/clean/"
+}
+
+def buildMigratedDbImage() {
+	sh "docker build -t dws/db-migrated:${VERSION_NUMBER} --build-arg version_number="${VERSION_NUMBER}" ops/dws/db/migrated/"
+}

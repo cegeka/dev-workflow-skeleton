@@ -1,5 +1,8 @@
 #!/bin/bash
-JENKINS_HOME="/data/dws/jenkins"
+
+source build-maven.sh
+
+JENKINS_HOME="/var/jenkins_home/"
 
 if [ ! -d $JENKINS_HOME ] 
 then

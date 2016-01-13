@@ -1,5 +1,5 @@
 db:
-    build: db/
+    build: db/clean/
     ports: 
         - "5432:5432"
 
