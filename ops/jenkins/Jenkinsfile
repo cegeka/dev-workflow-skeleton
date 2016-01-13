@@ -1,15 +1,3 @@
-VERSION_NUMBER = "";
-
-JENKINS_NETWORK = "dws-jenkins"
-
-JENKINS_MAVEN_NAME = "dws_jenkins_mvn"
-
-COMMIT_DB_NAME = "dws_db_jenkins_commit"
-
-TEST_DB_NAME = "dws_db_jenkins_test"
-TEST_BACKEND_NAME = "dws_back-end_jenkins_test"
-TEST_FRONTEND_NAME = "dws_front-end_jenkins_test"
-
 ACC_NETWORK = "dws-acc"
 ACC_DB_NAME = "dws_db_acc"
 ACC_BACKEND_NAME = "dws_back-end_acc"
@@ -21,20 +9,6 @@ PRD_DB_NAME = "dws_db_prd"
 PRD_BACKEND_NAME = "dws_back-end_prd"
 PRD_FRONTEND_NAME = "dws_front-end_prd"
 PRD_FRONTEND_PORT = 6060
-
-
-
-stage name: "test"
-	node("linux && jdk8 && mvn3 && docker && xvfb") {
-		createCleanWorkspace("build-${currentBuild.number}")
-		dir("build-${currentBuild.number}") {
-			unstashWorkspace()
-			buildDockerImages()
-			e2eTests()
-			stopWhenFailures()
-			tag()
-		}
-	}
 
 stage name: "pre-acc"
 	input "Do you want to deploy to acc?"
@@ -63,94 +37,6 @@ stage concurrency: 1, name: "prd"
 	}
 
 /********** Helper functions **********/
-def createCleanWorkspace(name) {
-	sh "rm -rf ${name}"
-	sh "mkdir ${name}"
-}
-
-def cloneProject() {
-	git credentialsId: "385df167-99f7-408d-b9d8-ad982a7c997b", url: "https://github.com/cegeka/dev-workflow-skeleton.git"
-}
-
-def determineVersionNumber() {
-	sh "git rev-list --count HEAD > nb-commits.txt"
-	def nbCommits = readFile("nb-commits.txt").trim()
-	VERSION_NUMBER = "0.0.${nbCommits}"
-}
-
-def setMvnVersion() {
-	mvnDocker("versions:set -DnewVersion=${VERSION_NUMBER} -DgenerateBackupPoms=false", JENKINS_NETWORK)
-}
-
-def buildWithoutE2ETests() {
-	def dbName = "${COMMIT_DB_NAME}_${VERSION_NUMBER}"
-
-	try {
-		buildDbImage()
-		startDb(dbName, JENKINS_NETWORK)
-		mvnDocker("clean install -Ddb.host=${dbName}:5432 -pl '!:dws-acc-tests'", JENKINS_NETWORK)
-	} catch(err) {
-		currentBuild.result  = "FAILURE"
-	} finally {
-		stopDb(dbName)
-		archiveAllTestResults()
-		archiveArtifacts()
-	}
-}
-
-def buildDockerImages() {
-	buildDbImage()
-	buildBackendImage()
-	buildFrontendImage()
-}
-
-def buildDbImage() {
-	sh "docker build -t dws/db:${VERSION_NUMBER} ops/dws/db/"
-}
-
-def buildBackendImage() {
-	sh "mkdir ops/dws/back-end/dws-jar"
-	sh "cp dws/dws-rest/target/dws-rest-${VERSION_NUMBER}.jar ops/dws/back-end/dws-jar/dws-rest.jar"
-	dir("ops/dws/back-end") {
-		sh "docker build -t dws/back-end:${VERSION_NUMBER} ."
-	}
-}
-
-def buildFrontendImage() { 
-	sh "mkdir ops/dws/front-end/dws-dist"
-	sh "cp -r dws/dws-ui/target/dist/* ops/dws/front-end/dws-dist/"
-	dir("ops/dws/front-end") {
-		sh "docker build -t dws/front-end:${VERSION_NUMBER} ."
-	}
-}
-
-def e2eTests() {
-	def dbName = "${TEST_DB_NAME}_${VERSION_NUMBER}"
-	def backendName = "${TEST_BACKEND_NAME}_${VERSION_NUMBER}"
-	def frontendName = "${TEST_FRONTEND_NAME}_${VERSION_NUMBER}"
-
-	try {
-		startDb(dbName, JENKINS_NETWORK)
-		initDb(dbName)
-		startBackend(backendName, dbName, JENKINS_NETWORK)
-		startFrontend(frontendName ,backendName, JENKINS_NETWORK)
-		runProtractor(frontendName, backendName)
-	} catch(err) {
-		currentBuild.result  = "FAILURE"
-	} finally {
-		stopFrontend(frontendName)
-		stopBackend(backendName)
-		stopDb(dbName)
-		archiveUiTestResults()
-	}
-}
-
-def runProtractor(frontendName, backendName) {
-	wrap([$class: "Xvfb", installationName: "xvfb"]) {
-		mvn("clean install -Djenkins -DfrontendHost=${frontendName}:80 -DbackendHost=${backendName}:8080 -pl :dws-acc-tests")
-	}
-}
-
 def stopAcc() {
 	stopFrontend(ACC_FRONTEND_NAME)
 	stopBackend(ACC_BACKEND_NAME)
@@ -201,104 +87,16 @@ def disconnectFromNetwork(network, container) {
 	sh "docker network disconnect ${network} ${container}"
 }
 
-def startDb(dbName, network) {
-	try { sh "docker rm -vf ${dbName}" } catch(err) {}
-	sh "docker run -d --net ${network} --name ${dbName} dws/db:${VERSION_NUMBER}"
-}
-
 def startDbWithMount(dbName, network, mountPoint) {
 	try { sh "docker rm -vf ${dbName}" } catch(err) {}
 	sh "docker run -d -v /data/dws/db/${mountPoint}:/var/lib/postgresql/data --net ${network} --name ${dbName} dws/db:${VERSION_NUMBER}"
-}
-
-def stopDb(dbName) {
-	try { sh "docker stop ${dbName}" } catch(err){}
-	try { sh "docker rm -v ${dbName}" } catch(err){}
-}
-
-def initDb(dbName) {
-	retry(3) { mvn("process-resources flyway:clean flyway:migrate -Ddb.host=${dbName}:5432 -pl :dws-infrastructure") }
 }
 
 def migrateDb(dbName) {
 	retry(3) { mvn("process-resources flyway:migrate -Ddb.host=${dbName}:5432 -pl :dws-infrastructure") }
 }
 
-def startBackend(backendName, dbName, network) {
-	stopBackend(backendName)
-	sh "docker run -d --net ${network} --env db.host=${dbName}:5432 --name ${backendName} dws/back-end:${VERSION_NUMBER}"
-}
-
-def stopBackend(backendName) {
-	try { sh "docker stop ${backendName}" } catch(err){}
-	try { sh "docker rm -v ${backendName}" } catch(err){}
-}
-
-def startFrontend(frontendName, backendName, network) {
-	stopFrontend(frontendName)
-	sh "docker run -d --net ${network} --env dws_api_proxy=${backendName}:8080 --name ${frontendName} dws/front-end:${VERSION_NUMBER}"
-}
-
 def startExposedFrontend(frontendName, port, backendName, network) {
 	stopFrontend(frontendName)
 	sh "docker run -d -p ${port}:80 --net ${network} --env dws_api_proxy=${backendName}:8080 --name ${frontendName} dws/front-end:${VERSION_NUMBER}"
-}
-
-def stopFrontend(frontendName) {
-	try { sh "docker stop ${frontendName}" } catch(err){}
-	try { sh "docker rm -v ${frontendName}" } catch(err){}	
-}
-
-def archiveAllTestResults() {
-	step([$class: "JUnitResultArchiver", testResults: "**/target/surefire-reports/TEST-*.xml"])
-	step([$class: "JUnitResultArchiver", testResults: "**/target/failsafe-reports/TEST-*.xml"])
-}
-
-def archiveUiTestResults() {
-	step([$class: "JUnitResultArchiver", testResults: "**/dws-acc-tests/target/surefire-reports/TEST-*.xml"])
-	step([$class: "JUnitResultArchiver", testResults: "**/dws-acc-tests/target/failsafe-reports/TEST-*.xml"])
-}
-
-def archiveArtifacts() {
- 	step([$class: "ArtifactArchiver", artifacts: "**/target/*.jar", fingerprint: true])
- 	step([$class: "ArtifactArchiver", artifacts: "**/dws-ui/target/dist/**/*", fingerprint: true])
-}
-
-def stopWhenFailures() {
-	if (currentBuild.result != null && !currentBuild.result.equalsIgnoreCase("STABLE")) {
-	    error "There are failures in the current stage. The current build will be stopped."
-	}
-}
-
-def tag() {
-	sh "git tag -a ${VERSION_NUMBER} -m 'Tag version ${VERSION_NUMBER}'"
-	sh "git push origin ${VERSION_NUMBER}"
-}
-
-def stashWorkspace() {
-	stash includes: '**/*', name: 'workspace', useDefaultExcludes: false
-}
-
-def unstashWorkspace() {
-	unstash "workspace"
-}
-
-def mvnDocker(task, network) {
-	def mvnName = "${JENKINS_MAVEN_NAME}_${VERSION_NUMBER}"
-
-	try { sh "docker rm -vf ${mvnName}" } catch(err) {}
-	sh "docker run -i --net ${network} --name ${mvnName} -v /var/jenkins_home/.m2:/root/.m2 -v \$(pwd)/dws/:/usr/src/dws/ -w /usr/src/dws maven:3.3-jdk-8 mvn -B -Dmaven.test.failure.ignore=true ${task}" 
-	try { sh "docker stop ${mvnName}" } catch(err){}
-	try { sh "docker rm -v ${mvnName}" } catch(err){}
-}
-
-def mvn(task) {
-	def javaHome = tool "jdk8"
-	def mvnHome = tool "mvn3"
-
-	dir("dws") {
-		withEnv(["JAVA_HOME=${javaHome}", "PATH+MAVEN=${mvnHome}/bin"]) {
-		    sh "mvn -B -Dmaven.test.failure.ignore=true ${task}"
-		}
-	}
 }
