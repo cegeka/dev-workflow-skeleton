@@ -7,11 +7,14 @@ NO_OPTIONS = ""
 
 /***** Networks *****/
 JENKINS_NETWORK = "dws-jenkins"
+ACC_NETWORK = "dws-acc"
+PRD_NETWORK = "dws-prd"
 
 /***** Images *****/
 MVN_IMAGE = "dws/mvn"
 MVN_FRONTEND_IMAGE = "dws/mvn-front-end"
 MVN_E2E_IMAGE = "dws/mvn-e2e"
+
 DB_CLEAN_IMAGE = "dws/db"
 DB_MIGRATED_IMAGE = "dws/db-migrated"
 BACKEND_IMAGE = "dws/back-end"
@@ -19,10 +22,24 @@ FRONTEND_IMAGE = "dws/front-end"
 
 /***** Containers *****/
 JENKINS_MAVEN_NAME = "dws_jenkins_mvn"
+
 COMMIT_DB_NAME = "dws_jenkins_db_commit"
+
 TEST_DB_NAME = "dws_jenkins_db_test"
 TEST_BACKEND_NAME = "dws_jenkins_back-end_test"
 TEST_FRONTEND_NAME = "dws_jenkins_front-end_test"
+
+ACC_DB_NAME = "dws_db_acc"
+ACC_DB_MOUNT_POINT = "acc"
+ACC_BACKEND_NAME = "dws_back-end_acc"
+ACC_FRONTEND_NAME = "dws_front-end_acc"
+ACC_FRONTEND_PORT = 5050
+
+PRD_DB_NAME = "dws_db_prd"
+PRD_DB_MOUNT_POINT = "prd"
+PRD_BACKEND_NAME = "dws_back-end_prd"
+PRD_FRONTEND_NAME = "dws_front-end_prd"
+PRD_FRONTEND_PORT = 6060
 
 /*********** Build workflow ***********/
 stage name: "commit"
@@ -45,6 +62,26 @@ stage name: "test"
 		e2eTests()
 		stopWhenFailures()
 		tag()
+	}
+
+stage name: "pre-acc"
+	input "Do you want to deploy to acc?"
+
+stage concurrency: 1, name: "acc"
+	node("linux && docker") {
+		unstashWorkspace()
+		stopAcc()	
+		startAcc()
+	}
+
+stage name: "pre-prd"
+	input "Do you want to deploy to prd?"
+
+stage concurrency: 1, name: "prd"
+	node("linux && docker") {		
+		unstashWorkspace()
+		stopPrd()
+		startPrd()
 	}
 
 /********** Helper functions **********/
@@ -88,7 +125,7 @@ def e2eTests() {
 	def frontendName = "${TEST_FRONTEND_NAME}_${VERSION_NUMBER}"
 
 	try {
-		startApplication(dbName, backendName, frontendName)
+		startTestApplication(dbName, backendName, frontendName)
 		mvn("clean install -Djenkins -DfrontendHost=${frontendName}:80 -DbackendHost=${backendName}:8080 -pl :dws-acc-tests", MVN_E2E_IMAGE, JENKINS_NETWORK)
 	} catch(err) {
 		printError(err)
@@ -191,16 +228,43 @@ def buildFrontendImage() {
 	}
 }
 
-def startApplication(dbName, backendName, frontendName) {
+def startTestApplication(dbName, backendName, frontendName) {
 	startContainer(DB_MIGRATED_IMAGE, dbName, JENKINS_NETWORK, NO_OPTIONS)
 	startContainer(BACKEND_IMAGE, backendName, JENKINS_NETWORK, "--env db.host=${dbName}:5432")
 	startContainer(FRONTEND_IMAGE, frontendName, JENKINS_NETWORK, "--env dws_api_proxy=${backendName}:8080")
+}
+
+def startApplication(dbName, dbMountPoint, backendName, frontendName, frontendPort, network) {
+	startContainer(DB_CLEAN_IMAGE, dbName, network, "-v /data/dws/db/${dbMountPoint}:/var/lib/postgresql/data")
+	mvn("process-resources flyway:migrate -Ddb.host=${dbName}:5432 -pl :dws-infrastructure", MVN_IMAGE, network)
+	startContainer(BACKEND_IMAGE, backendName, network, "--env db.host=${dbName}:5432")
+	startContainer(FRONTEND_IMAGE, frontendName, network, "-p ${frontendPort}:80 --env dws_api_proxy=${backendName}:8080")
+}
+
+def startAcc(){
+	createNetwork(ACC_NETWORK)
+	startApplication(ACC_DB_NAME, ACC_DB_MOUNT_POINT, ACC_BACKEND_NAME, ACC_FRONTEND_NAME, ACC_FRONTEND_PORT, ACC_NETWORK)	
+}
+
+def startPrd(){
+	createNetwork(PRD_NETWORK)
+	startApplication(PRD_DB_NAME, PRD_DB_MOUNT_POINT, PRD_BACKEND_NAME, PRD_FRONTEND_NAME, PRD_FRONTEND_PORT, PRD_NETWORK)	
 }
 
 def stopApplication(dbName, backendName, frontendName) {
 	removeContainer(frontendName)
 	removeContainer(backendName)
 	removeContainer(dbName)
+}
+
+def stopAcc() {
+	stopApplication(ACC_DB_NAME, ACC_BACKEND_NAME, ACC_FRONTEND_NAME)
+	removeNetwork(ACC_NETWORK)
+}
+
+def stopPrd() {
+	stopApplication(PRD_DB_NAME, PRD_BACKEND_NAME, PRD_FRONTEND_NAME)
+	removeNetwork(PRD_NETWORK)
 }
 
 /********** Basic Docker functions **********/
@@ -226,4 +290,12 @@ def killContainer(name) {
 def removeContainer(name) {
 	try { sh "docker stop ${name}" } catch(err){}
 	try { sh "docker rm -v ${name}" } catch(err){}
+}
+
+def createNetwork(network) {
+	sh "docker network create -d bridge ${network}"
+}
+
+def removeNetwork(network) {
+	try { sh "docker network rm ${network}" } catch(err){}
 }
