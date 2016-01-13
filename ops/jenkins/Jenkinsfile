@@ -65,8 +65,8 @@ stage name: "test"
 	}
 
 stage name: "pre-acc"
-	input "Do you want to deploy to acc?"
-
+	input "Do you want to deploy to acc?
+"
 stage concurrency: 1, name: "acc"
 	node("linux && docker") {
 		unstashWorkspace()
@@ -236,7 +236,7 @@ def startTestApplication(dbName, backendName, frontendName) {
 
 def startApplication(dbName, dbMountPoint, backendName, frontendName, frontendPort, network) {
 	startContainer(DB_CLEAN_IMAGE, dbName, network, "-v /data/dws/db/${dbMountPoint}:/var/lib/postgresql/data")
-	mvn("process-resources flyway:migrate -Ddb.host=${dbName}:5432 -pl :dws-infrastructure", MVN_IMAGE, network)
+	retry(2) { mvn("process-resources flyway:migrate -Ddb.host=${dbName}:5432 -pl :dws-infrastructure", MVN_IMAGE, network) }
 	startContainer(BACKEND_IMAGE, backendName, network, "--env db.host=${dbName}:5432")
 	startContainer(FRONTEND_IMAGE, frontendName, network, "-p ${frontendPort}:80 --env dws_api_proxy=${backendName}:8080")
 }
