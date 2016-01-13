@@ -9,4 +9,5 @@ RUN apt-get update && \
 COPY db/migration/ /opt/flyway-3.2.1/sql/
 COPY flyway.conf /opt/flyway-3.2.1/conf/
 
-COPY migrate.sh /docker-entrypoint-initdb.d/
+COPY start.sh /usr/bin/start.sh
+CMD ["/bin/bash", "/usr/bin/start.sh"]
