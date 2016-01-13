@@ -24,11 +24,6 @@ PRD_FRONTEND_PORT = 6060
 
 
 
-			stopWhenFailures()
-			stashWorkspace()
-		}
-	}
-
 stage name: "test"
 	node("linux && jdk8 && mvn3 && docker && xvfb") {
 		createCleanWorkspace("build-${currentBuild.number}")

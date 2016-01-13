@@ -6,6 +6,7 @@ JENKINS_NETWORK = "dws-jenkins"
 
 /***** Images *****/
 MVN_IMAGE = "dws/mvn"
+MVN_FRONTEND_IMAGE = "dws/mvn-front-end"
 DB_CLEAN_IMAGE = "dws/db"
 DB_MIGRATED_IMAGE = "dws/db-migrated"
 
@@ -23,6 +24,8 @@ stage name: "commit"
 		buildCleanDbImage()
 		buildMigratedDbImage()
 		buildWithoutE2ETests()
+		stopWhenFailures()
+		stashWorkspace()
 	}
 
 /********** Helper functions **********/
@@ -59,7 +62,7 @@ def buildWithoutE2ETests() {
 		startContainer(DB_MIGRATED_IMAGE, dbName, JENKINS_NETWORK)
 
 		killContainer(mvnName)
-		sh "docker run -t -d --net ${JENKINS_NETWORK} --name ${mvnName} -v $currentDir/dws:/usr/src/dws -v /var/jenkins_home/.m2:/root/.m2 ${MVN_IMAGE} cat"
+		sh "docker run -t -d --net ${JENKINS_NETWORK} --name ${mvnName} -v $currentDir/dws:/usr/src/dws -v /var/jenkins_home/.m2:/root/.m2 ${MVN_FRONTEND_IMAGE} cat"
 		sh "docker exec ${mvnName} mvn -B -Dmaven.test.failure.ignore=true -Djenkins clean install -Ddb.host=${dbName}:5432 -pl '!:dws-acc-tests'"
 	} catch(err) {
 		currentBuild.result  = "FAILURE"
@@ -79,6 +82,16 @@ def archiveAllTestResults() {
 def archiveArtifacts() {
  	step([$class: "ArtifactArchiver", artifacts: "**/target/*.jar", fingerprint: true])
  	step([$class: "ArtifactArchiver", artifacts: "**/dws-ui/target/dist/**/*", fingerprint: true])
+}
+
+def stopWhenFailures() {
+	if (currentBuild.result != null && !currentBuild.result.equalsIgnoreCase("STABLE")) {
+	    error "There are failures in the current stage. The current build will be stopped."
+	}
+}
+
+def stashWorkspace() {
+	stash includes: '**/*', name: 'workspace', useDefaultExcludes: false
 }
 
 /********** DWS Docker functions **********/
