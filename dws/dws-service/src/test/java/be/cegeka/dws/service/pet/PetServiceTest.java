@@ -13,7 +13,7 @@ import org.mockito.Mock;
 
 import be.cegeka.dws.domain.pet.Pet;
 import be.cegeka.dws.domain.pet.PetRepository;
-import be.cegeka.dws.infrasctructure.UnitTest;
+import be.cegeka.dws.infrastructure.UnitTest;
 
 public class PetServiceTest extends UnitTest {
 

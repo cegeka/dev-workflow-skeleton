@@ -1,4 +1,4 @@
-package be.cegeka.dws.infrasctructure;
+package be.cegeka.dws.infrastructure;
 
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
