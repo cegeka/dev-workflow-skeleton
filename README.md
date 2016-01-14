@@ -40,7 +40,7 @@ The goal of this innovation center is to set up a small project that can be used
   3. `sudo mv apache-maven-3.3.9 /opt`
   4. `sudo ln -s /opt/apache-maven-3.3.9/bin/mvn /usr/local/bin/mvn`
 9. Install [Eclipse IDE For Java EE Developers](http://www.eclipse.org/downloads/)
-  1. `curl curl http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/mars/1/eclipse-jee-mars-1-linux-gtk-x86_64.tar.gz > eclipse-jee-mars-1-linux-gtk-x86_64.tar.gz`
+  1. `curl http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/mars/1/eclipse-jee-mars-1-linux-gtk-x86_64.tar.gz > eclipse-jee-mars-1-linux-gtk-x86_64.tar.gz`
   2. `tar xzvf eclipse-jee-mars-1-linux-gtk-x86_64.tar.gz`
   3. `sudo mv eclipse /opt`
   4. `sudo ln -s /opt/eclipse/eclipse /usr/local/bin/eclipse`
