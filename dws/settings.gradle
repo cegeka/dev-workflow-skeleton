@@ -1,0 +1,1 @@
+include "dws-infrastructure", "dws-domain", "dws-service", "dws-rest", "dws-ui", "dws-acc-tests"

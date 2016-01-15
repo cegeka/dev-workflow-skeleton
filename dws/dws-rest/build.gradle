@@ -1,0 +1,7 @@
+description = 'The DWS rest services'
+
+dependencies {
+	compile project(':dws-infrastructure')
+	compile project(':dws-domain')
+	compile project(':dws-service')
+}

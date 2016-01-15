@@ -1,0 +1,51 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-9" ng-click="gallery.deselectPet()">
+            <div class="gallery">
+                <div class="gallery-pet fader" ng-class="{active: gallery.selectedPet === pet}" ng-repeat="pet in gallery.pets | filter:gallery.searchCriteria
+" ng-click="gallery.selectPet($event, pet)">
+                    <img class="profile-picture" ng-src="{{pet.imageLocation}}">
+                    <div class="overlay">
+                        <div class="overlay-text">{{pet.name}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="gallery-detail">
+                <section class="tiny-dialog">
+                    <h3>Pick &amp; Play</h3>
+                    <p>Like to play and cuddle with pets but can't keep one at home?</p>
+                    <ol class="big-numbers">
+                        <li>Pick a cute pet</li>
+                        <li>Setup a date</li>
+                        <li>Go play!</li>
+                    </ol>
+                </section>
+                <section class="tiny-dialog">
+                    <h3>Find your pet</h3>
+                    <form>
+                        <div class="form-group">
+                            <input class="form-control" placeholder="Search" ng-model="gallery.searchCriteria.$">
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" ng-model="gallery.searchCriteria.race">
+                                <option value="">All</option>
+                                <option value="CAT">Cat</option>
+                                <option value="DOG">Dog</option>
+                                <option value="CHICKEN">Chicken</option>
+                            </select>
+                        </div>
+                    </form>
+                </section>
+                <section class="tiny-dialog fader" ng-show="gallery.selectedPet">
+                    <h3>{{gallery.selectedPet.name}}</h3>
+                    <p>{{gallery.selectedPet.profileText}}</p>
+                    <div class="dialog-centered">
+                        <button id="setup-date" type="button" class="btn btn-primary btn-lg dialog-centered" ng-click="gallery.setupDate()">Setup date</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>

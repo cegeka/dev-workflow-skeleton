@@ -1,0 +1,39 @@
+subprojects {
+	apply plugin: 'java'
+
+	/*
+	versions {
+		junit 'junit': '3.2'
+	}
+	*/	
+
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
+		testCompile group: 'junit', name: 'junit', version: '4.+'
+	}
+
+	sourceCompatibility = 1.8
+	version = '1.0'
+
+	jar {
+		manifest {
+			attributes 	'Implementation-Title': 'DWS',
+						'Implementation-Version': version,
+						'Provider': 'gradle'
+		}
+	}
+
+	// Test crap
+
+	uploadArchives {
+		repositories {
+			flatDir {
+				dirs 'repos'
+			}
+		}
+	}
+}

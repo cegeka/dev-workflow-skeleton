@@ -1,0 +1,9 @@
+description = 'The DWS acceptance tests'
+
+dependencies {
+	compile project(':dws-infrastructure')
+	compile project(':dws-domain')
+	compile project(':dws-service')
+	compile project(':dws-rest')
+	compile project(':dws-ui')
+}

@@ -1,0 +1,5 @@
+description = 'The DWS domain layer'
+
+dependencies {
+	compile project(':dws-infrastructure')
+}
