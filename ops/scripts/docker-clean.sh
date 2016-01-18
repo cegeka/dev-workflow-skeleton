@@ -1,3 +1,4 @@
 #!/bin/bash
-docker rm -vf $(docker ps -qa)
-docker rmi -f $(docker images -qa)
+
+docker rm -f $(docker ps -qa)
+docker rmi $(docker images -qa)
