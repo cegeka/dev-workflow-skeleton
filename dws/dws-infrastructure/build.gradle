@@ -1,1 +1,36 @@
-description = 'The DWS infrastructure layer'
+ buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.flywaydb:flyway-gradle-plugin:$flywayVersion"
+    }
+}
+apply plugin: "org.flywaydb.flyway"
+
+description = "DWS Infrastructure Layer"
+
+dependencies {
+    compile     "org.springframework.boot:spring-boot-starter-jdbc",
+                "org.jdbi:jdbi:$jdbiVersion"
+
+    runtime     "org.postgresql:postgresql"
+}
+
+flyway {
+    user = "dws"
+    password = "dws"
+    url = "jdbc:postgresql://localhost:5432/dws"
+}
+
+// Tasks
+task flyway << {
+    println "Cleaning database..."
+    tasks.flywayClean.execute();
+    println "Migrating database..."
+    tasks.flywayMigrate.execute();
+    tasks.flywayInfo.execute();
+}
+
+// Dependencies
+test.dependsOn("flyway")

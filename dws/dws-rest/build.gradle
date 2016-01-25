@@ -1,7 +1,22 @@
-description = 'The DWS rest services'
+description = "DWS Rest Layer"
+
+buildscript {
+	repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
+    }
+}
+apply plugin: 'spring-boot'
 
 dependencies {
-	compile project(':dws-infrastructure')
-	compile project(':dws-domain')
-	compile project(':dws-service')
+	compile 	project(":dws-infrastructure"),
+				project(":dws-domain"),
+				project(":dws-service"),
+				"org.springframework.boot:spring-boot-starter-jersey"
+				
+	testCompile	project(":dws-infrastructure").sourceSets.test.output,
+				project(":dws-domain").sourceSets.test.output,
+				project(":dws-service").sourceSets.test.output
 }

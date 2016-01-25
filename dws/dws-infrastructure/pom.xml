@@ -9,7 +9,7 @@
 	</parent>
 	<artifactId>dws-infrastructure</artifactId>
 
-	<name>dws-infrascructure</name>
+	<name>dws-infrastructure</name>
 	<description>DWS Infrastructure Layer</description>
 
 	<properties>

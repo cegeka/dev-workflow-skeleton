@@ -1,39 +1,56 @@
-subprojects {
-	apply plugin: 'java'
+description = "Innovation center to set up a small project that can be used to quickly bootstrap the development of new applications"
 
-	/*
-	versions {
-		junit 'junit': '3.2'
-	}
-	*/	
+defaultTasks "clean", "build"
 
+buildscript {
 	repositories {
 		mavenCentral()
+    }
+    dependencies {
+    	classpath "io.spring.gradle:dependency-management-plugin:0.5.4.RELEASE"
+	}
+}
+
+allprojects {
+	group =		"be.cegeka"
+	version = 	"0.0.0-SNAPSHOT"
+
+	ext {
+		javaVersion = 		1.8
+		jdbiVersion =		"2.70"
+		javaXVersion = 		"1"
+		springBomVersion =	"2.0.1.RELEASE"
+		springBootVersion =	"1.3.1.RELEASE"
+		assertJVersion =	"3.3.0"
+		flywayVersion =		"3.2.1"
+	}
+
+    repositories {
+		mavenCentral()
+    }
+}
+
+subprojects {
+
+	apply plugin: "java"
+	apply plugin: "io.spring.dependency-management"
+
+	targetCompatibility = javaVersion
+	sourceCompatibility = javaVersion
+
+	dependencyManagement {
+    	imports {
+      		mavenBom "io.spring.platform:platform-bom:$springBomVersion"
+     	}
 	}
 
 	dependencies {
-		compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
-		testCompile group: 'junit', name: 'junit', version: '4.+'
-	}
+		compile	"javax.inject:javax.inject:$javaXVersion"
 
-	sourceCompatibility = 1.8
-	version = '1.0'
-
-	jar {
-		manifest {
-			attributes 	'Implementation-Title': 'DWS',
-						'Implementation-Version': version,
-						'Provider': 'gradle'
-		}
-	}
-
-	// Test crap
-
-	uploadArchives {
-		repositories {
-			flatDir {
-				dirs 'repos'
-			}
-		}
+		testCompile "org.springframework.boot:spring-boot-starter-test",
+                	"org.assertj:assertj-core:$assertJVersion"
 	}
 }
+// TODO: add plugins
+// TODO: add spring boot to dws-rest
+// TODO: subprojects: add testRuntime dependencies

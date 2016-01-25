@@ -1,6 +1,9 @@
-description = 'The DWS service layer'
+description = "DWS Service Layer"
 
 dependencies {
-	compile project(':dws-infrastructure')
-	compile project(':dws-domain')
+	compile project(":dws-infrastructure"),
+			project(":dws-domain")
+
+	testCompile	project(":dws-infrastructure").sourceSets.test.output,
+				project(":dws-domain").sourceSets.test.output
 }
