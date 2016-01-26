@@ -62,6 +62,7 @@ stage name: "test"
 		e2eTests()
 		stopWhenFailures()
 		// tag()
+		// dockerPushImages()
 	}
 
 stage name: "pre-acc"
@@ -143,6 +144,10 @@ def tag() {
 
 	sh "git tag -a ${VERSION_NUMBER} -m 'Tag version ${VERSION_NUMBER}'"
 	sh "git push origin ${VERSION_NUMBER}"
+}
+
+def dockerPushImages(){
+	// TODO: push images to docker registry, e.g. nexus.cegeka.be
 }
 
 def mvn(task, mvnImageName, network) {
