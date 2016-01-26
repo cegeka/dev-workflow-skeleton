@@ -70,5 +70,8 @@ The goal of this innovation center is to set up a small project that can be used
 8. `gulp` in front-end root to build front-end
 9. `gulp dev` in front-end root to start application, go to http://localhost:8080
 
+### Issue tracker
+A nicer issue tracker can be found at [waffle.io](https://waffle.io/cegeka/dev-workflow-skeleton).
+
 ### License
 See the [LICENSE](https://github.com/cegeka/dev-workflow-skeleton/blob/master/LICENSE.md) file for license rights and limitations (Apache).
