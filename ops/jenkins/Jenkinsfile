@@ -61,7 +61,7 @@ stage name: "test"
 		buildDockerImages()
 		e2eTests()
 		stopWhenFailures()
-		tag()
+		// tag()
 	}
 
 stage name: "pre-acc"
@@ -90,7 +90,7 @@ def cleanWorkspace() {
 }
 
 def cloneProject() {
-	git credentialsId: "385df167-99f7-408d-b9d8-ad982a7c997b", url: "https://github.com/cegeka/dev-workflow-skeleton.git"
+	git /* credentialsId: "385df167-99f7-408d-b9d8-ad982a7c997b", */ url: "https://github.com/cegeka/dev-workflow-skeleton.git"
 }	
 
 def determineVersionNumber() {
