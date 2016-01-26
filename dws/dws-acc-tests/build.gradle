@@ -1,14 +1,15 @@
 description = 'The DWS acceptance tests'
 
-List dws = [
-	project(':dws-infrastructure'),
-	project(':dws-domain'),
-	project(':dws-service'),
-	project(':dws-rest'),
-	project(':dws-ui')
-]
-
 dependencies {
-	compile	dws
-	testCompile dws
+	compile		project(':dws-infrastructure'),
+				project(':dws-domain'),
+				project(':dws-service'),
+				project(':dws-rest'),
+				project(':dws-ui')
+	
+	testCompile project(':dws-infrastructure'),
+				project(':dws-domain'),
+				project(':dws-service'),
+				project(':dws-rest'),
+				project(':dws-ui')
 }

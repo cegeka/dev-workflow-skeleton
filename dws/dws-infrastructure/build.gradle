@@ -17,12 +17,6 @@ dependencies {
     runtime     "org.postgresql:postgresql"
 }
 
-flyway {
-    user = "dws"
-    password = "dws"
-    url = "jdbc:postgresql://localhost:5432/dws"
-}
-
 // Tasks
 task flyway << {
     println "Cleaning database..."

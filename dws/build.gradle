@@ -52,5 +52,4 @@ subprojects {
 	}
 }
 // TODO: add plugins
-// TODO: add spring boot to dws-rest
 // TODO: subprojects: add testRuntime dependencies
