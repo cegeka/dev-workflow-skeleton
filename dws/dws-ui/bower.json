@@ -24,10 +24,10 @@
     "url": "git+https://github.com/cegeka/dev-workflow-skeleton.git"
   },
   "dependencies": {
-    "angular": "~1.4.8",
-    "angular-resource": "~1.4.8",
-    "es6-module-loader": "~0.17.8",
-    "system.js": "~0.19.6"
+    "angular": "~1.4.9",
+    "angular-resource": "~1.4.9",
+    "es6-module-loader": "~0.17.10",
+    "system.js": "~0.19.17"
   },
   "overrides": {
     "es6-module-loader": {
