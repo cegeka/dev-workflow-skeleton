@@ -46,16 +46,18 @@ The goal of this innovation center is to set up a small project that can be used
   4. `sudo ln -s /opt/eclipse/eclipse /usr/local/bin/eclipse`
   5. If you want to access eclipse from the launcher create /usr/share/applications/eclipse.desktop as described at [link](http://difusal.blogspot.be/2015/06/how-to-install-eclipse-mars-45-on-ubuntu.html)
 10. Install [Docker](https://docs.docker.com/engine/installation/ubuntulinux/)
-  1. [Create a Docker group](https://docs.docker.com/engine/installation/ubuntulinux/#create-a-docker-group)
-  2. Add `127.0.0.1 dws_db_1` to /etc/hosts 
+  1. `sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D`
+  2. Add [correct OS entry](https://docs.docker.com/engine/installation/ubuntulinux/) to `/etc/apt/sources.list.d/docker.list`
+  3. `apt-get update`
+  4. `apt-get purge lxc-docker`
+  5. `apt-cache policy docker-engine`
+  6. `sudo usermod -aG docker [USERNAME]`
+  7. Add `127.0.0.1 dws_db_1` to /etc/hosts 
 11. Install [Docker Compose](https://docs.docker.com/compose/install/)
   1. `sudo -i`
   2. ``curl -L https://github.com/docker/compose/releases/download/1.5.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose``
   3. `chmod +x /usr/local/bin/docker-compose`
-  4. ` curl -L https://raw.githubusercontent.com/docker/compose/$(docker-compose --version | awk 'NR==1{print $NF}')/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose
-`
-`
-
+  4. `curl -L https://raw.githubusercontent.com/docker/compose/$(docker-compose --version | awk 'NR==1{print $NF}')/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose`
 
 ### Setup
 1. `git clone https://github.com/cegeka/dev-workflow-skeleton.git`
