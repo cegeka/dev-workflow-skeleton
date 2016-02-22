@@ -1,0 +1,8 @@
+{
+    "env": {
+        "jasmine": true
+    },
+    "rules": {
+        "init-declarations": 0
+    }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "project",
+  "version": "0.0.0",
+  "dependencies": {
+    "jquery": "~2.2.0",
+    "bootstrap": "~3.3.6",
+    "angular": "~1.5.0",
+    "angular-animate": "~1.5.0",
+    "angular-bootstrap": "~1.1.2",
+    "angular-ui-router": "~0.2.18",
+    "angular-resource": "~1.5.0",
+    "es6-module-loader": "~0.17.8",
+    "system.js": "~0.19.6"
+  },
+  "overrides": {
+    "bootstrap": {
+      "main": [
+        "./dist/css/bootstrap.css",
+        "./dist/js/bootstrap.js"
+      ]
+    },
+    "es6-module-loader": {
+      "main": [
+        "./dist/es6-module-loader.src.js"
+      ]
+    },
+    "system.js": {
+      "main": [
+        "./dist/system.src.js"
+      ]
+    }
+  }
+}

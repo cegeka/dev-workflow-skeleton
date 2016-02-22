@@ -1,0 +1,12 @@
+# npm
+node_modules/
+npm-debug.log
+
+# Bower
+bower_components/
+
+# gulp
+dist/
+
+# maven
+target/
