@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source build-maven.sh
-
+	
 JENKINS_HOME="/var/jenkins_home/"
 
 if [ ! -d $JENKINS_HOME ] 
@@ -19,5 +19,4 @@ docker run -d -p 8888:8888 \
 		   --net dws-jenkins \
 		   -v $JENKINS_HOME:/var/jenkins_home \
 		   -v /var/run/docker.sock:/var/run/docker.sock \
-		   -v $(which docker):/bin/docker \
 		   --name dws_jenkins dws/jenkins

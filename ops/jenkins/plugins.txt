@@ -13,21 +13,21 @@ ssh-credentials:1.11
 git:2.4.1
 
 # worfklow-aggregator dependencies
-script-security:1.15
-workflow-step-api:1.12
-workflow-basic-steps:1.12
-workflow-scm-step:1.12
-workflow-api:1.12
+script-security:1.17
+workflow-step-api:1.13
+workflow-basic-steps:1.13
+workflow-scm-step:1.13
+workflow-api:1.13
 durable-task:1.7
-workflow-support:1.12
+workflow-support:1.13
 jquery-detached:1.2
 ace-editor:1.0.1
-workflow-cps:1.12
+workflow-cps:1.13
 git-server:1.6
-workflow-cps-global-lib:1.12
-workflow-job:1.12
-workflow-durable-task-step:1.12
+workflow-cps-global-lib:1.13
+workflow-job:1.13
+workflow-durable-task-step:1.13
 authentication-tokens:1.2
 
 # worklfow plugin
-workflow-aggregator:1.12
+workflow-aggregator:1.13
