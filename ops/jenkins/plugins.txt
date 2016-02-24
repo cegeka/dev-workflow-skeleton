@@ -31,3 +31,8 @@ authentication-tokens:1.2
 
 # worklfow plugin
 workflow-aggregator:1.13
+
+# workflow stage view dependencies
+mapdb-api:1.0.6.0
+momentjs:1.1
+handlebars:1.1

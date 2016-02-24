@@ -1,0 +1,3 @@
+# workflow stage view
+pipeline-rest-api:latest
+pipeline-stage-view:latest

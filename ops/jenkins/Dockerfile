@@ -16,4 +16,6 @@ COPY config.groovy /usr/share/jenkins/ref/init.groovy.d/config.groovy
 COPY plugins.txt /usr/share/jenkins/ref/
 RUN /usr/local/bin/plugins.sh /usr/share/jenkins/ref/plugins.txt
 
-RUN git config --global credential.helper 'cache --timeout=18000'
+COPY plugins-experimental.txt /usr/share/jenkins/ref/
+COPY plugins-experimental.sh /usr/local/bin/
+RUN /usr/local/bin/plugins-experimental.sh /usr/share/jenkins/ref/plugins-experimental.txt
