@@ -39,7 +39,7 @@
 							<goal>npm</goal>
 						</goals>
                         <configuration>
-                            <arguments>install --verbose</arguments>
+                            <arguments>install -d</arguments>
                         </configuration>
 					</execution>
 					<execution>
