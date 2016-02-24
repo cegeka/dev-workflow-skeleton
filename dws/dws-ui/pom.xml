@@ -38,9 +38,6 @@
 						<goals>
 							<goal>npm</goal>
 						</goals>
-                        <configuration>
-                            <arguments>install -d</arguments>
-                        </configuration>
 					</execution>
 					<execution>
 						<id>bower-install</id>
