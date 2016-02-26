@@ -1,3 +1,12 @@
+import com.wiredforcode.gradle.spawn.*
+
+plugins {
+    id "com.moowork.node" version '0.11'
+    id "com.moowork.gulp" version '0.11'
+}
+
+apply plugin: 'com.wiredforcode.spawn'
+
 description = 'DWS Acceptance Tests'
 
 dependencies {
@@ -13,7 +22,35 @@ dependencies {
     testCompile project(path: ':dws-rest', configuration: 'testArtifacts')
 }
 
-
 test.onlyIf {
     project.hasProperty('runAccTests')
 }
+
+node {
+    version = versions.node
+    npmVersion = versions.npm
+    download = true
+}
+
+task generateNpmResources(type: NpmTask) {
+    args = ['install', '--unsafe-perm']
+}
+
+task runUITestsLocal(type: GulpTask, dependsOn: 'startBackend') {
+    args = ['test:local']
+}
+
+runUITestsLocal {}.finalizedBy('stopBackend')
+
+task startBackend(type: SpawnProcessTask, dependsOn: ['getBuiltUI', ':dws-rest:assemble']) {
+    command "java -jar ${tasks.getByPath(':dws-rest:jar').archivePath}"
+    ready 'Started Application'
+}
+
+task stopBackend(type: KillProcessTask)
+
+task getBuiltUI(type: Copy, dependsOn: ':dws-ui:runGulp') {
+    from new File(rootProject.project('dws-ui').projectDir, 'target/dist')
+    into 'target/acceptance-tests/front-end'
+}
+

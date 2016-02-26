@@ -1,0 +1,26 @@
+plugins {
+    id "com.moowork.node" version '0.11'
+    id "com.moowork.gulp" version '0.11'
+}
+
+description = 'DWS Acceptance Tests'
+
+
+node {
+    version = versions.node
+    npmVersion = versions.npm
+    download = true
+}
+
+task generateNpmResources(type: NpmTask) {
+    args = ['install', '--unsafe-perm']
+}
+
+task bowerInstall(type: NpmTask) {
+    args = ['run', 'bowerInstall']
+}
+
+task runGulp(type: GulpTask, dependsOn: ['generateNpmResources', 'bowerInstall']) {
+    args = []
+}
+

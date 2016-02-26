@@ -1,14 +1,5 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath group: 'org.postgresql', name: 'postgresql', version: versions.postgresql
-    }
-}
-
 plugins {
-    id "org.flywaydb.flyway" version "3.2"
+    id "org.flywaydb.flyway" version '3.2'
 }
 
 description = 'DWS Infrastructure Layer'

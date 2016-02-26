@@ -1,3 +1,5 @@
+apply plugin: 'spring-boot'
+
 description = 'DWS Rest Layer'
 
 dependencies {

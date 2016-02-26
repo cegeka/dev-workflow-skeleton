@@ -12,12 +12,30 @@ allprojects {
                 javax_inject: '1',
                 assertj     : '3.2.0',
                 jdbi        : '2.70',
-                postgresql  : '9.4-1206-jdbc41'
+                postgresql  : '9.4-1206-jdbc41',
+                node        : '5.3.0',
+                npm         : '3.5.2'
         ]
     }
 }
 
 subprojects {
+    buildscript {
+        repositories {
+            jcenter()
+            maven { url "https://plugins.gradle.org/m2/" }
+            maven { url 'http://dl.bintray.com/vermeulen-mp/gradle-plugins' }
+            maven { url "http://repo.spring.io/release" }
+            maven { url "http://repo.spring.io/milestone" }
+            maven { url "http://repo.spring.io/snapshot" }
+        }
+        dependencies {
+            classpath group: 'org.postgresql', name: 'postgresql', version: versions.postgresql
+            classpath 'com.wiredforcode:gradle-spawn-plugin:0.6.0'
+            classpath("org.springframework.boot:spring-boot-gradle-plugin:${versions.spring_boot}")
+        }
+    }
+
     apply plugin: 'java'
     apply from: "$rootDir/gradle/addTestJarArchive.gradle"
 
