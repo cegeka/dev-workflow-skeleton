@@ -72,6 +72,13 @@ The goal of this innovation center is to set up a small project that can be used
 8. `gulp` in front-end root to build front-end
 9. `gulp dev` in front-end root to start application, go to http://localhost:8080
 
+### OSX Setup
+Add port forwarding on the virtualbox image to access the application, db and jenkins through localhost:
+
+1. `docker-machine ssh default -L 5432:localhost:5432` for the db
+2. `docker-machine ssh default -L 8080:localhost:8080` for the application
+3. `docker-machine ssh default -L 8888:localhost:8888` for jenkins
+
 ### Issue tracker
 A nicer issue tracker can be found at [waffle.io](https://waffle.io/cegeka/dev-workflow-skeleton).
 
