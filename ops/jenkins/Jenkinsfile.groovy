@@ -11,9 +11,9 @@ ACC_NETWORK = "dws-acc"
 PRD_NETWORK = "dws-prd"
 
 /***** Images *****/
-MVN_IMAGE = "dws/mvn"
-MVN_FRONTEND_IMAGE = "dws/mvn-front-end"
-MVN_E2E_IMAGE = "dws/mvn-e2e"
+GRADLE_IMAGE = "dws/gradle"
+GRADLE_FRONTEND_IMAGE = "dws/gradle-front-end"
+GRADLE_E2E_IMAGE = "dws/gradle-e2e"
 
 DB_CLEAN_IMAGE = "dws/db"
 DB_MIGRATED_IMAGE = "dws/db-migrated"
@@ -21,7 +21,7 @@ BACKEND_IMAGE = "dws/back-end"
 FRONTEND_IMAGE = "dws/front-end"
 
 /***** Containers *****/
-JENKINS_MAVEN_NAME = "dws_jenkins_mvn"
+JENKINS_GRADLE_NAME = "dws_jenkins_gradle"
 
 COMMIT_DB_NAME = "dws_jenkins_db_commit"
 
@@ -43,47 +43,46 @@ PRD_FRONTEND_PORT = 6060
 
 /*********** Build workflow ***********/
 stage name: "commit"
-	node("linux && docker") {
-		cleanWorkspace()
-		cloneProject()
-		determineVersionNumber()
-		setMvnVersion()
-		buildCleanDbImage()
-		buildMigratedDbImage()
-		buildWithoutE2ETests()
-		stopWhenFailures()
-		stashWorkspace()
-	}
+node("linux && docker") {
+	cleanWorkspace()
+	cloneProject()
+	determineVersionNumber()
+	buildCleanDbImage()
+	buildMigratedDbImage()
+	buildWithoutE2ETests()
+	stopWhenFailures()
+	stashWorkspace()
+}
 
 stage name: "test"
-	node("linux && docker") {
-		unstashWorkspace()
-		buildDockerImages()
-		e2eTests()
-		stopWhenFailures()
-		// tag()
-		// dockerPushImages()
-	}
+node("linux && docker") {
+	unstashWorkspace()
+	buildDockerImages()
+	e2eTests()
+	stopWhenFailures()
+	// tag()
+	// dockerPushImages()
+}
 
 stage name: "pre-acc"
-	input "Do you want to deploy to acc?"
-	
+input "Do you want to deploy to acc?"
+
 stage concurrency: 1, name: "acc"
-	node("linux && docker") {
-		unstashWorkspace()
-		stopAcc()	
-		startAcc()
-	}
+node("linux && docker") {
+	unstashWorkspace()
+	stopAcc()
+	startAcc()
+}
 
 stage name: "pre-prd"
-	input "Do you want to deploy to prd?"
+input "Do you want to deploy to prd?"
 
 stage concurrency: 1, name: "prd"
-	node("linux && docker") {		
-		unstashWorkspace()
-		stopPrd()
-		startPrd()
-	}
+node("linux && docker") {
+	unstashWorkspace()
+	stopPrd()
+	startPrd()
+}
 
 /********** Helper functions **********/
 def cleanWorkspace() {
@@ -92,7 +91,7 @@ def cleanWorkspace() {
 
 def cloneProject() {
 	git /* credentialsId: "385df167-99f7-408d-b9d8-ad982a7c997b", */ url: "https://github.com/cegeka/dev-workflow-skeleton.git"
-}	
+}
 
 def determineVersionNumber() {
 	sh "git rev-list --count HEAD > nb-commits.txt"
@@ -100,16 +99,12 @@ def determineVersionNumber() {
 	VERSION_NUMBER = "0.0.${nbCommits}"
 }
 
-def setMvnVersion() {
-	mvn("versions:set -DnewVersion=${VERSION_NUMBER} -DgenerateBackupPoms=false", MVN_IMAGE, JENKINS_NETWORK)
-}
-
 def buildWithoutE2ETests() {
 	def dbName = "${COMMIT_DB_NAME}_${VERSION_NUMBER}"
-	
+
 	try {
 		startContainer(DB_MIGRATED_IMAGE, dbName, JENKINS_NETWORK, NO_OPTIONS)
-		mvn("clean install -Djenkins -Ddb.host=${dbName}:5432 -pl '!:dws-acc-tests'", MVN_FRONTEND_IMAGE, JENKINS_NETWORK)
+		gradle("build -Pversion=${VERSION_NUMBER} -Ddb.host=${dbName}:5432", GRADLE_FRONTEND_IMAGE, JENKINS_NETWORK)
 	} catch(err) {
 		printError(err)
 		currentBuild.result  = "FAILURE"
@@ -127,7 +122,7 @@ def e2eTests() {
 
 	try {
 		startTestApplication(dbName, backendName, frontendName)
-		mvn("clean install -Djenkins -DfrontendHost=${frontendName}:80 -DbackendHost=${backendName}:8080 -pl :dws-acc-tests", MVN_E2E_IMAGE, JENKINS_NETWORK)
+		gradle("build -PrunAccTests -Pversion=${VERSION_NUMBER} -Djenkins -DfrontendHost=${frontendName}:80 -DbackendHost=${backendName}:8080", GRADLE_E2E_IMAGE, JENKINS_NETWORK)
 	} catch(err) {
 		printError(err)
 		currentBuild.result  = "FAILURE"
@@ -135,7 +130,7 @@ def e2eTests() {
 		stopApplication(dbName, backendName, frontendName)
 		archiveUiTestResults()
 	}
-}	
+}
 
 def tag() {
 	sh "git config user.name '${JENKINS_GIT_USERNAME}'"
@@ -150,17 +145,17 @@ def dockerPushImages(){
 	// TODO: push images to docker registry, e.g. nexus.cegeka.be
 }
 
-def mvn(task, mvnImageName, network) {
-	def mvnName = "${JENKINS_MAVEN_NAME}_${VERSION_NUMBER}"
+def gradle(task, gradleImageName, network) {
+	def gradleName = "${JENKINS_GRADLE_NAME}_${VERSION_NUMBER}"
 
 	try {
-		startMvnContainer(mvnImageName, mvnName, network)
-		execMvn(mvnName, task)	
+		startGradleContainer(gradleImageName, gradleName, network)
+		execGradle(gradleName, task)
 	} catch(err) {
 		printError(err)
 		currentBuild.result  = "FAILURE"
 	} finally {
-		removeContainer(mvnName)
+		removeContainer(gradleName)
 	}
 }
 
@@ -175,13 +170,13 @@ def archiveUiTestResults() {
 }
 
 def archiveArtifacts() {
- 	step([$class: "ArtifactArchiver", artifacts: "**/target/*.jar", fingerprint: true])
- 	step([$class: "ArtifactArchiver", artifacts: "**/dws-ui/target/dist/**/*", fingerprint: true])
+	step([$class: "ArtifactArchiver", artifacts: "**/target/*.jar", fingerprint: true])
+	step([$class: "ArtifactArchiver", artifacts: "**/dws-ui/target/dist/**/*", fingerprint: true])
 }
 
 def stopWhenFailures() {
 	if (currentBuild.result != null && !currentBuild.result.equalsIgnoreCase("STABLE")) {
-	    error "There are failures in the current stage. The current build will be stopped."
+		error "There are failures in the current stage. The current build will be stopped."
 	}
 }
 
@@ -225,7 +220,7 @@ def buildBackendImage() {
 	}
 }
 
-def buildFrontendImage() { 
+def buildFrontendImage() {
 	sh "mkdir ops/dws/front-end/dws-dist"
 	sh "cp -r dws/dws-ui/target/dist/* ops/dws/front-end/dws-dist/"
 	dir("ops/dws/front-end") {
@@ -241,19 +236,19 @@ def startTestApplication(dbName, backendName, frontendName) {
 
 def startApplication(dbName, dbMountPoint, backendName, frontendName, frontendPort, network) {
 	startContainer(DB_CLEAN_IMAGE, dbName, network, "-v /data/dws/db/${dbMountPoint}:/var/lib/postgresql/data")
-	retry(2) { mvn("process-resources flyway:migrate -Ddb.host=${dbName}:5432 -pl :dws-infrastructure", MVN_IMAGE, network) }
+	retry(2) { gradle("flywayMigrate -i", GRADLE_IMAGE, network) }
 	startContainer(BACKEND_IMAGE, backendName, network, "--env db.host=${dbName}:5432")
 	startContainer(FRONTEND_IMAGE, frontendName, network, "-p ${frontendPort}:80 --env dws_api_proxy=${backendName}:8080")
 }
 
 def startAcc(){
 	createNetwork(ACC_NETWORK)
-	startApplication(ACC_DB_NAME, ACC_DB_MOUNT_POINT, ACC_BACKEND_NAME, ACC_FRONTEND_NAME, ACC_FRONTEND_PORT, ACC_NETWORK)	
+	startApplication(ACC_DB_NAME, ACC_DB_MOUNT_POINT, ACC_BACKEND_NAME, ACC_FRONTEND_NAME, ACC_FRONTEND_PORT, ACC_NETWORK)
 }
 
 def startPrd(){
 	createNetwork(PRD_NETWORK)
-	startApplication(PRD_DB_NAME, PRD_DB_MOUNT_POINT, PRD_BACKEND_NAME, PRD_FRONTEND_NAME, PRD_FRONTEND_PORT, PRD_NETWORK)	
+	startApplication(PRD_DB_NAME, PRD_DB_MOUNT_POINT, PRD_BACKEND_NAME, PRD_FRONTEND_NAME, PRD_FRONTEND_PORT, PRD_NETWORK)
 }
 
 def stopApplication(dbName, backendName, frontendName) {
@@ -278,18 +273,18 @@ def startContainer(imageName, containerName, network, options) {
 	sh "docker run -d --net ${network} --name ${containerName} ${options} ${imageName}:${VERSION_NUMBER}"
 }
 
-def startMvnContainer(mvnImageName, mvnContainerName, network) {
+def startGradleContainer(gradleImageName, gradleContainerName, network) {
 	def currentDir = pwd()
-	killContainer(mvnContainerName)
-	sh "docker run -t -d --name ${mvnContainerName} --net ${network} -v $currentDir/dws:/usr/src/dws -v /var/jenkins_home/.m2:/root/.m2 ${mvnImageName}"
+	killContainer(gradleContainerName)
+	sh "docker run -t -d --name ${gradleContainerName} --net ${network} -v $currentDir/dws:/usr/src/dws -v /var/jenkins_home/.m2:/root/.m2 ${gradleImageName}"
 }
 
-def execMvn(mvnContainerName, task) {
-	sh "docker exec ${mvnContainerName} mvn -B -Dmaven.test.failure.ignore=true ${task}"
+def execGradle(gradleContainerName, task) {
+	sh "docker exec ${gradleContainerName} gradlew --continue ${task}"
 }
 
 def killContainer(name) {
-	try { sh "docker rm -vf ${name}" } catch(err) {}	
+	try { sh "docker rm -vf ${name}" } catch(err) {}
 }
 
 def removeContainer(name) {
