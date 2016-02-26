@@ -14,7 +14,8 @@ allprojects {
                 jdbi        : '2.70',
                 postgresql  : '9.4-1206-jdbc41',
                 node        : '5.3.0',
-                npm         : '3.5.2'
+                npm         : '3.5.2',
+                spawn       : '0.6.0'
         ]
     }
 }
@@ -31,8 +32,8 @@ subprojects {
         }
         dependencies {
             classpath group: 'org.postgresql', name: 'postgresql', version: versions.postgresql
-            classpath 'com.wiredforcode:gradle-spawn-plugin:0.6.0'
-            classpath("org.springframework.boot:spring-boot-gradle-plugin:${versions.spring_boot}")
+            classpath group: 'com.wiredforcode', name: 'gradle-spawn-plugin', version: versions.spawn
+            classpath group: "org.springframework.boot", name: "spring-boot-gradle-plugin", version: versions.spring_boot
         }
     }
 
@@ -41,13 +42,6 @@ subprojects {
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
-
-    task packageSources(type: Jar) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
-
-    }
-    artifacts.archives packageSources
 
     dependencies {
         compile group: 'javax.inject', name: 'javax.inject', version: versions.javax_inject

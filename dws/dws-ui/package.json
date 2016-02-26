@@ -76,6 +76,7 @@
         ]
     },
     "scripts": {
-        "bowerInstall": "bower install --allow-root"
+        "bowerInstall": "bower install --allow-root",
+        "gulpBuild": "gulp"
     }
 }

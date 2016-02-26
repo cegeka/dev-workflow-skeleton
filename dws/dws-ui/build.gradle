@@ -1,10 +1,8 @@
 plugins {
     id "com.moowork.node" version '0.11'
-    id "com.moowork.gulp" version '0.11'
 }
 
 description = 'DWS Acceptance Tests'
-
 
 node {
     version = versions.node
@@ -20,7 +18,7 @@ task bowerInstall(type: NpmTask) {
     args = ['run', 'bowerInstall']
 }
 
-task runGulp(type: GulpTask, dependsOn: ['generateNpmResources', 'bowerInstall']) {
-    args = []
+task runGulp(type: NpmTask, dependsOn: ['generateNpmResources', 'bowerInstall']) {
+    args = ['run', 'gulpBuild']
 }
 

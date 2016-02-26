@@ -36,13 +36,13 @@ task generateNpmResources(type: NpmTask) {
     args = ['install', '--unsafe-perm']
 }
 
-task runUITestsLocal(type: GulpTask, dependsOn: 'startBackend') {
+task runUITestsLocal(type: GulpTask, dependsOn: ['generateNpmResources', 'getBuiltUI', 'startBackend']) {
     args = ['test:local']
 }
 
 runUITestsLocal {}.finalizedBy('stopBackend')
 
-task startBackend(type: SpawnProcessTask, dependsOn: ['getBuiltUI', ':dws-rest:assemble']) {
+task startBackend(type: SpawnProcessTask, dependsOn: [':dws-rest:assemble']) {
     command "java -jar ${tasks.getByPath(':dws-rest:jar').archivePath}"
     ready 'Started Application'
 }
