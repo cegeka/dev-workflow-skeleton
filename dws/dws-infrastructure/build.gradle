@@ -1,0 +1,31 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath group: 'org.postgresql', name: 'postgresql', version: versions.postgresql
+    }
+}
+
+plugins {
+    id "org.flywaydb.flyway" version "3.2"
+}
+
+description = 'dws-infrascructure'
+
+dependencies {
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: versions.spring_boot
+    compile group: 'org.jdbi', name: 'jdbi', version: versions.jdbi
+    runtime group: 'org.postgresql', name: 'postgresql', version: versions.postgresql
+}
+
+task flyway << {
+    println "Cleaning database..."
+    tasks.flywayClean.execute();
+    println "Migrating database..."
+    tasks.flywayMigrate.execute();
+    tasks.flywayInfo.execute();
+}
+
+test.dependsOn("flyway")
+

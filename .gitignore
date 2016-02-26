@@ -15,3 +15,10 @@ ops/dws/front-end/dws-dist
 ops/dws/back-end/dws-jar
 
 .vagrant
+
+.idea/
+*.iws
+*.iml
+
+.gradle
+build/

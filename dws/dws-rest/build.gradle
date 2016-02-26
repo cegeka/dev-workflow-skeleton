@@ -1,0 +1,12 @@
+description = 'dws-rest'
+
+dependencies {
+    compile project(':dws-infrastructure')
+    compile project(':dws-domain')
+    compile project(':dws-service')
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jersey', version: versions.spring_boot
+
+    testCompile project(path: ':dws-infrastructure', configuration: 'testArtifacts')
+    testCompile project(path: ':dws-domain', configuration: 'testArtifacts')
+    testCompile project(path: ':dws-service', configuration: 'testArtifacts')
+}

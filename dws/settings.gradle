@@ -1,0 +1,6 @@
+include ':dws-infrastructure'
+include ':dws-domain'
+include ':dws-service'
+include ':dws-rest'
+include ':dws-ui'
+include ':dws-acc-tests'

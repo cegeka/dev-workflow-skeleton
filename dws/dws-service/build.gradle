@@ -1,0 +1,9 @@
+description = 'dws-service'
+
+dependencies {
+    compile project(':dws-infrastructure')
+    compile project(':dws-domain')
+
+    testCompile project(path: ':dws-infrastructure', configuration: 'testArtifacts')
+    testCompile project(path: ':dws-domain', configuration: 'testArtifacts')
+}
