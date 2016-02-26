@@ -26,6 +26,10 @@ test.onlyIf {
     project.hasProperty('runAccTests')
 }
 
+task runUITestsLocal(type: GulpTask, dependsOn: ['generateNpmResources', 'getBuiltUI', 'startBackend']) {
+    args = ['test:local']
+}
+
 node {
     version = versions.node
     npmVersion = versions.npm
@@ -36,12 +40,9 @@ task generateNpmResources(type: NpmTask) {
     args = ['install', '--unsafe-perm']
 }
 
-task runUITestsLocal(type: GulpTask, dependsOn: ['generateNpmResources', 'getBuiltUI', 'startBackend']) {
-    args = ['test:local']
-}
-
 runUITestsLocal {}.finalizedBy('stopBackend')
 
+//Start backend jar
 task startBackend(type: SpawnProcessTask, dependsOn: [':dws-rest:assemble']) {
     command "java -jar ${tasks.getByPath(':dws-rest:jar').archivePath}"
     ready 'Started Application'
@@ -49,6 +50,7 @@ task startBackend(type: SpawnProcessTask, dependsOn: [':dws-rest:assemble']) {
 
 task stopBackend(type: KillProcessTask)
 
+//Build UI and copy
 task getBuiltUI(type: Copy, dependsOn: ':dws-ui:runGulp') {
     from new File(rootProject.project('dws-ui').projectDir, 'target/dist')
     into 'target/acceptance-tests/front-end'
