@@ -1,4 +1,4 @@
-description = 'dws-domain'
+description = 'DWS Domain Layer'
 
 dependencies {
     compile project(':dws-infrastructure')

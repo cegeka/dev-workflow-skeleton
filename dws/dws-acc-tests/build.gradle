@@ -1,14 +1,19 @@
-description = 'dws-acc-tests'
+description = 'DWS Acceptance Tests'
 
 dependencies {
-  compile project(':dws-infrastructure')
-  compile project(':dws-domain')
-  compile project(':dws-service')
-  compile project(':dws-rest')
-  compile project(':dws-ui')
+    compile project(':dws-infrastructure')
+    compile project(':dws-domain')
+    compile project(':dws-service')
+    compile project(':dws-rest')
+    compile project(':dws-ui')
 
-  testCompile project(path:':dws-infrastructure', configuration: 'testArtifacts')
-  testCompile project(path:':dws-domain', configuration: 'testArtifacts')
-  testCompile project(path:':dws-service', configuration: 'testArtifacts')
-  testCompile project(path:':dws-rest', configuration: 'testArtifacts')
+    testCompile project(path: ':dws-infrastructure', configuration: 'testArtifacts')
+    testCompile project(path: ':dws-domain', configuration: 'testArtifacts')
+    testCompile project(path: ':dws-service', configuration: 'testArtifacts')
+    testCompile project(path: ':dws-rest', configuration: 'testArtifacts')
+}
+
+
+test.onlyIf {
+    project.hasProperty('runAccTests')
 }

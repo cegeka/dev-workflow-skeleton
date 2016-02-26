@@ -1,4 +1,4 @@
-description = 'dws-rest'
+description = 'DWS Rest Layer'
 
 dependencies {
     compile project(':dws-infrastructure')
